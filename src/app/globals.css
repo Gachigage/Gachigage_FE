@@ -2,6 +2,104 @@
 
 @theme {
     --font-sans: var(--font-pretendard), ui-sans-serif, system-ui, sans-serif;
+
+    /* 2. 폰트 사이즈 (Desktop) */
+    /* 사용법: text-dTitle */
+    --text-dTitle: 28px;
+    --text-dSubTitle: 24px;
+    --text-dBodyBig: 18px;
+    --text-dBody: 16px;
+    --text-dDescription: 13px;
+    --text-dCaption: 10px;
+
+    /* 3. 폰트 사이즈 (Mobile) */
+    /* 사용법: text-mTitle */
+    --text-mTitle: 24px;
+    --text-mSubTitle: 20px;
+    --text-mBody: 16px;
+    --text-mDescription: 13px;
+
+    /* 4. 색상 (Color Palette) */
+    /* 사용법: bg-gachigageMint, text-gachigageDarkMint1 */
+
+    /* Main Colors */
+    --color-gachigageMint: #1ad8a2;
+    --color-gachigageDarkMint1: #129771;
+    --color-gachigageDarkMint2: #0a5641;
+    --color-gachigageDarkMint3: #031610; /* 중복 수정됨 */
+    --color-gachigageDark: #160502;
+
+    /* Bright Mints */
+    --color-gachigageBrightMint1: #5ee4be;
+    --color-gachigageBrightMint2: #a3efda;
+    --color-gachigageBrightMint3: #e8fbf6;
+
+    /* Grays */
+    --color-gachigageGray7: #6d6767;
+    --color-gachigageGray5: #9d9a99;
+    --color-gachigageGray3: #cecccc;
+    --color-gachigageGray1: #e7e6e6;
+    --color-gachigageGray0: #f0f0f0;
+    --color-gachigageWhite: #fafafa;
+
+    /* Sub Colors */
+    --color-gachigageSubMint: #49deca;
+    --color-gachigageSubMint1: #3ab2a2;
+    --color-gachigageSubMint2: #2c8579;
+    --color-gachigageSubMint3: #1d5951;
+    --color-gachigageSubMint4: #0f2c28;
+
+    /* Sub Bright Mints */
+    --color-gachigageSubBrightMint1: #6de5d5;
+    --color-gachigageSubBrightMint2: #92ebdf;
+    --color-gachigageSubBrightMint3: #b6f2ea;
+    --color-gachigageSubBrightMint4: #dbf8f4;
+}
+
+@layer utilities {
+    /* Desktop */
+    .text-dTitle {
+        font-size: var(--text-dTitle);
+        font-weight: 600; /* SemiBold 고정 */
+    }
+    .text-dSubTitle {
+        font-size: var(--text-dSubTitle);
+        font-weight: 600;
+    }
+    .text-dBodyBig {
+        font-size: var(--text-dBodyBig);
+        font-weight: 600;
+    }
+    .text-dBody {
+        font-size: var(--text-dBody);
+        font-weight: 600;
+    }
+    .text-dDescription {
+        font-size: var(--text-dDescription);
+        font-weight: 600;
+    }
+    .text-dCaption {
+        font-size: var(--text-dCaption);
+        font-weight: 600;
+    }
+
+    /* Mobile */
+    .text-mTitle {
+        font-size: var(--text-mTitle);
+        font-weight: 600;
+    }
+    .text-mSubTitle {
+        font-size: var(--text-mSubTitle);
+        font-weight: 600;
+    }
+    .text-mBody {
+        font-size: var(--text-mBody);
+        font-weight: 600;
+    }
+    .text-mDescription {
+        font-size: var(--text-mDescription);
+        font-weight: 600;
+    }
 }
 
 body {

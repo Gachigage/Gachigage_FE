@@ -1,4 +1,4 @@
-export default function MarketLayout({
+export default function ProductLayout({
     children,
 }: {
     children: React.ReactNode;
