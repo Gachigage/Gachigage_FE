@@ -5,6 +5,9 @@ import Providers from "./Providers";
 export const metadata: Metadata = {
     title: "같이가게",
     description: "자영업자 플랫폼 같이가게",
+    icons: {
+        icon: "/favicon.ico",
+    },
 };
 
 export default function RootLayout({
