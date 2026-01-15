@@ -1,3 +1,6 @@
+import { redirect } from "next/navigation";
+
 export default function Home() {
-    return <div>홈입니다 </div>;
+    redirect("/products");
+    return <div className="max-w-[402px] xl:max-w-[1152px]"></div>;
 }
