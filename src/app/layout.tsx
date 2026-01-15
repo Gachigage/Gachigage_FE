@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "./Providers";
+import localFont from "next/font/local";
+
+const pretendard = localFont({
+    src: "../assets/fonts/PretendardVariable.woff2",
+    display: "swap",
+    weight: "45 920",
+    variable: "--font-pretendard",
+});
 
 export const metadata: Metadata = {
     title: "같이가게",
@@ -16,7 +24,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="ko">
+        <html lang="ko" className={`${pretendard.variable}`}>
             <body className="antialiased">
                 <Providers>{children}</Providers>
             </body>
