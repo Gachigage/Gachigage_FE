@@ -1,6 +1,5 @@
 "use client";
 
-// import { axiosServer } from "@/apis/axiosInstance"; // 제거: 백엔드가 이미 JWT를 직접 전달
 import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -11,22 +10,16 @@ export default function KakaoCallbackPage() {
     const requestRef = useRef(false);
 
     useEffect(() => {
-        const token = searchParams.get("token"); // 변경: code → token
+        const token = searchParams.get("token");
 
         if (!token || requestRef.current) return;
         requestRef.current = true;
 
         const processLogin = async () => {
             try {
-                // 제거: 백엔드 API 호출 불필요 (이미 JWT를 받았음)
-                // const { data } = await axiosServer.get(
-                //     `/oauth2/authorization/kakao`,
-                //     { params: { code } },
-                // );
-
                 const result = await signIn("kakao-backend", {
                     redirect: false,
-                    accessToken: token, // 변경: data.accessToken → token (URL에서 직접 받은 JWT)
+                    accessToken: token,
                 });
 
                 if (result?.ok) {
@@ -43,5 +36,9 @@ export default function KakaoCallbackPage() {
         processLogin();
     }, [router, searchParams]);
 
-    return <div>로그인중..</div>;
+    return (
+        <div className="w-screen h-screen flex items-center justify-center font-semibold text-[28px]">
+            로그인 중입니다...
+        </div>
+    );
 }
