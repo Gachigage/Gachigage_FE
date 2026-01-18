@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import { getSession } from "next-auth/react";
 
 const BASE_URL =
     process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
@@ -11,7 +12,28 @@ const axiosClient: AxiosInstance = axios.create({
     timeout: 5000,
 });
 
-// 인터셉터 추후 작성
+// 요청 인터셉터
+axiosClient.interceptors.request.use(
+    async (config) => {
+        const session = await getSession();
+        if (session?.accessToken) {
+            config.headers.Authorization = `Bearer ${session.accessToken}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error),
+);
+
+// 401 에러 처리
+axiosClient.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        if (error.response?.status === 401) {
+            window.location.href = "/login";
+        }
+        return Promise.reject(error);
+    },
+);
 
 const axiosServer: AxiosInstance = axios.create({
     baseURL: BASE_URL,
