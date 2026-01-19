@@ -3,6 +3,7 @@
 import Image from "next/image";
 import hamburger from "@/assets/icons/hamburger.svg";
 import { useState, useRef } from "react";
+import { useProductSearchFilterStore } from "@/store/useProductSearchFilterStore";
 
 const categories = [
     {
@@ -46,16 +47,16 @@ const categories = [
     },
 ];
 
-interface SelectedCategory {
-    primary: string;
-    secondary: string;
-}
-
 export default function ProductTypeFilter() {
+    const productType = useProductSearchFilterStore(
+        (state) => state.productType,
+    );
+    const setProductType = useProductSearchFilterStore(
+        (state) => state.setProductType,
+    );
+
     const [isOpen, setIsOpen] = useState(false);
     const [hoveredPrimary, setHoveredPrimary] = useState<string | null>(null);
-    const [selectedCategory, setSelectedCategory] =
-        useState<SelectedCategory | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -79,17 +80,16 @@ export default function ProductTypeFilter() {
     };
 
     const handleSecondaryClick = (primary: string, secondary: string) => {
-        setSelectedCategory({ primary, secondary });
+        setProductType({ primary, secondary });
         setIsOpen(false);
         setHoveredPrimary(null);
-        // TODO: Zustand store 연동
     };
 
     const getDisplayText = () => {
-        if (selectedCategory) {
-            return `${selectedCategory.primary} - ${selectedCategory.secondary}`;
-        }
-        return "물품 유형";
+        if (productType.primary === "" || productType.secondary === "")
+            return "물품 유형";
+
+        return `${productType.primary} - ${productType.secondary}`;
     };
 
     const currentSecondaries = hoveredPrimary
@@ -106,7 +106,7 @@ export default function ProductTypeFilter() {
             {/* 필터 버튼 */}
             <div
                 className={`w-full h-[54px] rounded-[12px] border border-gachigageGray1 text-gachigageGray7" flex items-center pl-[10px] gap-[10px] cursor-pointer font-normal text-[18px] transition-colors hover:bg-gachigageGray0 ${
-                    isOpen || selectedCategory ? "bg-gachigageGray0" : ""
+                    isOpen || productType ? "bg-gachigageGray0" : ""
                 }`}
             >
                 <Image
