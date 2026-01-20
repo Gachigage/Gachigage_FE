@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function ProductMoneyFilter() {
     return (
         <div
-            className={`w-full h-[54px] rounded-[12px] border border-gachigageGray1 text-gachigageGray7" flex items-center pl-[10px] gap-[10px] cursor-pointer font-normal text-[18px] transition-colors hover:bg-gachigageGray0
+            className={`w-full h-[54px] rounded-[12px] border border-gachigageGray1 font-normal text-gachigageGray5 text-[16px] flex items-center pl-[10px] gap-[10px] cursor-pointer transition-colors cursor-pointer
                     hover:bg-gachigageGray0`}
         >
             <Image src={won} alt="원 아이콘" width={24} height={24} />

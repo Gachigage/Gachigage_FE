@@ -57,6 +57,7 @@ export default function ProductTypeFilter() {
     );
 
     const [isOpen, setIsOpen] = useState(false);
+    const [selectedPrimaryIndex, setSelectedPrimaryIndex] = useState<number>(0);
     const [hoveredPrimaryIndex, setHoveredPrimaryIndex] = useState<
         number | null
     >(null);
@@ -78,13 +79,27 @@ export default function ProductTypeFilter() {
         closeTimeoutRef.current = setTimeout(() => {
             setIsOpen(false);
             setHoveredPrimaryIndex(null);
+            setHoveredSecondaryIndex(null);
         }, 100);
+    };
+
+    const handlePrimaryClick = (index: number) => {
+        setSelectedPrimaryIndex(index);
+        setHoveredSecondaryIndex(null);
+
+        // "전체" 카테고리 클릭 시 바로 store 업데이트
+        if (index === 0) {
+            setProductType({ primary: "전체", secondary: "전체" });
+            setIsOpen(false);
+            setHoveredPrimaryIndex(null);
+        }
     };
 
     const handleSecondaryClick = (primary: string, secondary: string) => {
         setProductType({ primary, secondary });
         setIsOpen(false);
         setHoveredPrimaryIndex(null);
+        setHoveredSecondaryIndex(null);
     };
 
     const getDisplayText = () => {
@@ -95,9 +110,7 @@ export default function ProductTypeFilter() {
     };
 
     const currentSecondaries =
-        hoveredPrimaryIndex !== null
-            ? categories[hoveredPrimaryIndex]?.secondary || []
-            : [];
+        categories[selectedPrimaryIndex]?.secondary || [];
 
     return (
         <div
@@ -108,10 +121,10 @@ export default function ProductTypeFilter() {
         >
             {/* 필터 버튼 */}
             <div
-                className={`w-full h-[54px] rounded-[12px] border border-gachigageGray1 text-gachigageGray7" flex items-center pl-[10px] gap-[10px] cursor-pointer font-normal text-[18px] transition-colors hover:bg-gachigageGray0 ${
+                className={`w-full h-[54px] rounded-[12px] border border-gachigageGray1 font-normal text-gachigageGray5 text-[16px] flex items-center pl-[10px] gap-[10px] cursor-pointer transition-colors hover:bg-gachigageGray0 ${
                     isOpen ||
-                    productType.primary.trim() !== "" ||
-                    productType.secondary.trim() !== ""
+                    (productType.primary.trim() !== "" &&
+                        productType.secondary.trim() !== "")
                         ? "bg-gachigageGray0"
                         : ""
                 }`}
@@ -122,32 +135,42 @@ export default function ProductTypeFilter() {
                     width={24}
                     height={24}
                 />
-                <span className="truncate pr-[10px]">{getDisplayText()}</span>
+                <span
+                    className={`truncate pr-[10px] ${
+                        productType.primary.trim() !== "" &&
+                        productType.secondary.trim() !== ""
+                            ? "text-gachigageGray7 font-medium"
+                            : ""
+                    }`}
+                >
+                    {getDisplayText()}
+                </span>
             </div>
 
             {/* 드롭다운 컨테이너 */}
             {isOpen && (
-                <div className="absolute top-[58px] left-0 flex z-50">
+                <div className="absolute w-[350px] top-[58px] left-0 z-50 flex bg-white border border-gachigageGray1 rounded-[12px] shadow-[0_0_8px_rgba(0,0,0,0.15)]">
                     {/* 1차 카테고리 */}
-                    <div className=" w-[175px] md:w-[230px] lg:w-[376px] px-[12px] py-[8px] md:px-[24px] md:py-[12px] bg-white border border-gachigageGray1 rounded-[12px] shadow-[0_0_8px_rgba(0,0,0,0.15)]">
+                    <div className="w-[175px] px-[8px] py-[8px] flex flex-col gap-[8px]">
                         {categories.map((category, index) => {
+                            const isSelected = selectedPrimaryIndex === index;
                             const isHovered = hoveredPrimaryIndex === index;
-                            const isAfterHovered =
-                                hoveredPrimaryIndex === index - 1;
-                            const showBorder =
-                                index !== 0 && !isHovered && !isAfterHovered;
 
                             return (
                                 <div
                                     key={category.primary}
-                                    className={`flex w-full h-[44px] md:h-[50px] xl:h-[60px] items-center justify-center hover:rounded-[12px] cursor-pointer text-[16px] transition-colors border-gachigageGray1 ${
-                                        isHovered
+                                    className={`flex w-[159px] px-[10px] h-[41px] items-center rounded-[4px] cursor-pointer text-[13px] transition-colors ${
+                                        isSelected || isHovered
                                             ? "bg-gachigageGray1 text-gachigageDark font-medium"
                                             : "text-gachigageGray7 font-normal"
-                                    } ${showBorder ? "border-t" : ""}`}
+                                    }`}
                                     onMouseEnter={() =>
                                         setHoveredPrimaryIndex(index)
                                     }
+                                    onMouseLeave={() =>
+                                        setHoveredPrimaryIndex(null)
+                                    }
+                                    onClick={() => handlePrimaryClick(index)}
                                 >
                                     {category.primary}
                                 </div>
@@ -155,51 +178,49 @@ export default function ProductTypeFilter() {
                         })}
                     </div>
 
-                    {/* 2차 카테고리 */}
-                    {hoveredPrimaryIndex !== null &&
-                        currentSecondaries.length > 0 && (
-                            <div
-                                className="w-[175px] md:w-[230px] lg:w-[340px] px-[12px] py-[8px] md:py-[12px] md:px-[24px] xl:px-[42px] bg-white border border-gachigageGray1 rounded-[12px] shadow-[0_0_8px_rgba(0,0,0,0.15)] ml-[4px]"
-                                onMouseLeave={() =>
-                                    setHoveredSecondaryIndex(null)
-                                }
-                            >
-                                {currentSecondaries.map((secondary, index) => {
-                                    const isHovered =
-                                        hoveredSecondaryIndex === index;
-                                    const isAfterHovered =
-                                        hoveredSecondaryIndex === index - 1;
-                                    const showBorder =
-                                        index !== 0 &&
-                                        !isHovered &&
-                                        !isAfterHovered;
+                    {/* 구분선 */}
+                    <div className="w-[1px] bg-gachigageGray1 my-[12px]" />
 
-                                    return (
-                                        <div
-                                            key={secondary}
-                                            className={`flex w-full h-[44px] md:h-[50px] xl:h-[60px] items-center justify-center hover:rounded-[12px] cursor-pointer text-[16px] transition-colors border-gachigageGray1 ${
-                                                isHovered
-                                                    ? "bg-gachigageGray1 text-gachigageDark font-medium"
-                                                    : "text-gachigageGray7 font-normal"
-                                            } ${showBorder ? "border-t" : ""}`}
-                                            onMouseEnter={() =>
-                                                setHoveredSecondaryIndex(index)
-                                            }
-                                            onClick={() =>
-                                                handleSecondaryClick(
-                                                    categories[
-                                                        hoveredPrimaryIndex
-                                                    ].primary,
-                                                    secondary,
-                                                )
-                                            }
-                                        >
-                                            {secondary}
-                                        </div>
-                                    );
-                                })}
+                    {/* 2차 카테고리 */}
+                    <div
+                        className="w-[175px] md:w-[230px] lg:w-[240px] px-[12px] py-[8px] md:py-[12px] md:px-[16px] flex flex-col"
+                        onMouseLeave={() => setHoveredSecondaryIndex(null)}
+                    >
+                        {selectedPrimaryIndex === 0 ? (
+                            <div className="flex-1 flex flex-col items-center justify-center text-gachigageGray7 text-[13px] text-center">
+                                <p>카테고리를 선택하시면</p>
+                                <p>세부 항목을 볼 수 있어요.</p>
                             </div>
+                        ) : (
+                            currentSecondaries.map((secondary, index) => {
+                                const isHovered =
+                                    hoveredSecondaryIndex === index;
+
+                                return (
+                                    <div
+                                        key={secondary}
+                                        className={`flex w-[159px] px-[10px] h-[41px] items-center rounded-[4px] cursor-pointer text-[13px] transition-colors ${
+                                            isHovered
+                                                ? "bg-gachigageGray1 text-gachigageDark font-medium"
+                                                : "text-gachigageGray7 font-normal"
+                                        }`}
+                                        onMouseEnter={() =>
+                                            setHoveredSecondaryIndex(index)
+                                        }
+                                        onClick={() =>
+                                            handleSecondaryClick(
+                                                categories[selectedPrimaryIndex]
+                                                    .primary,
+                                                secondary,
+                                            )
+                                        }
+                                    >
+                                        {secondary}
+                                    </div>
+                                );
+                            })
                         )}
+                    </div>
                 </div>
             )}
         </div>
