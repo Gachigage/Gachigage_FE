@@ -103,6 +103,11 @@ export default function ProductTypeFilter() {
     };
 
     const getDisplayText = () => {
+        if (
+            productType.primary === "전체" &&
+            productType.secondary.trim() !== ""
+        )
+            return "전체";
         if (productType.primary === "" || productType.secondary === "")
             return "물품 유형";
 
@@ -149,7 +154,7 @@ export default function ProductTypeFilter() {
 
             {/* 드롭다운 컨테이너 */}
             {isOpen && (
-                <div className="absolute w-[350px] top-[58px] left-0 z-50 flex bg-white border border-gachigageGray1 rounded-[12px] shadow-[0_0_8px_rgba(0,0,0,0.15)]">
+                <div className="absolute w-[350px] top-[58px] left-0 z-50 flex bg-white border border-gachigageDark1 rounded-[12px] ">
                     {/* 1차 카테고리 */}
                     <div className="w-[175px] px-[8px] py-[8px] flex flex-col gap-[8px] border-r border-gachigageGray1">
                         {categories.map((category, index) => {
