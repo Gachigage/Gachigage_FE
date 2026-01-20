@@ -161,6 +161,7 @@ body {
     }
 }
 
+/* shadcn */
 :root {
     --background: oklch(1 0 0);
     --foreground: oklch(0.129 0.042 264.695);
@@ -181,10 +182,20 @@ body {
     --radius: 0.625rem;
 }
 
+/* shadcn */
 .dark {
     --background: oklch(0.129 0.042 264.695);
     --foreground: oklch(0.984 0.003 247.858);
     --primary: oklch(0.929 0.013 255.508);
     --primary-foreground: oklch(0.208 0.042 265.755);
-    /* 다크모드 최소한의 설정 */
+}
+
+/* scrollbar 숨기기 */
+.scrollbar-hidden {
+    -ms-overflow-style: none; /* IE, Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
 }

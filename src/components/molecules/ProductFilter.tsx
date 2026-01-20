@@ -1,3 +1,4 @@
+import ProductLocationFilter from "../atoms/ProductLocationFilter";
 import ProductMoneyFilter from "../atoms/ProductMoneyFilter";
 import ProductTypeFilter from "../atoms/ProductTypeFilter";
 
@@ -6,6 +7,7 @@ export default function ProductFilter() {
         <div className="w-full flex gap-[12px]">
             <ProductTypeFilter />
             <ProductMoneyFilter />
+            <ProductLocationFilter />
         </div>
     );
 }
