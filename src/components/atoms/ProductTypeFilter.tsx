@@ -109,7 +109,11 @@ export default function ProductTypeFilter() {
             {/* 필터 버튼 */}
             <div
                 className={`w-full h-[54px] rounded-[12px] border border-gachigageGray1 text-gachigageGray7" flex items-center pl-[10px] gap-[10px] cursor-pointer font-normal text-[18px] transition-colors hover:bg-gachigageGray0 ${
-                    isOpen || productType ? "bg-gachigageGray0" : ""
+                    isOpen ||
+                    productType.primary.trim() !== "" ||
+                    productType.secondary.trim() !== ""
+                        ? "bg-gachigageGray0"
+                        : ""
                 }`}
             >
                 <Image
