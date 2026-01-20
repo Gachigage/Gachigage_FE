@@ -120,13 +120,13 @@ export default function ProductTypeFilter() {
     return (
         <div
             ref={containerRef}
-            className="relative w-full"
+            className="relative w-full min-w-0"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
             {/* 필터 버튼 */}
             <div
-                className={`w-full h-[54px] rounded-[12px] border border-gachigageGray1 font-normal text-gachigageGray5 text-[16px] flex items-center pl-[10px] gap-[10px] cursor-pointer transition-colors hover:bg-gachigageGray0 ${
+                className={`w-full h-[56px] rounded-[12px] border border-gachigageGray1 font-normal text-gachigageGray5 text-[16px] flex items-center pl-[10px] gap-[10px] cursor-pointer transition-colors hover:bg-gachigageGray0 ${
                     isOpen ||
                     (productType.primary.trim() !== "" &&
                         productType.secondary.trim() !== "")
@@ -154,7 +154,7 @@ export default function ProductTypeFilter() {
 
             {/* 드롭다운 컨테이너 */}
             {isOpen && (
-                <div className="absolute w-[350px] top-[58px] left-0 z-50 flex bg-white border border-gachigageDark1 rounded-[12px] ">
+                <div className="absolute w-[350px] top-[66px] left-0 z-50 flex bg-white border border-gachigageDark1 rounded-[12px] ">
                     {/* 1차 카테고리 */}
                     <div className="w-[175px] px-[8px] py-[8px] flex flex-col gap-[8px] border-r border-gachigageGray1">
                         {categories.map((category, index) => {

@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 export default function Header() {
     const pathname = usePathname();
     return (
-        <div className="fixed top-0 w-full h-[80px] flex items-center justify-center bg-gachigageWhite shadow-[0_0_8px_0_rgba(0,0,0,0.1)] z-1">
+        <div className="fixed top-0 w-full h-[80px] flex items-center justify-center bg-gachigageWhite shadow-[0_0_8px_0_rgba(0,0,0,0.1)] z-99">
             <div className="md:hidden flex items-center justify-center">
                 <Link href="/">
                     <Image

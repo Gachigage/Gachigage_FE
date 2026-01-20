@@ -376,7 +376,7 @@ export default function ProductLocationFilter() {
     return (
         <div
             ref={containerRef}
-            className="relative w-full"
+            className="relative w-full min-w-0"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
@@ -405,7 +405,7 @@ export default function ProductLocationFilter() {
 
             {/* 드롭다운 컨테이너 */}
             {isOpen && (
-                <div className="absolute w-[350px] top-[58px] left-0 z-50 flex bg-white border border-gachigageDark1 rounded-[12px] ">
+                <div className="absolute w-[350px] top-[66px] right-0 z-2 flex bg-white border border-gachigageDark1 rounded-[12px] ">
                     {/* (시/도) */}
                     <div className="w-[175px] px-[8px] py-[8px] max-h-[449px] scrollbar-hidden flex flex-col gap-[8px] border-r border-gachigageGray1 overflow-y-auto overflow-x-hidden">
                         {locations.map((loc, index) => {
