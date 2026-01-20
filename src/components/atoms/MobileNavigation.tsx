@@ -16,7 +16,7 @@ export default function MobileNavigation() {
     const pathname = usePathname();
 
     return (
-        <div className="w-full h-[110px] border-t pt-[12px] pb-[24px] border-gachigageGray1 md:hidden bg-gachigageWhite flex justify-center fixed bottom-0">
+        <div className="w-full z-99 h-[110px] border-t pt-[12px] pb-[24px] border-gachigageGray1 md:hidden bg-gachigageWhite flex justify-center fixed bottom-0">
             <div className="flex gap-[12px] h-[74px]">
                 <Link href="/products">
                     <div className="flex flex-col items-center gap-[8px] w-[79.5px]">
