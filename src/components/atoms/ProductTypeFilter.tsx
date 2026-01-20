@@ -151,7 +151,7 @@ export default function ProductTypeFilter() {
             {isOpen && (
                 <div className="absolute w-[350px] top-[58px] left-0 z-50 flex bg-white border border-gachigageGray1 rounded-[12px] shadow-[0_0_8px_rgba(0,0,0,0.15)]">
                     {/* 1차 카테고리 */}
-                    <div className="w-[175px] px-[8px] py-[8px] flex flex-col gap-[8px]">
+                    <div className="w-[175px] px-[8px] py-[8px] flex flex-col gap-[8px] border-r border-gachigageGray1">
                         {categories.map((category, index) => {
                             const isSelected = selectedPrimaryIndex === index;
                             const isHovered = hoveredPrimaryIndex === index;
@@ -178,12 +178,9 @@ export default function ProductTypeFilter() {
                         })}
                     </div>
 
-                    {/* 구분선 */}
-                    <div className="w-[1px] bg-gachigageGray1 my-[12px]" />
-
                     {/* 2차 카테고리 */}
                     <div
-                        className="w-[175px] md:w-[230px] lg:w-[240px] px-[12px] py-[8px] md:py-[12px] md:px-[16px] flex flex-col"
+                        className="w-[175px] px-[8px] py-[8px] flex flex-col"
                         onMouseLeave={() => setHoveredSecondaryIndex(null)}
                     >
                         {selectedPrimaryIndex === 0 ? (
