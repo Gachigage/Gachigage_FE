@@ -1,5 +1,5 @@
-import Product from "@/components/atoms/Product";
 import ProductAddButton from "@/components/atoms/ProductAddButton";
+import ProductList from "@/components/molecules/ProductList";
 import ProductSearchFilter from "@/components/organisms/ProductSearchFilter";
 
 export default function ProductPage() {
@@ -20,10 +20,27 @@ export default function ProductPage() {
         isLike: true, // 내가 좋아요 했는지 (추가)
         createdAt: "2024-01-10T12:30:00",
     };
+    const products = [
+        product,
+        product,
+        product,
+        product,
+        product,
+        product,
+        product,
+        product,
+        product,
+        product,
+        product,
+        product,
+        product,
+        product,
+        product,
+    ];
 
     return (
-        <div className="w-full bg-gachigageWhite flex justify-center">
-            <div className="w-full pt-[138px] h-[2000px] max-w-[402px] md:max-w-[768px] xl:max-w-[1152px] flex flex-col gap-[48px] md:gap-[60px]">
+        <div className="w-full h-full bg-gachigageWhite flex justify-center">
+            <div className="w-full pt-[138px] pb-[134px] md:pb-[60px] max-w-[402px] md:max-w-[768px] xl:max-w-[1152px] flex flex-col gap-[48px] md:gap-[60px]">
                 <ProductSearchFilter />
                 <div className="w-full flex flex-col gap-[24px]">
                     <div className="flex w-full justify-between items-end">
@@ -42,9 +59,7 @@ export default function ProductPage() {
                         </div>
                         <ProductAddButton />
                     </div>
-                    <div>
-                        <Product {...product} />
-                    </div>
+                    <ProductList products={products} />
                 </div>
             </div>
         </div>

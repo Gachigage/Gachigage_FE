@@ -13,3 +13,7 @@ export type Product = {
     isLike: boolean; // 내가 좋아요 했는지 (추가)
     createdAt: string;
 };
+
+export type ProductList = {
+    products: Product[];
+};

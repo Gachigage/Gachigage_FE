@@ -27,9 +27,9 @@ export default function Product(product: ProductType) {
     return (
         <Link
             href={`/products/${product.productId}`}
-            className="w-[165px]  flex flex-col gap-[12px] rounded-[14px] md:w-[224px]  xl:w-[270px]  cursor-pointer hover:drop-shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:bg-white hover:box-content hover:p-[8px] hover:pb-[16px] hover:m-[-8px] hover:mb-[-16px]"
+            className="w-[165px]  flex flex-col rounded-[14px] md:w-[224px]  xl:w-[270px]  cursor-pointer hover:drop-shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:bg-white hover:box-content hover:p-[8px] hover:pb-[16px] hover:m-[-8px] hover:mb-[-16px]"
         >
-            <div className="w-full relative">
+            <div className="w-full relative mb-[7px]">
                 <Image
                     src={smapleProduct1}
                     alt="상품 이미지"
@@ -57,12 +57,11 @@ export default function Product(product: ProductType) {
                     />
                 )}
             </div>
-
-            <p className="truncate text-gachigageDark font-semibold text-[16px] md:text-[18px] leading-none">
+            <p className="truncate text-gachigageDark font-semibold text-[16px] md:text-[18px] leading-[130%]">
                 {product.title}
             </p>
 
-            <div className="flex  text-[16px] xl:text-[18px] font-semibold gap-[2px] leading-none">
+            <div className="flex  text-[16px] xl:text-[18px] font-semibold gap-[2px] leading-[130%] mb-[5px]">
                 <div className="flex">
                     <span className="text-gachigageDarkMint1">
                         {formatNumber(product.price)}
@@ -73,7 +72,7 @@ export default function Product(product: ProductType) {
                 <div>{formatNumber(product.quantity)}개</div>
             </div>
 
-            <div className="flex gap-[18px] text-[13px] font-normal text-gachigageGray5 leading-none">
+            <div className="flex gap-[18px] text-[13px] font-normal text-gachigageGray5 leading-[130%]">
                 <p>
                     · {product.province} {product.city}
                 </p>
