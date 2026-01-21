@@ -1,10 +1,17 @@
 "use client";
 
+import { useProductSearchFilterStore } from "@/store/useProductSearchFilterStore";
+import Pagenation from "../atoms/Pagenation";
 import ProductAddButton from "../atoms/ProductAddButton";
 import ProductGroupFilter from "../atoms/ProductGroupFilter";
 import ProductList from "../molecules/ProductList";
 
 export default function ProductLanding() {
+    const { productPage, setProductPage } = useProductSearchFilterStore();
+
+    const handlePageChange = (page: number) => {
+        setProductPage({ ...productPage, currentPage: page });
+    };
     const product = {
         productId: 111,
         title: "Lorem ipsum",
@@ -46,6 +53,11 @@ export default function ProductLanding() {
                 <ProductAddButton />
             </div>
             <ProductList products={products} />
+            <Pagenation
+                currentPage={productPage.currentPage}
+                totalPages={productPage.totalPages}
+                onPageChange={handlePageChange}
+            />
         </div>
     );
 }

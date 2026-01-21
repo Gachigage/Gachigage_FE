@@ -1,15 +1,11 @@
 "use client";
 
 import { useProductSearchFilterStore } from "@/store/useProductSearchFilterStore";
-import { useEffect } from "react";
 
 export default function ProductGroupFilter() {
     const productGroup = useProductSearchFilterStore(
         (state) => state.productGroup,
     );
-    useEffect(() => {
-        console.log(productGroup);
-    }, [productGroup]);
     const setProductGroup = useProductSearchFilterStore(
         (state) => state.setProductGroup,
     );
