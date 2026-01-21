@@ -1,6 +1,7 @@
 "use client";
 
 import ProductAddButton from "../atoms/ProductAddButton";
+import ProductGroupFilter from "../atoms/ProductGroupFilter";
 import ProductList from "../molecules/ProductList";
 
 export default function ProductLanding() {
@@ -41,19 +42,7 @@ export default function ProductLanding() {
     return (
         <div className="w-full flex flex-col gap-[24px]">
             <div className="flex w-full justify-between items-end">
-                <div className="flex items-center justify-center gap-[10px]">
-                    <button className="cursor-pointer font-medium text-[13px] md:font-normal md:text-[18px] text-gachigageGray7 border-b border-transparent hover:text-gachigageDark hover:border-gachigageDark">
-                        전체 상품
-                    </button>
-                    <span className="text-gachigageGray5">|</span>
-                    <button className="cursor-pointer font-medium text-[13px] md:font-normal md:text-[18px] text-gachigageGray7 border-b border-transparent hover:text-gachigageDark hover:border-gachigageDark">
-                        일괄 판매
-                    </button>
-                    <span className="text-gachigageGray5">|</span>
-                    <button className="cursor-pointer font-medium text-[13px] md:font-normal md:text-[18px] text-gachigageGray7 border-b border-transparent hover:text-gachigageDark hover:border-gachigageDark">
-                        개별 판매
-                    </button>
-                </div>
+                <ProductGroupFilter />
                 <ProductAddButton />
             </div>
             <ProductList products={products} />

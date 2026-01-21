@@ -5,6 +5,7 @@ interface ProductSearchFilterState {
     productType: { primary: string; secondary: string };
     productPrice: { minPrice: number; maxPrice: number };
     productLocation: { province: string; city: string };
+    productGroup: string;
 }
 
 interface ProductSearchFilterActions {
@@ -21,6 +22,7 @@ interface ProductSearchFilterActions {
         province: string;
         city: string;
     }) => void;
+    setProductGroup: (productGroup: string) => void;
     resetAll: () => void;
 }
 
@@ -32,6 +34,7 @@ const initialState: ProductSearchFilterState = {
     productType: { primary: "", secondary: "" },
     productPrice: { minPrice: 0, maxPrice: 0 },
     productLocation: { province: "", city: "" },
+    productGroup: "전체",
 };
 
 export const useProductSearchFilterStore = create<ProductSearchFilterStore>(
@@ -42,6 +45,7 @@ export const useProductSearchFilterStore = create<ProductSearchFilterStore>(
         setProductPrice: (productPrice) => set({ productPrice: productPrice }),
         setProductLocation: (productLocation) =>
             set({ productLocation: productLocation }),
+        setProductGroup: (productGroup) => set({ productGroup: productGroup }),
         resetAll: () => set(initialState),
     }),
 );
