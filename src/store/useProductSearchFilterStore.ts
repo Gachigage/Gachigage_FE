@@ -4,7 +4,9 @@ interface ProductSearchFilterState {
     searchKeyword: string;
     productType: { primary: string; secondary: string };
     productPrice: { minPrice: number; maxPrice: number };
-    productLocation: { city: string; district: string };
+    productLocation: { province: string; city: string };
+    productGroup: string;
+    productPage: { currentPage: number; totalPages: number };
 }
 
 interface ProductSearchFilterActions {
@@ -18,8 +20,13 @@ interface ProductSearchFilterActions {
         maxPrice: number;
     }) => void;
     setProductLocation: (productLocation: {
+        province: string;
         city: string;
-        district: string;
+    }) => void;
+    setProductGroup: (productGroup: string) => void;
+    setProductPage: (productPage: {
+        currentPage: number;
+        totalPages: number;
     }) => void;
     resetAll: () => void;
 }
@@ -31,7 +38,10 @@ const initialState: ProductSearchFilterState = {
     searchKeyword: "",
     productType: { primary: "", secondary: "" },
     productPrice: { minPrice: 0, maxPrice: 0 },
-    productLocation: { city: "", district: "" },
+    productLocation: { province: "", city: "" },
+    // 임시로 totalPage 변경. TODO:추후 1로 변경
+    productPage: { currentPage: 1, totalPages: 21 },
+    productGroup: "전체",
 };
 
 export const useProductSearchFilterStore = create<ProductSearchFilterStore>(
@@ -42,6 +52,8 @@ export const useProductSearchFilterStore = create<ProductSearchFilterStore>(
         setProductPrice: (productPrice) => set({ productPrice: productPrice }),
         setProductLocation: (productLocation) =>
             set({ productLocation: productLocation }),
+        setProductGroup: (productGroup) => set({ productGroup: productGroup }),
+        setProductPage: (productPage) => set({ productPage: productPage }),
         resetAll: () => set(initialState),
     }),
 );

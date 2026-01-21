@@ -7,7 +7,7 @@ export default function ProductLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="flex flex-col w-screen">
+        <div className="flex flex-col w-screen min-h-screen">
             <Header />
             {children}
             <MobileNavigation />
