@@ -26,7 +26,7 @@ export default function Product(product: ProductType) {
 
     return (
         <Link
-            href={`/product/${product.productId}`}
+            href={`/products/${product.productId}`}
             className="w-[165px]  flex flex-col gap-[12px] rounded-[14px] md:w-[224px]  xl:w-[270px]  cursor-pointer hover:drop-shadow-[0_0_12px_rgba(0,0,0,0.15)] hover:bg-white hover:box-content hover:p-[8px] hover:pb-[16px] hover:m-[-8px] hover:mb-[-16px]"
         >
             <div className="w-full relative">
