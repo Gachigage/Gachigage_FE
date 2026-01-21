@@ -1,7 +1,26 @@
+import Product from "@/components/atoms/Product";
 import ProductAddButton from "@/components/atoms/ProductAddButton";
 import ProductSearchFilter from "@/components/organisms/ProductSearchFilter";
 
 export default function ProductPage() {
+    const product = {
+        productId: 111,
+        title: "Lorem ipsum",
+        price: 30000000, // 물건 가격 (추가)
+        quantity: 50, // 물건 개수 (추가)
+        minPrice: 150000,
+        maxPrice: 180000,
+        thumbnailUrl: "https://bucket/img1.jpg",
+        category: "식기류",
+        province: "서울특별시",
+        city: "강남구",
+        district: "역삼동",
+        tradeType: "직거래",
+        viewCount: 32,
+        isLike: true, // 내가 좋아요 했는지 (추가)
+        createdAt: "2024-01-10T12:30:00",
+    };
+
     return (
         <div className="w-full bg-gachigageWhite flex justify-center">
             <div className="w-full pt-[138px] h-[2000px] max-w-[402px] md:max-w-[768px] xl:max-w-[1152px] flex flex-col gap-[48px] md:gap-[60px]">
@@ -23,7 +42,9 @@ export default function ProductPage() {
                         </div>
                         <ProductAddButton />
                     </div>
-                    <div></div>
+                    <div>
+                        <Product {...product} />
+                    </div>
                 </div>
             </div>
         </div>

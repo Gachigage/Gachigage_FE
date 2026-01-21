@@ -6,10 +6,10 @@ import { useState, useRef } from "react";
 import { useProductSearchFilterStore } from "@/store/useProductSearchFilterStore";
 
 const locations = [
-    { city: "전국", district: ["전체"] },
+    { province: "전국", city: ["전체"] },
     {
-        city: "서울특별시",
-        district: [
+        province: "서울특별시",
+        city: [
             "전체",
             "종로구",
             "중구",
@@ -39,8 +39,8 @@ const locations = [
         ],
     },
     {
-        city: "부산광역시",
-        district: [
+        province: "부산광역시",
+        city: [
             "전체",
             "중구",
             "서구",
@@ -61,8 +61,8 @@ const locations = [
         ],
     },
     {
-        city: "인천광역시",
-        district: [
+        province: "인천광역시",
+        city: [
             "전체",
             "중구",
             "동구",
@@ -77,8 +77,8 @@ const locations = [
         ],
     },
     {
-        city: "대구광역시",
-        district: [
+        province: "대구광역시",
+        city: [
             "전체",
             "중구",
             "동구",
@@ -92,21 +92,21 @@ const locations = [
         ],
     },
     {
-        city: "광주광역시",
-        district: ["전체", "동구", "서구", "남구", "북구", "광산구"],
+        province: "광주광역시",
+        city: ["전체", "동구", "서구", "남구", "북구", "광산구"],
     },
     {
-        city: "대전광역시",
-        district: ["전체", "동구", "중구", "서구", "유성구", "대덕구"],
+        province: "대전광역시",
+        city: ["전체", "동구", "중구", "서구", "유성구", "대덕구"],
     },
     {
-        city: "울산광역시",
-        district: ["전체", "중구", "남구", "동구", "북구", "울주군"],
+        province: "울산광역시",
+        city: ["전체", "중구", "남구", "동구", "북구", "울주군"],
     },
-    { city: "세종특별자치시", district: ["전체"] },
+    { province: "세종특별자치시", city: ["전체"] },
     {
-        city: "경기도",
-        district: [
+        province: "경기도",
+        city: [
             "전체",
             "가평군",
             "고양시",
@@ -142,8 +142,8 @@ const locations = [
         ],
     },
     {
-        city: "강원특별자치도",
-        district: [
+        province: "강원특별자치도",
+        city: [
             "전체",
             "원주시",
             "춘천시",
@@ -166,8 +166,8 @@ const locations = [
         ],
     },
     {
-        city: "충청북도",
-        district: [
+        province: "충청북도",
+        city: [
             "전체",
             "청주시",
             "충주시",
@@ -183,8 +183,8 @@ const locations = [
         ],
     },
     {
-        city: "충청남도",
-        district: [
+        province: "충청남도",
+        city: [
             "전체",
             "천안시",
             "공주시",
@@ -204,8 +204,8 @@ const locations = [
         ],
     },
     {
-        city: "경상북도",
-        district: [
+        province: "경상북도",
+        city: [
             "전체",
             "포항시",
             "경주시",
@@ -232,8 +232,8 @@ const locations = [
         ],
     },
     {
-        city: "경상남도",
-        district: [
+        province: "경상남도",
+        city: [
             "전체",
             "창원시",
             "김해시",
@@ -256,8 +256,8 @@ const locations = [
         ],
     },
     {
-        city: "전북특별자치도",
-        district: [
+        province: "전북특별자치도",
+        city: [
             "전체",
             "전주시",
             "익산시",
@@ -276,8 +276,8 @@ const locations = [
         ],
     },
     {
-        city: "전라남도",
-        district: [
+        province: "전라남도",
+        city: [
             "전체",
             "여수시",
             "순천시",
@@ -303,7 +303,7 @@ const locations = [
             "구례군",
         ],
     },
-    { city: "제주특별자치도", district: ["전체", "제주시", "서귀포시"] },
+    { province: "제주특별자치도", city: ["전체", "제주시", "서귀포시"] },
 ];
 
 export default function ProductLocationFilter() {
@@ -315,11 +315,11 @@ export default function ProductLocationFilter() {
     );
 
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedCityIndex, setSelectedCityIndex] = useState<number>(0);
-    const [hoveredCityIndex, setHoveredCityIndex] = useState<number | null>(
+    const [selectedProvinceIndex, setSelectedProvinceIndex] = useState<number>(0);
+    const [hoveredProvinceIndex, setHoveredProvinceIndex] = useState<number | null>(
         null,
     );
-    const [hoveredDistrictIndex, setHoveredDistrictIndex] = useState<
+    const [hoveredCityIndex, setHoveredCityIndex] = useState<
         number | null
     >(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -336,42 +336,42 @@ export default function ProductLocationFilter() {
     const handleMouseLeave = () => {
         closeTimeoutRef.current = setTimeout(() => {
             setIsOpen(false);
+            setHoveredProvinceIndex(null);
             setHoveredCityIndex(null);
-            setHoveredDistrictIndex(null);
         }, 100);
     };
 
-    const handleCityClick = (index: number) => {
-        setSelectedCityIndex(index);
-        setHoveredDistrictIndex(null);
+    const handleProvinceClick = (index: number) => {
+        setSelectedProvinceIndex(index);
+        setHoveredCityIndex(null);
 
         if (index === 0) {
-            setProductLocation({ city: "전국", district: "전체" });
+            setProductLocation({ province: "전국", city: "전체" });
             setIsOpen(false);
-            setHoveredCityIndex(null);
+            setHoveredProvinceIndex(null);
         }
     };
 
-    const handleDistrictClick = (city: string, district: string) => {
-        setProductLocation({ city, district });
+    const handleCityClick = (province: string, city: string) => {
+        setProductLocation({ province, city });
         setIsOpen(false);
+        setHoveredProvinceIndex(null);
         setHoveredCityIndex(null);
-        setHoveredDistrictIndex(null);
     };
 
     const getDisplayText = () => {
         if (
-            productLocation.city === "전국" &&
-            productLocation.district.trim() !== ""
+            productLocation.province === "전국" &&
+            productLocation.city.trim() !== ""
         )
             return "전국";
-        if (productLocation.city === "" || productLocation.district === "")
+        if (productLocation.province === "" || productLocation.city === "")
             return "지역";
 
-        return `${productLocation.city} - ${productLocation.district}`;
+        return `${productLocation.province} - ${productLocation.city}`;
     };
 
-    const currentDistricts = locations[selectedCityIndex]?.district || [];
+    const currentCities = locations[selectedProvinceIndex]?.city || [];
 
     return (
         <div
@@ -384,8 +384,8 @@ export default function ProductLocationFilter() {
             <div
                 className={`w-full h-[56px] rounded-[12px] border border-gachigageGray1 font-normal text-gachigageGray5 text-[16px] flex items-center pl-[10px] gap-[10px] cursor-pointer transition-colors hover:bg-gachigageGray0 ${
                     isOpen ||
-                    (productLocation.city.trim() !== "" &&
-                        productLocation.district.trim() !== "")
+                    (productLocation.province.trim() !== "" &&
+                        productLocation.city.trim() !== "")
                         ? "bg-gachigageGray0"
                         : ""
                 }`}
@@ -393,8 +393,8 @@ export default function ProductLocationFilter() {
                 <Image src={pin} alt="pin 아이콘" width={24} height={24} />
                 <span
                     className={`truncate pr-[10px] ${
-                        productLocation.city.trim() !== "" &&
-                        productLocation.district.trim() !== ""
+                        productLocation.province.trim() !== "" &&
+                        productLocation.city.trim() !== ""
                             ? "text-gachigageGray7 font-medium"
                             : ""
                     }`}
@@ -409,26 +409,26 @@ export default function ProductLocationFilter() {
                     {/* (시/도) */}
                     <div className="w-[175px] px-[8px] py-[8px] max-h-[449px] scrollbar-hidden flex flex-col gap-[8px] border-r border-gachigageGray1 overflow-y-auto overflow-x-hidden">
                         {locations.map((loc, index) => {
-                            const isSelected = selectedCityIndex === index;
-                            const isHovered = hoveredCityIndex === index;
+                            const isSelected = selectedProvinceIndex === index;
+                            const isHovered = hoveredProvinceIndex === index;
 
                             return (
                                 <div
-                                    key={loc.city}
+                                    key={loc.province}
                                     className={`flex shrink-0 w-[159px] px-[10px] h-[41px] items-center rounded-[4px] cursor-pointer text-[13px] transition-colors ${
                                         isSelected || isHovered
                                             ? "bg-gachigageGray1 text-gachigageDark font-medium"
                                             : "text-gachigageGray7 font-normal"
                                     }`}
                                     onMouseEnter={() =>
-                                        setHoveredCityIndex(index)
+                                        setHoveredProvinceIndex(index)
                                     }
                                     onMouseLeave={() =>
-                                        setHoveredCityIndex(null)
+                                        setHoveredProvinceIndex(null)
                                     }
-                                    onClick={() => handleCityClick(index)}
+                                    onClick={() => handleProvinceClick(index)}
                                 >
-                                    {loc.city}
+                                    {loc.province}
                                 </div>
                             );
                         })}
@@ -437,38 +437,38 @@ export default function ProductLocationFilter() {
                     {/* (구/군) */}
                     <div
                         className="w-[175px] px-[8px] py-[8px] max-h-[449px] scrollbar-hidden flex flex-col overflow-y-auto overflow-x-hidden"
-                        onMouseLeave={() => setHoveredDistrictIndex(null)}
+                        onMouseLeave={() => setHoveredCityIndex(null)}
                     >
-                        {selectedCityIndex === 0 ? (
+                        {selectedProvinceIndex === 0 ? (
                             <div className="flex-1 flex flex-col items-center justify-center text-gachigageGray7 text-[13px] text-center">
                                 <p>지역을 선택하시면</p>
                                 <p>세부 항목을 볼 수 있어요.</p>
                             </div>
                         ) : (
-                            currentDistricts.map((district, index) => {
+                            currentCities.map((city: string, index: number) => {
                                 const isHovered =
-                                    hoveredDistrictIndex === index;
+                                    hoveredCityIndex === index;
 
                                 return (
                                     <div
-                                        key={district}
+                                        key={city}
                                         className={`flex shrink-0 w-[159px] px-[10px] h-[41px] items-center rounded-[4px] cursor-pointer text-[13px] transition-colors ${
                                             isHovered
                                                 ? "bg-gachigageGray1 text-gachigageDark font-medium"
                                                 : "text-gachigageGray7 font-normal"
                                         }`}
                                         onMouseEnter={() =>
-                                            setHoveredDistrictIndex(index)
+                                            setHoveredCityIndex(index)
                                         }
                                         onClick={() =>
-                                            handleDistrictClick(
-                                                locations[selectedCityIndex]
-                                                    .city,
-                                                district,
+                                            handleCityClick(
+                                                locations[selectedProvinceIndex]
+                                                    .province,
+                                                city,
                                             )
                                         }
                                     >
-                                        {district}
+                                        {city}
                                     </div>
                                 );
                             })
