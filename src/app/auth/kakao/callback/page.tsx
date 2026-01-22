@@ -2,9 +2,9 @@
 
 import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, Suspense } from "react";
 
-export default function KakaoCallbackPage() {
+function KakaoCallbackContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const requestRef = useRef(false);
@@ -40,5 +40,19 @@ export default function KakaoCallbackPage() {
         <div className="w-screen h-screen flex items-center justify-center font-semibold text-[28px]">
             로그인 중입니다...
         </div>
+    );
+}
+
+export default function KakaoCallbackPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="w-screen h-screen flex items-center justify-center font-semibold text-[28px]">
+                    로그인 중입니다...
+                </div>
+            }
+        >
+            <KakaoCallbackContent />
+        </Suspense>
     );
 }
