@@ -131,6 +131,7 @@ body {
 @media (max-width: 767px) {
     ::-webkit-scrollbar {
         width: 6px;
+        height: 6px;
     }
 
     ::-webkit-scrollbar-thumb {
@@ -142,6 +143,7 @@ body {
 @media (min-width: 768px) and (max-width: 1279px) {
     ::-webkit-scrollbar {
         width: 8px;
+        height: 8px;
     }
 
     ::-webkit-scrollbar-thumb {
@@ -153,6 +155,7 @@ body {
 @media (min-width: 1280px) {
     ::-webkit-scrollbar {
         width: 10px;
+        height: 10px;
     }
 
     ::-webkit-scrollbar-thumb {
@@ -198,4 +201,16 @@ body {
 
 .scrollbar-hidden::-webkit-scrollbar {
     display: none; /* Chrome, Safari */
+}
+
+/* 모바일에서만 스크롤바 숨기기 */
+@media (max-width: 767px) {
+    .scrollbar-hidden-mobile {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .scrollbar-hidden-mobile::-webkit-scrollbar {
+        display: none;
+    }
 }
