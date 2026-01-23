@@ -4,7 +4,7 @@ import Image from "next/image";
 import searchIcon from "@/assets/icons/search.svg";
 import { useProductSearchFilterStore } from "@/store/useProductSearchFilterStore";
 
-export default function Search() {
+export default function Search(props: { placeholderText?: string }) {
     const searchKeyword = useProductSearchFilterStore(
         (state) => state.searchKeyword,
     );
@@ -31,7 +31,7 @@ export default function Search() {
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="원하는 물품을 찾아보세요"
+                placeholder={props.placeholderText || "검색어를 입력하세요"}
                 className="flex-1 placeholder:text-gachigageGray5 font-normal focus:outline-none mr-[14px]"
             />
             <button
