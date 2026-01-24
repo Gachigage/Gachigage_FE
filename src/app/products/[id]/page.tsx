@@ -1,6 +1,7 @@
 import BackButton from "@/components/atoms/BackButton";
 import ProductDetailImgs from "@/components/atoms/ProductDetailImgs";
 import sampleImg from "@/assets/images/sampleProduct1.png";
+import ProductDetailInfo from "@/components/molecules/ProductDetailInfo";
 
 export default function ProductDetailPage() {
     const imgs = [
@@ -16,10 +17,12 @@ export default function ProductDetailPage() {
 
     return (
         <div className="w-full flex-1 bg-gachigageWhite flex justify-center">
-            <div className="w-full pt-[140px] pb-[134px] md:pb-[60px] max-w-[402px] md:max-w-[1152px] md:px-[24px] flex flex-col">
+            <div className="w-full pt-[140px] pb-[134px] md:pb-[60px] max-w-[354px] md:max-w-[1152px] md:px-[24px] flex flex-col gap-[60px]">
                 <BackButton pageName={"판매 상품 목록"} href={"/products"} />
-                <div className="flex flex-col md:flex-row"></div>
-                <ProductDetailImgs images={imgs} />
+                <div className="w-full flex flex-col md:flex-row gap-[60px] justify-center">
+                    <ProductDetailImgs images={imgs} />
+                    <ProductDetailInfo />
+                </div>
             </div>
         </div>
     );

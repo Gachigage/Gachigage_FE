@@ -103,7 +103,7 @@ export default function ProductDetailImgs({ images }: ProductDetailImgsProps) {
                     />
                 </button>
 
-                <div className="absolute bottom-[8px] right-[8px] w-[38px] h-[20px] bg-[#150502]/70 rounded-[4px] flex items-center justify-center">
+                <div className="absolute bottom-[8px] right-[8px] w-[38px] h-[20px] bg-[#150502]/60 rounded-[4px] flex items-center justify-center">
                     <span className="text-gachigageGray1 text-[16px] font-normal leading-[120%]">
                         {currentIndex + 1}/{images.length}
                     </span>
