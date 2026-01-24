@@ -6,6 +6,8 @@ import person from "@/assets/icons/person.svg";
 import eyeLine from "@/assets/icons/eyeLine.svg";
 import { formatNumber } from "@/lib/utils";
 import NaverMap from "@/components/atoms/NaverMap";
+import LikeButton from "../atoms/LikeButton";
+import InquireButton from "../atoms/InquireButton";
 
 const response = {
     productId: 111,
@@ -146,6 +148,12 @@ export default function ProductDetailInfo() {
                     latitude={response.preferredTradeLocations[0]?.latitude}
                     longitude={response.preferredTradeLocations[0]?.longitude}
                 />
+            </div>
+
+            {/* 좋아요 & 문의하기*/}
+            <div className="fixed bottom-[110px] left-0 right-0 z-50 flex gap-[4px] rounded-t-[8px] shadow-[0_-2px_4px_0_rgba(0,0,0,0.06)] overflow-hidden md:static md:bottom-auto md:z-auto md:rounded-none md:shadow-none md:overflow-visible">
+                <LikeButton isLike={false} />
+                <InquireButton />
             </div>
         </div>
     );

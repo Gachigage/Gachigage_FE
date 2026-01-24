@@ -60,7 +60,7 @@ export default function NaverMap({
     return (
         <div
             ref={mapRef}
-            className={`w-full h-[200px] md:h-[300px] overflow-hidden border border-gachigageGray3 ${className}`}
+            className={`w-full h-[200px] md:h-[300px] overflow-hidden border border-gachigageGray3 ${className} z-[1]`}
         />
     );
 }
