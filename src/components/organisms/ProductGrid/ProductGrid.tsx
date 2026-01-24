@@ -1,6 +1,7 @@
+import Link from "next/link";
 import ProductItem from "./ProductItem";
 
-export default function ProductGrid(props: {title: string, columns?: number}) {
+export default function ProductGrid(props: {title: string, columns?: number, href: string}) {
     const product = {
         name: '북유럽 디자인 체어',
         price: 180000,
@@ -30,7 +31,7 @@ export default function ProductGrid(props: {title: string, columns?: number}) {
         <div className="w-full">
             <div className="flex flex-row justify-between mb-[20px]">
                 <span className="text-dSubTitle">{props.title}</span>
-                <div className="flex items-center">더보기</div>
+                <Link href={props.href} className="flex items-center">더보기</Link>
             </div>
             <div className={`grid grid-cols-2 ${props.columns === 6 ? 'md:grid-cols-6' : 'md:grid-cols-4'} gap-2`}>
                 {productList.map((product, index) => (

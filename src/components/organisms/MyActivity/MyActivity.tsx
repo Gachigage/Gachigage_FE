@@ -1,5 +1,8 @@
 import DefaultButton from "@/components/atoms/DefaultButton"
 import MyActivityItem from "./MyActivityItem"
+import moreIcon from "@/assets/icons/more.svg"
+import Image from "next/image"
+import Link from "next/link"
 
 export default function MyActivity() {
     const post = {
@@ -15,19 +18,22 @@ export default function MyActivity() {
         post,   
         post,
         post,
-        post,
-        post,
-        post,
-        post,
     ]
     return (
-        <div className="w-full">
-            <div className="text-dSubTitle mb-[20px]">내 활동</div>
+        <div className="w-full flex flex-col gap-7">
+            <div className="text-dSubTitle">내 활동</div>
             <div className="flex flex-row gap-3">
                 <DefaultButton name="작성한 게시글" borderColor="border-[var(--color-gachigageGray3)]" />
                 <DefaultButton name="작성한 댓글" borderColor="border-[var(--color-gachigageGray3)]" />
             </div>
-            <div className="flex flex-col gap-1 border-[var(--color-gachigageGray3)] py-4">
+            <div className="flex flex-row justify-between items-center">
+                <span>최신순</span>
+                <Link href="#" className="flex flex-row gap-1">
+                    <span>더보기</span>
+                    <Image src={moreIcon} alt="더보기"/>
+                </Link>
+            </div>
+            <div className="flex flex-col gap-5 border-[var(--color-gachigageGray3)] py-4">
                 {postList.map((post, index) => (
                     <MyActivityItem post={post} index={index} key={index}/>
                 ))}
