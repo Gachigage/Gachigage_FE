@@ -1,18 +1,22 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import Image, { StaticImageData } from "next/image";
 import gray1LeftArrow from "@/assets/icons/gray1LeftArrow.svg";
 import gray1RightArrow from "@/assets/icons/gray1RightArrow.svg";
 
 interface ProductDetailImgsProps {
     // 테스트용 StaticImageData
+    // TODO: 실제 이미지 연동 과정에서 StaticImageData 삭제
     images: (string | StaticImageData)[];
 }
 
 export default function ProductDetailImgs({ images }: ProductDetailImgsProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const thumbnailContainerRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const isDraggingRef = useRef(false);
+    const startXRef = useRef(0);
+    const scrollLeftRef = useRef(0);
 
     const handlePrev = () => {
         setCurrentIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
@@ -23,12 +27,50 @@ export default function ProductDetailImgs({ images }: ProductDetailImgsProps) {
     };
 
     const handleThumbnailClick = (index: number) => {
-        setCurrentIndex(index);
+        if (!isDraggingRef.current) {
+            setCurrentIndex(index);
+        }
     };
 
+    const handleMouseDown = useCallback((e: React.MouseEvent) => {
+        if (!containerRef.current) return;
+        isDraggingRef.current = false;
+        startXRef.current = e.pageX;
+        scrollLeftRef.current = containerRef.current.scrollLeft;
+        containerRef.current.style.cursor = "grabbing";
+    }, []);
+
+    const handleMouseMove = useCallback((e: React.MouseEvent) => {
+        if (!containerRef.current || startXRef.current === 0) return;
+        const diff = Math.abs(e.pageX - startXRef.current);
+        if (diff > 5) isDraggingRef.current = true;
+        const walk = e.pageX - startXRef.current;
+        containerRef.current.scrollLeft = scrollLeftRef.current - walk;
+    }, []);
+
+    const handleMouseUp = useCallback(() => {
+        if (!containerRef.current) return;
+        startXRef.current = 0;
+        containerRef.current.style.cursor = "grab";
+        setTimeout(() => {
+            isDraggingRef.current = false;
+        }, 0);
+    }, []);
+
+    // 화면 크기 변경 시 스크롤 위치 리셋
+    useEffect(() => {
+        const handleResize = () => {
+            if (containerRef.current) {
+                containerRef.current.scrollLeft = 0;
+            }
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     return (
-        <div className="flex flex-col gap-[8px] w-[353px] md:w-[calc(100%-587px)]">
-            {/* 메인 이미지 영역 */}
+        <div className="flex flex-col gap-[8px] w-[353px] md:w-[calc(100%-587px)] min-w-[354px]">
             <div className="relative w-full aspect-square rounded-[12px] overflow-hidden">
                 <Image
                     src={images[currentIndex]}
@@ -37,10 +79,9 @@ export default function ProductDetailImgs({ images }: ProductDetailImgsProps) {
                     className="object-cover"
                 />
 
-                {/* 왼쪽 화살표 */}
                 <button
                     onClick={handlePrev}
-                    className="absolute top-1/2 left-[8px] -translate-y-1/2 w-[32px] h-[32px] cursor-pointer"
+                    className="absolute top-1/2 left-[8px] -translate-y-1/2 w-[32px] h-[32px] cursor-pointer drop-shadow-[2px_2px_4px_rgba(0,0,0,0.5)]"
                 >
                     <Image
                         src={gray1LeftArrow}
@@ -50,10 +91,9 @@ export default function ProductDetailImgs({ images }: ProductDetailImgsProps) {
                     />
                 </button>
 
-                {/* 오른쪽 화살표 */}
                 <button
                     onClick={handleNext}
-                    className="absolute top-1/2 right-[8px] -translate-y-1/2 w-[32px] h-[32px] cursor-pointer"
+                    className="absolute top-1/2 right-[8px] -translate-y-1/2 w-[32px] h-[32px] cursor-pointer drop-shadow-[2px_2px_4px_rgba(0,0,0,0.5)]"
                 >
                     <Image
                         src={gray1RightArrow}
@@ -63,18 +103,20 @@ export default function ProductDetailImgs({ images }: ProductDetailImgsProps) {
                     />
                 </button>
 
-                {/* 이미지 번호 표시 */}
-                <div className="absolute bottom-[8px] right-[8px] w-[38px] h-[20px] bg-[#150502]/70 rounded-[4px] flex items-center justify-center">
-                    <span className="text-gachigageGray1 text-[16px] font-[400] leading-[120%]">
+                <div className="absolute bottom-[8px] right-[8px] w-[38px] h-[20px] bg-[#150502]/60 rounded-[4px] flex items-center justify-center">
+                    <span className="text-gachigageGray1 text-[16px] font-normal leading-[120%]">
                         {currentIndex + 1}/{images.length}
                     </span>
                 </div>
             </div>
 
-            {/* 썸네일 이미지 영역 */}
             <div
-                ref={thumbnailContainerRef}
-                className="flex gap-[8px] overflow-x-auto scrollbar-hidden md:overflow-x-scroll"
+                ref={containerRef}
+                className="flex gap-[8px] overflow-x-auto scrollbar-hidden-mobile select-none cursor-grab pb-[12px]"
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
             >
                 {images.map((image, index) => (
                     <button
@@ -91,7 +133,8 @@ export default function ProductDetailImgs({ images }: ProductDetailImgsProps) {
                             alt={`썸네일 ${index + 1}`}
                             width={105}
                             height={105}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover pointer-events-none"
+                            draggable={false}
                         />
                     </button>
                 ))}
