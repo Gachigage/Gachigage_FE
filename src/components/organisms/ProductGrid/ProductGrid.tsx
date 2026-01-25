@@ -1,7 +1,12 @@
-import Link from "next/link";
-import ProductItem from "./ProductItem";
-
-export default function ProductGrid(props: {title: string, columns?: number, href: string}) {
+import PageName from "@/components/atoms/PageName";
+import ProductListGrid from "./ProductListGrid";
+ 
+export default function ProductGrid(props: {
+    title: string;
+    href: string;
+    columns?: number;
+}) {
+    const { title, href, columns = 6 } = props;
     const product = {
         name: '북유럽 디자인 체어',
         price: 180000,
@@ -29,18 +34,8 @@ export default function ProductGrid(props: {title: string, columns?: number, hre
     ]; 
     return (
         <div className="w-full">
-            <div className="flex flex-row justify-between mb-[20px]">
-                <span className="text-dSubTitle">{props.title}</span>
-                <Link href={props.href} className="flex items-center">더보기</Link>
-            </div>
-            <div className={`grid grid-cols-2 ${props.columns === 6 ? 'md:grid-cols-6' : 'md:grid-cols-4'} gap-2`}>
-                {productList.map((product, index) => (
-                    props.columns === 6 ? 
-                    index < 6 &&
-                    <ProductItem product={product} key={index} index={index} columns={props.columns}/> : 
-                    <ProductItem product={product} key={index} index={index} columns={props.columns}/>
-                ))}
-            </div>
+            <PageName name={title} href={href} />
+            <ProductListGrid productList={productList} columns={columns} limit={6}/>
         </div>
     )
 }

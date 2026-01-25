@@ -1,9 +1,19 @@
+"use client";
+import React, { useState } from "react";
 import DefaultButton from "@/components/atoms/DefaultButton";
+import PageName from "../atoms/PageName";
+import NicknameChangeModal from "@/components/molecules/NicknameChangeModal";
 
 export default function ProfileCard() {
+    const [changeNickName, setChangeNickName] = useState(false);
+
+    const handleClickChangeNickName = () => {
+        setChangeNickName(true);
+    }
+
     return (
         <div className="w-full">
-            <div className="text-dSubTitle mb-[20px]">내 정보</div>
+            <PageName name={"내 정보"} />
             <div className="flex flex-col
                 w-full
                 md:flex-row
@@ -34,10 +44,14 @@ export default function ProfileCard() {
                         <div>2026년 1월 13일 가입</div>
                     </div>
                     <div className="flex flex-row gap-2">
-                        <DefaultButton name="프로필 사진 등록" borderColor="border-[var(--color-gachigageSubMint)]" backgroundColor="bg-white" color="text-gachigageSubMint"/>
-                        <DefaultButton name="닉네임 변경" borderColor="border-[var(--color-gachigageSubMint)]" backgroundColor="bg-white" color="text-gachigageSubMint"/>
+                        <DefaultButton className="text-gachigageSubMint bg-white" name="프로필 사진 등록"/>
+                        <DefaultButton className="text-gachigageSubMint bg-white" name="닉네임 변경" onClick={handleClickChangeNickName}/>
                     </div>
                 </div>
+                 <NicknameChangeModal
+                    isOpen={changeNickName}
+                    onClose={() => setChangeNickName(false)}
+                />
             </div>
         </div>
     )
