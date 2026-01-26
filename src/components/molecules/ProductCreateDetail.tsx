@@ -9,6 +9,7 @@ import search from "@/assets/icons/search.svg";
 import xButton from "@/assets/icons/xButton27.svg";
 import { formatNumber, parseFormattedNumber } from "@/lib/utils";
 import { useProductCategoriesForForm } from "@/hooks/useProductCategories";
+import PlaceSearch from "../atoms/PlaceSearch";
 
 interface SaleOption {
     id: number;
@@ -486,6 +487,9 @@ export default function ProductCreateDetail() {
                     />
                 </button>
             </div>
+
+            {/* 임시 모달 */}
+            <PlaceSearch />
         </div>
     );
 }

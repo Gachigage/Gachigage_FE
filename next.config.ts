@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
                 destination: "/api/auth/:path*", // NextAuth는 그대로 유지
             },
             {
+                source: "/api/naver/:path*",
+                destination: "/api/naver/:path*",
+            },
+            {
                 source: "/api/:path*",
                 destination: "http://localhost:8080/api/:path*",
             },
