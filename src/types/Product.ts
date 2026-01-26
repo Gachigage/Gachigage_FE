@@ -17,3 +17,22 @@ export type Product = {
 export type ProductList = {
     products: Product[];
 };
+
+// 카테고리 관련 타입
+export type CategoryChild = {
+    id: number;
+    name: string;
+    children: [];
+};
+
+export type Category = {
+    id: number;
+    name: string;
+    children: CategoryChild[];
+};
+
+export type CategoryResponse = {
+    status: number;
+    message: string;
+    data: Category[];
+};
