@@ -10,6 +10,7 @@ import xButton from "@/assets/icons/xButton27.svg";
 import { formatNumber, parseFormattedNumber } from "@/lib/utils";
 import { useProductCategoriesForForm } from "@/hooks/useProductCategories";
 import PlaceSearch from "../atoms/PlaceSearch";
+import { Place } from "@/types/Naver";
 
 interface SaleOption {
     id: number;
@@ -86,6 +87,10 @@ export default function ProductCreateDetail() {
     // 거래 유형
     const [directTrade, setDirectTrade] = useState(false);
     const [deliveryTrade, setDeliveryTrade] = useState(false);
+
+    // 거래 희망 장소
+    const [isPlaceSearchOpen, setIsPlaceSearchOpen] = useState(false);
+    const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
     // 숫자만 입력 처리
     const handleNumberInput = (
@@ -465,7 +470,7 @@ export default function ProductCreateDetail() {
             </div>
 
             {/* 거래 희망 장소 */}
-            <div className="flex flex-col gap-[8px]">
+            <div className="flex flex-col gap-[12px]">
                 <div className="flex gap-[8px]">
                     <span className="text-[16px] text-gachigageDark font-semibold leading-[120%]">
                         거래 희망 장소
@@ -475,7 +480,10 @@ export default function ProductCreateDetail() {
                     </span>
                 </div>
 
-                <button className="w-full h-[40px] rounded-[8px] border border-gachigageGray3 px-[12px] flex justify-between items-center cursor-pointer">
+                <button
+                    onClick={() => setIsPlaceSearchOpen(true)}
+                    className="w-full h-[40px] rounded-[8px] border border-gachigageGray3 px-[12px] flex justify-between items-center cursor-pointer"
+                >
                     <span className="text-[16px] font-normal text-gachigageGray7">
                         희망하시는 장소를 입력해주세요.
                     </span>
@@ -486,10 +494,43 @@ export default function ProductCreateDetail() {
                         height={18}
                     />
                 </button>
+
+                {selectedPlace && (
+                    <div className="flex justify-between border-b h-[35px] px-[12px] border-gachigageGray3">
+                        <span className="text-[16px] font-medium text-gachigageDark">
+                            {selectedPlace.title}
+                        </span>
+                        <button
+                            onClick={() => setSelectedPlace(null)}
+                            className="cursor-pointer"
+                        >
+                            <Image
+                                src={xButton}
+                                alt="삭제"
+                                width={27}
+                                height={27}
+                            />
+                        </button>
+                    </div>
+                )}
             </div>
 
-            {/* 임시 모달 */}
-            <PlaceSearch />
+            {isPlaceSearchOpen && (
+                <div
+                    className="fixed inset-0 z-999 flex items-center justify-center bg-[#160502]/10"
+                    onClick={() => setIsPlaceSearchOpen(false)}
+                >
+                    <div
+                        className="w-[400px]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <PlaceSearch
+                            onClose={() => setIsPlaceSearchOpen(false)}
+                            onSelect={(place) => setSelectedPlace(place)}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
