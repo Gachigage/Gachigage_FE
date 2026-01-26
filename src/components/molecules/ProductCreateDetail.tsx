@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import grayArrowDown from "@/assets/icons/grayArrowDown.svg";
 import emptyCheckBox from "@/assets/icons/emptyCheckBox.svg";
 import checkedBox from "@/assets/icons/checkedBox.svg";
 import search from "@/assets/icons/search.svg";
 import xButton from "@/assets/icons/xButton27.svg";
 import { formatNumber, parseFormattedNumber } from "@/lib/utils";
+import { useProductCategoriesForForm } from "@/hooks/useProductCategories";
 
 interface SaleOption {
     id: number;
@@ -16,6 +17,59 @@ interface SaleOption {
 }
 
 export default function ProductCreateDetail() {
+    const { categories } = useProductCategoriesForForm();
+    const [selectedPrimaryId, setSelectedPrimaryId] = useState<number | null>(
+        null,
+    );
+    const [selectedSecondaryId, setSelectedSecondaryId] = useState<
+        number | null
+    >(null);
+    const [isPrimaryOpen, setIsPrimaryOpen] = useState(false);
+    const [isSecondaryOpen, setIsSecondaryOpen] = useState(false);
+    const primaryRef = useRef<HTMLDivElement>(null);
+    const secondaryRef = useRef<HTMLDivElement>(null);
+
+    const selectedPrimary = categories.find(
+        (cat) => cat.primaryId === selectedPrimaryId,
+    );
+    const selectedSecondary = selectedPrimary?.secondary.find(
+        (sec) => sec.id === selectedSecondaryId,
+    );
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                primaryRef.current &&
+                !primaryRef.current.contains(event.target as Node)
+            ) {
+                setIsPrimaryOpen(false);
+            }
+            if (
+                secondaryRef.current &&
+                !secondaryRef.current.contains(event.target as Node)
+            ) {
+                setIsSecondaryOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () =>
+            document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    // 업종 선택 핸들러
+    const handlePrimarySelect = (primaryId: number) => {
+        setSelectedPrimaryId(primaryId);
+        setSelectedSecondaryId(null);
+        setIsPrimaryOpen(false);
+    };
+
+    // 세부 항목 선택 핸들러
+    const handleSecondarySelect = (secondaryId: number) => {
+        setSelectedSecondaryId(secondaryId);
+        setIsSecondaryOpen(false);
+    };
+
     // 제목
     const [title, setTitle] = useState("");
 
@@ -94,29 +148,114 @@ export default function ProductCreateDetail() {
                 </div>
 
                 <div className="flex gap-[8px]">
-                    <button className="w-[173px] h-[40px] rounded-[8px] border border-gachigageGray3 flex items-center justify-between px-[12px] cursor-pointer">
-                        <span className="text-[16px] text-gachigageGray7 font-normal">
-                            업종
-                        </span>
-                        <Image
-                            src={grayArrowDown}
-                            alt="grayArrowDown 아이콘"
-                            width={26}
-                            height={26}
-                        />
-                    </button>
+                    {/* 업종 드롭다운 */}
+                    <div ref={primaryRef} className="relative">
+                        <button
+                            onClick={() => setIsPrimaryOpen(!isPrimaryOpen)}
+                            className={`w-[173px] h-[40px] rounded-[8px] border flex items-center justify-between px-[12px] cursor-pointer ${
+                                selectedPrimaryId
+                                    ? "border-gachigageDark"
+                                    : "border-gachigageGray3"
+                            }`}
+                        >
+                            <span
+                                className={`text-[16px] font-normal ${
+                                    selectedPrimaryId
+                                        ? "text-gachigageDark"
+                                        : "text-gachigageGray7"
+                                }`}
+                            >
+                                {selectedPrimary?.primary || "업종"}
+                            </span>
+                            <Image
+                                src={grayArrowDown}
+                                alt="grayArrowDown 아이콘"
+                                width={26}
+                                height={26}
+                                className={`transition-transform ${isPrimaryOpen ? "rotate-180" : ""}`}
+                            />
+                        </button>
 
-                    <button className="w-[173px] h-[40px] rounded-[8px] border border-gachigageGray3 flex items-center justify-between px-[12px] cursor-pointer">
-                        <span className="text-[16px] text-gachigageGray7 font-normal">
-                            세부 항목
-                        </span>
-                        <Image
-                            src={grayArrowDown}
-                            alt="grayArrowDown 아이콘"
-                            width={26}
-                            height={26}
-                        />
-                    </button>
+                        {isPrimaryOpen && (
+                            <div className="absolute top-[44px] left-0 z-10 w-[173px] rounded-[8px] border border-gachigageDark bg-white p-[8px] flex flex-col gap-[8px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.25)]">
+                                {categories.map((category) => (
+                                    <button
+                                        key={category.primaryId}
+                                        onClick={() =>
+                                            handlePrimarySelect(
+                                                category.primaryId,
+                                            )
+                                        }
+                                        className={`w-full rounded-[4px] px-[8px] py-[8px] text-left text-[16px] text-gachigageDark cursor-pointer transition-colors ${
+                                            selectedPrimaryId ===
+                                            category.primaryId
+                                                ? "bg-gachigageGray0 border border-gachigageGray1 font-medium"
+                                                : "font-normal hover:bg-gachigageGray0 hover:border hover:border-gachigageGray1 hover:font-medium border border-transparent"
+                                        }`}
+                                    >
+                                        {category.primary}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* 세부 항목 드롭다운 */}
+                    <div ref={secondaryRef} className="relative">
+                        <button
+                            onClick={() =>
+                                selectedPrimaryId &&
+                                setIsSecondaryOpen(!isSecondaryOpen)
+                            }
+                            disabled={!selectedPrimaryId}
+                            className={`w-[173px] h-[40px] rounded-[8px] border flex items-center justify-between px-[12px] ${
+                                selectedPrimaryId
+                                    ? "cursor-pointer"
+                                    : "cursor-not-allowed opacity-50"
+                            } ${
+                                selectedSecondaryId
+                                    ? "border-gachigageDark"
+                                    : "border-gachigageGray3"
+                            }`}
+                        >
+                            <span
+                                className={`text-[16px] font-normal ${
+                                    selectedSecondaryId
+                                        ? "text-gachigageDark"
+                                        : "text-gachigageGray7"
+                                }`}
+                            >
+                                {selectedSecondary?.name || "세부 항목"}
+                            </span>
+                            <Image
+                                src={grayArrowDown}
+                                alt="grayArrowDown 아이콘"
+                                width={26}
+                                height={26}
+                                className={`transition-transform ${isSecondaryOpen ? "rotate-180" : ""}`}
+                            />
+                        </button>
+
+                        {isSecondaryOpen && selectedPrimary && (
+                            <div className="absolute top-[44px] left-0 z-10 w-[173px] rounded-[8px] border border-gachigageDark bg-white p-[8px] flex flex-col gap-[8px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.25)]">
+                                {selectedPrimary.secondary.map((secondary) => (
+                                    <button
+                                        key={secondary.id}
+                                        onClick={() =>
+                                            handleSecondarySelect(secondary.id)
+                                        }
+                                        className={`w-full rounded-[4px] px-[8px] py-[8px] text-left text-[16px] text-gachigageDark cursor-pointer transition-colors ${
+                                            selectedSecondaryId === secondary.id
+                                                ? "bg-gachigageGray0 border border-gachigageGray1 font-medium"
+                                                : "font-normal hover:bg-gachigageGray0 hover:border hover:border-gachigageGray1 hover:font-medium border border-transparent"
+                                        }`}
+                                    >
+                                        {secondary.name}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
