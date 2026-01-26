@@ -1,5 +1,6 @@
 import BackButton from "@/components/atoms/BackButton";
 import ProductCreateImgs from "@/components/atoms/ProductCreateImgs";
+import ProductCreateDetail from "@/components/molecules/ProductCreateDetail";
 
 export default function ProductCreatePage() {
     return (
@@ -8,7 +9,7 @@ export default function ProductCreatePage() {
                 <BackButton pageName={"판매 상품 목록"} href={"/products"} />
                 <div className="w-full flex flex-col md:flex-row gap-[60px] justify-center">
                     <ProductCreateImgs />
-                    <div className="flex flex-1 flex-col gap-[36px]"></div>
+                    <ProductCreateDetail />
                 </div>
             </div>
         </div>
