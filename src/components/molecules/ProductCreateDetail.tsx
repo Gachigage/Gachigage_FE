@@ -18,7 +18,13 @@ interface SaleOption {
     price: string;
 }
 
-export default function ProductCreateDetail() {
+interface ProductCreateDetailProps {
+    imageCount: number;
+}
+
+export default function ProductCreateDetail({
+    imageCount,
+}: ProductCreateDetailProps) {
     const { categories } = useProductCategoriesForForm();
     const [selectedPrimaryId, setSelectedPrimaryId] = useState<number | null>(
         null,
@@ -531,6 +537,36 @@ export default function ProductCreateDetail() {
                     </div>
                 </div>
             )}
+
+            {(() => {
+                const hasImage = imageCount >= 1;
+                const hasCategory = selectedSecondaryId !== null;
+                const hasTitle = title.trim() !== "";
+                const hasSaleOption = saleOptions.some(
+                    (option) => option.count !== "" && option.price !== "",
+                );
+                const hasTradeType = directTrade || deliveryTrade;
+
+                const isValid =
+                    hasImage &&
+                    hasCategory &&
+                    hasTitle &&
+                    hasSaleOption &&
+                    hasTradeType;
+
+                return (
+                    <button
+                        disabled={!isValid}
+                        className={`w-full h-[56px] font-semibold leading-[120%] text-[24px] rounded-[8px] flex items-center justify-center ${
+                            isValid
+                                ? "cursor-pointer text-gachigageWhite bg-gachigageMint border-[0.5px] border-gachigageBrightMint1"
+                                : "cursor-not-allowed bg-gachigageGray3 border-[0.5px] border-gachigageGray5 text-gachigageGray5"
+                        }`}
+                    >
+                        작성완료
+                    </button>
+                );
+            })()}
         </div>
     );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import plusButton60 from "@/assets/icons/plusButton60.svg";
 import plusButton36 from "@/assets/icons/plusButton36.svg";
@@ -9,8 +9,15 @@ import xButton23 from "@/assets/icons/xButton23.svg";
 
 const MAX_IMAGES = 8;
 
-export default function ProductCreateImgs() {
-    const [images, setImages] = useState<string[]>([]);
+interface ProductCreateImgsProps {
+    images: string[];
+    setImages: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+export default function ProductCreateImgs({
+    images,
+    setImages,
+}: ProductCreateImgsProps) {
     const [dragIndex, setDragIndex] = useState<number | null>(null);
     const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
     const mainInputRef = useRef<HTMLInputElement>(null);
