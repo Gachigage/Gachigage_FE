@@ -82,3 +82,12 @@ export type UpdateProductResponse = {
         productId: number;
     };
 };
+
+export type ProductImageUploadResponse = {
+    errorCode: string;
+    status: number;
+    message: string;
+    data: {
+        imagesUrls: string[];
+    };
+};
