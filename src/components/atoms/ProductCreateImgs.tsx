@@ -175,7 +175,7 @@ export default function ProductCreateImgs({
                     {images.length < MAX_IMAGES && (
                         <button
                             onClick={handleSubInputClick}
-                            className="w-[105px] h-[105px] rounded-[8px] bg-gachigageGray2 flex items-center justify-center cursor-pointer"
+                            className="w-[105px] h-[105px] rounded-[8px] bg-gachigageGray1 flex items-center justify-center cursor-pointer"
                         >
                             <Image
                                 src={plusButton36}
