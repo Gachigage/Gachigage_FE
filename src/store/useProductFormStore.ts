@@ -1,4 +1,8 @@
 import {
+    productFormSchema,
+    ProductFormValidationResult,
+} from "@/schemas/product.schema";
+import {
     CreateProductRequest,
     PreferredTradeLocation,
     PriceTableItem,
@@ -29,6 +33,9 @@ interface ProductFormState {
     // 상품 수정시
     isEditMode: boolean;
     editProductId: number | null;
+
+    // 검증 에러
+    validationErrors: Record<string, string>;
 }
 
 interface ProductFormActions {
@@ -60,6 +67,8 @@ interface ProductFormActions {
     loadProductData: (data: Partial<ProductFormState>) => void;
 
     isValid: () => boolean;
+    validate: () => ProductFormValidationResult;
+    getFieldError: (field: string) => string | undefined;
 
     toCreateRequest: (imageUrls: string[]) => CreateProductRequest;
 
@@ -84,9 +93,10 @@ const initialState: ProductFormState = {
     preferredLocation: null,
     isEditMode: false,
     editProductId: null,
+    validationErrors: {},
 };
 
-export const useProductFormState = create<ProductFormStore>((set, get) => ({
+export const useProductFormStore = create<ProductFormStore>((set, get) => ({
     ...initialState,
     setImages: (images) => set({ images }),
     setImageFiles: (files) => set({ imageFiles: files }),
@@ -156,23 +166,42 @@ export const useProductFormState = create<ProductFormStore>((set, get) => ({
     setEditMode: (isEdit, productId) =>
         set({ isEditMode: isEdit, editProductId: productId ?? null }),
     loadProductData: (data) => set((state) => ({ ...state, ...data })),
-    isValid: () => {
-        const state = get();
-        const hasImages = state.images.length >= 1;
-        const hasCategory = state.secondaryCategoryId !== null;
-        const hasTitle = state.title.trim() !== "";
-        const hasPriceTable = state.priceTable.some(
-            (item) => item.quantity > 0 && item.price > 0,
-        );
-        const hasTradeType = state.tradeType.direct || state.tradeType.delivery;
 
-        return (
-            hasImages &&
-            hasCategory &&
-            hasTitle &&
-            hasPriceTable &&
-            hasTradeType
-        );
+    validate: () => {
+        const state = get();
+
+        const formData = {
+            images: state.images,
+            secondaryCategoryId: state.secondaryCategoryId,
+            title: state.title,
+            detail: state.detail,
+            stock: state.stock,
+            priceTable: state.priceTable,
+            tradeType: state.tradeType,
+            preferredLocation: state.preferredLocation,
+        };
+
+        const result = productFormSchema.safeParse(formData);
+
+        if (!result.success) {
+            const errors: Record<string, string> = {};
+            result.error.issues.forEach((err) => {
+                const field = err.path.join(".");
+                errors[field] = err.message;
+            });
+            set({ validationErrors: errors });
+            return { success: false, error: result.error };
+        }
+
+        set({ validationErrors: {} });
+        return { success: true, data: result.data };
+    },
+    getFieldError: (field) => {
+        return get().validationErrors[field];
+    },
+    isValid: () => {
+        const result = get().validate();
+        return result.success;
     },
     toCreateRequest: (imageUrls) => {
         const state = get();
