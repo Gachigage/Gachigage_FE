@@ -1,5 +1,4 @@
 "use client";
-import errorIcon from "@/assets/icons/alertError.svg";
 import confirmIcon from "@/assets/icons/alertCheck.svg";
 import warningIcon from "@/assets/icons/alertWarning.svg";
 import questionIcon from "@/assets/icons/alertQuestion.svg";
@@ -11,11 +10,10 @@ type AlertModalProps = {
     description: string;
     isOpen: boolean;
     onClose: () => void;
-    type: "error" | "confirm" | "warning" | "question" | "info";
+    type: "confirm" | "warning" | "question" | "info";
 };
 
 const alertIconMap = {
-    error: errorIcon,
     confirm: confirmIcon,
     warning: warningIcon,
     question: questionIcon,
@@ -23,10 +21,6 @@ const alertIconMap = {
 };
 
 const alertStyleMap = {
-    error: {
-        sideColor: "#D52E14",
-        bgColor: "rgba(213, 46, 20, 0.1)", // #D52E14 + white 90%
-    },
     warning: {
         sideColor: "#D52E14",
         bgColor: "rgba(213, 46, 20, 0.1)", // #D52E14 + white 90%

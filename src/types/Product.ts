@@ -36,3 +36,49 @@ export type CategoryResponse = {
     message: string;
     data: Category[];
 };
+
+// 상품 등록/수정 관련 타입
+
+export type PriceTableStatus = "ACTIVE" | "INACTIVE";
+export type PriceTableItem = {
+    quantity: number;
+    price: number;
+    status: PriceTableStatus;
+};
+
+export type TradeType = "DIRECT" | "DELIVERY" | "ALL";
+
+export type PreferredTradeLocation = {
+    latitude: number;
+    longitude: number;
+    address: string;
+};
+
+export type CreateProductRequest = {
+    categoryId: number;
+    title: string;
+    detail: string;
+    stock: number;
+    priceTable: PriceTableItem[];
+    tradeType: TradeType;
+    preferredTradeLocations: PreferredTradeLocation | null;
+    imageUrls: string[];
+};
+
+export type CreateProductResponse = {
+    status: number;
+    message: string;
+    data: {
+        productId: number;
+    };
+};
+
+export type UpdateProductRequest = CreateProductRequest;
+
+export type UpdateProductResponse = {
+    status: number;
+    message: string;
+    data: {
+        productId: number;
+    };
+};
