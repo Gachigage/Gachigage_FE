@@ -70,7 +70,7 @@ export default function ProductDetailImgs({ images }: ProductDetailImgsProps) {
     }, []);
 
     return (
-        <div className="flex flex-col gap-[8px] w-[353px] md:w-[calc(100%-587px)] min-w-[354px]">
+        <div className="flex flex-col gap-[8px] w-[353px] md:w-[calc(100%-587px)] md:min-w-[354px]">
             <div className="relative w-full aspect-square rounded-[12px] overflow-hidden">
                 <Image
                     src={images[currentIndex]}

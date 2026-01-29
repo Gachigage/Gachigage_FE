@@ -17,3 +17,77 @@ export type Product = {
 export type ProductList = {
     products: Product[];
 };
+
+// 카테고리 관련 타입
+export type CategoryChild = {
+    id: number;
+    name: string;
+    children: [];
+};
+
+export type Category = {
+    id: number;
+    name: string;
+    children: CategoryChild[];
+};
+
+export type CategoryResponse = {
+    status: number;
+    message: string;
+    data: Category[];
+};
+
+// 상품 등록/수정 관련 타입
+
+export type PriceTableStatus = "ACTIVE" | "INACTIVE";
+export type PriceTableItem = {
+    quantity: number;
+    price: number;
+    status: PriceTableStatus;
+};
+
+export type TradeType = "DIRECT" | "DELIVERY" | "ALL";
+
+export type PreferredTradeLocation = {
+    latitude: number;
+    longitude: number;
+    address: string;
+};
+
+export type CreateProductRequest = {
+    categoryId: number;
+    title: string;
+    detail: string;
+    stock: number;
+    priceTable: PriceTableItem[];
+    tradeType: TradeType;
+    preferredTradeLocations: PreferredTradeLocation | null;
+    imageUrls: string[];
+};
+
+export type CreateProductResponse = {
+    status: number;
+    message: string;
+    data: {
+        productId: number;
+    };
+};
+
+export type UpdateProductRequest = CreateProductRequest;
+
+export type UpdateProductResponse = {
+    status: number;
+    message: string;
+    data: {
+        productId: number;
+    };
+};
+
+export type ProductImageUploadResponse = {
+    errorCode: string;
+    status: number;
+    message: string;
+    data: {
+        imageUrls: string[];
+    };
+};
