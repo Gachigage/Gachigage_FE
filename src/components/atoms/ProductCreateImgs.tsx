@@ -6,18 +6,18 @@ import plusButton60 from "@/assets/icons/plusButton60.svg";
 import plusButton36 from "@/assets/icons/plusButton36.svg";
 import xButton36 from "@/assets/icons/xButton36.svg";
 import xButton23 from "@/assets/icons/xButton23.svg";
+import { useProductFormStore } from "@/store/useProductFormStore";
 
 const MAX_IMAGES = 8;
 
-interface ProductCreateImgsProps {
-    images: string[];
-    setImages: React.Dispatch<React.SetStateAction<string[]>>;
-}
+export default function ProductCreateImgs() {
+    // Store에서 상태 가져오기
+    const images = useProductFormStore((state) => state.images);
+    const addImages = useProductFormStore((state) => state.addImages);
+    const removeImage = useProductFormStore((state) => state.removeImage);
+    const reorderImages = useProductFormStore((state) => state.reorderImages);
 
-export default function ProductCreateImgs({
-    images,
-    setImages,
-}: ProductCreateImgsProps) {
+    // 로컬 UI 상태 (드래그)
     const [dragIndex, setDragIndex] = useState<number | null>(null);
     const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
     const mainInputRef = useRef<HTMLInputElement>(null);
@@ -34,17 +34,12 @@ export default function ProductCreateImgs({
             URL.createObjectURL(file),
         );
 
-        setImages((prev) => [...prev, ...newImageUrls]);
+        addImages(newImageUrls, filesToAdd);
         e.target.value = "";
     };
 
     const handleDeleteImage = (index: number) => {
-        setImages((prev) => {
-            const newImages = [...prev];
-            URL.revokeObjectURL(newImages[index]);
-            newImages.splice(index, 1);
-            return newImages;
-        });
+        removeImage(index);
     };
 
     const handleMainInputClick = () => {
@@ -70,12 +65,7 @@ export default function ProductCreateImgs({
             dragOverIndex !== null &&
             dragIndex !== dragOverIndex
         ) {
-            setImages((prev) => {
-                const newImages = [...prev];
-                const [draggedImage] = newImages.splice(dragIndex, 1);
-                newImages.splice(dragOverIndex, 0, draggedImage);
-                return newImages;
-            });
+            reorderImages(dragIndex, dragOverIndex);
         }
         setDragIndex(null);
         setDragOverIndex(null);

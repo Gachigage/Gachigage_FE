@@ -88,6 +88,6 @@ export type ProductImageUploadResponse = {
     status: number;
     message: string;
     data: {
-        imagesUrls: string[];
+        imageUrls: string[];
     };
 };

@@ -9,7 +9,6 @@ import { useProductFormStore } from "@/store/useProductFormStore";
 export default function ProductCategorySelect() {
     const { categories } = useProductCategoriesForForm();
 
-    // Store에서 상태 가져오기
     const primaryCategoryId = useProductFormStore(
         (state) => state.primaryCategoryId,
     );
@@ -23,13 +22,11 @@ export default function ProductCategorySelect() {
         (state) => state.setSecondaryCategoryId,
     );
 
-    // 로컬 UI 상태
     const [isPrimaryOpen, setIsPrimaryOpen] = useState(false);
     const [isSecondaryOpen, setIsSecondaryOpen] = useState(false);
     const primaryRef = useRef<HTMLDivElement>(null);
     const secondaryRef = useRef<HTMLDivElement>(null);
 
-    // 선택된 카테고리 찾기
     const selectedPrimary = categories.find(
         (cat) => cat.primaryId === primaryCategoryId,
     );
@@ -37,7 +34,6 @@ export default function ProductCategorySelect() {
         (sec) => sec.id === secondaryCategoryId,
     );
 
-    // 외부 클릭 감지
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (

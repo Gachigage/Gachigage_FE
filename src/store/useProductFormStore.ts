@@ -200,8 +200,20 @@ export const useProductFormStore = create<ProductFormStore>((set, get) => ({
         return get().validationErrors[field];
     },
     isValid: () => {
-        const result = get().validate();
-        return result.success;
+        // 상태 변경 없이 유효성만 체크 (렌더링 중 호출 가능)
+        const state = get();
+
+        const hasImages = state.images.length >= 1;
+        const hasCategory = state.secondaryCategoryId !== null;
+        const hasTitle = state.title.trim() !== "";
+        const hasPriceTable = state.priceTable.some(
+            (item) => item.quantity > 0 && item.price > 0,
+        );
+        const hasTradeType = state.tradeType.direct || state.tradeType.delivery;
+
+        return (
+            hasImages && hasCategory && hasTitle && hasPriceTable && hasTradeType
+        );
     },
     toCreateRequest: (imageUrls) => {
         const state = get();

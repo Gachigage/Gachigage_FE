@@ -43,7 +43,7 @@ export const productFormSchema = z.object({
     tradeType: z
         .object({
             direct: z.boolean(),
-            delivery: z.boolean,
+            delivery: z.boolean(),
         })
         .refine(
             (val) => val.direct || val.delivery,

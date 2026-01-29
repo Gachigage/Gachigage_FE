@@ -31,12 +31,12 @@ export const uploadProductImages = async (files: File[]): Promise<string[]> => {
         formData,
         {
             headers: {
-                "Content-Type": "multipart/form-data",
+                "Content-Type": undefined,
             },
         },
     );
 
-    return response.data.data.imagesUrls;
+    return response.data.data.imageUrls;
 };
 
 /**

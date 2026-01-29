@@ -10,18 +10,20 @@ interface MutationOptions {
 
 export const useCreateProduct = (options?: MutationOptions) => {
     const router = useRouter();
-    const { imageFiles, toCreateRequest, resetForm } =
-        useProductFormStore.getState();
 
     return useMutation({
         mutationFn: async () => {
+            // mutationFn 내부에서 최신 상태를 가져와야 함
+            const { imageFiles, toCreateRequest } =
+                useProductFormStore.getState();
+
             const imageUrls = await uploadProductImages(imageFiles);
 
             const requestData = toCreateRequest(imageUrls);
             return createProduct(requestData);
         },
         onSuccess: (data) => {
-            resetForm();
+            useProductFormStore.getState().resetForm();
             router.push(`/products/${data.data.productId}`);
             if (options?.onSuccess) options.onSuccess();
         },
