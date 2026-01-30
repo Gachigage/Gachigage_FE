@@ -4,14 +4,14 @@ export type Product = {
     price: number; // 물건 가격 (추가)
     quantity: number; // 물건 개수 (추가)
     thumbnailUrl: string;
-    category: string;
+    category?: string;
     province: string;
     city: string;
-    district: string;
-    tradeType: string;
+    district?: string;
+    tradeType?: string;
     viewCount: number;
-    isLike: boolean; // 내가 좋아요 했는지 (추가)
-    createdAt: string;
+    isLiked: boolean; // 내가 좋아요 했는지 (추가)
+    createdAt?: string;
 };
 
 export type ProductList = {
@@ -27,6 +27,7 @@ export type RelatedProduct = {
     province: string;
     city: string;
     viewCount: number;
+    isLiked: boolean;
 };
 
 export type ProductDetail = {

@@ -5,10 +5,10 @@ import heart from "@/assets/icons/heart.svg";
 import Image from "next/image";
 
 type LikeButtonProps = {
-    isLike: boolean;
+    isLiked: boolean;
 };
 
-export default function LikeButton({ isLike }: LikeButtonProps) {
+export default function LikeButton({ isLiked }: LikeButtonProps) {
     return (
         <button
             className={`w-[56px] h-[56px]  flex items-center justify-center cursor-pointer
@@ -16,7 +16,7 @@ export default function LikeButton({ isLike }: LikeButtonProps) {
                 `}
         >
             <Image
-                src={isLike ? heart : grayEmptyHeart}
+                src={isLiked ? heart : grayEmptyHeart}
                 alt="grayEmptyHeart 아이콘"
                 width={32}
                 height={32}

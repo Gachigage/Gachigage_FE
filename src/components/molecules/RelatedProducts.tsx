@@ -1,7 +1,7 @@
-import { ProductList } from "@/types/Product";
+import { RelatedProduct } from "@/types/Product";
 import Product from "../atoms/Product";
 
-export default function RelatedProducts({ products }: ProductList) {
+export default function RelatedProducts(products: RelatedProduct[]) {
     return (
         <div className="flex flex-col gap-[15px] md:gap-[24px] w-full ">
             <p className="text-[20px] md:text-[24px] font-semibold leading-[120%] text-gachigageDark">
