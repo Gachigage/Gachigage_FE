@@ -4,6 +4,7 @@ import sampleImg from "@/assets/images/sampleProduct1.png";
 import ProductDetailInfo from "@/components/molecules/ProductDetailInfo";
 import RelatedProducts from "@/components/molecules/RelatedProducts";
 import { fetchProductDetail } from "@/apis/product";
+import { auth } from "@/auth";
 
 export default async function ProductDetailPage({
     params,
@@ -11,7 +12,10 @@ export default async function ProductDetailPage({
     params: Promise<{ id: string }>;
 }) {
     const { id } = await params;
-    const product = (await fetchProductDetail(Number(id))).data;
+    const session = await auth();
+    const product = (
+        await fetchProductDetail(Number(id), session?.accessToken)
+    ).data;
     console.log(product);
 
     return (

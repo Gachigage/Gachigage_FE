@@ -4,6 +4,7 @@ import {
     CreateProductResponse,
     ProductDetailResponse,
     ProductImageUploadResponse,
+    ProductLikeResponse,
     UpdateProductRequest,
     UpdateProductResponse,
 } from "@/types/Product";
@@ -17,9 +18,13 @@ export const fetchProductCategories = async (): Promise<CategoryResponse> => {
 
 export const fetchProductDetail = async (
     productId: number,
+    accessToken?: string,
 ): Promise<ProductDetailResponse> => {
     const response = await axiosServer.get<ProductDetailResponse>(
         `/products/${productId}`,
+        accessToken
+            ? { headers: { Authorization: `Bearer ${accessToken}` } }
+            : {},
     );
     return response.data;
 };
@@ -77,6 +82,15 @@ export const updateProduct = async (
     const response = await axiosClient.put<UpdateProductResponse>(
         `/products/${productId}`,
         data,
+    );
+    return response.data;
+};
+
+export const productLike = async (
+    productId: number,
+): Promise<ProductLikeResponse> => {
+    const response = await axiosClient.post<ProductLikeResponse>(
+        `/products/${productId}/like`,
     );
     return response.data;
 };

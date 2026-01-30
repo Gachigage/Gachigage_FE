@@ -132,3 +132,15 @@ export type ProductImageUploadResponse = {
         imageUrls: string[];
     };
 };
+
+// 상품 좋아요
+
+export type ProductLikeResponse = {
+    errorCode: string;
+    status: number;
+    message: string;
+    data: {
+        liked: boolean;
+        likeCount: number;
+    };
+};

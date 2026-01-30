@@ -22,10 +22,10 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
         if (!categories) return { main: "", sub: "" };
 
         const mainCategory = categories.find(
-            (cat) => cat.id === product.category.mainCategoryId
+            (cat) => cat.id === product.category.mainCategoryId,
         );
         const subCategory = mainCategory?.children.find(
-            (child) => child.id === product.category.subCategoryId
+            (child) => child.id === product.category.subCategoryId,
         );
 
         return {
@@ -137,7 +137,10 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
 
             {/* 좋아요 & 문의하기*/}
             <div className="fixed bottom-[110px] left-0 right-0 z-50 flex gap-[4px] rounded-t-[8px] shadow-[0_-2px_4px_0_rgba(0,0,0,0.06)] overflow-hidden md:static md:bottom-auto md:z-auto md:rounded-none md:shadow-none md:overflow-visible">
-                <LikeButton isLiked={product.isLiked} />
+                <LikeButton
+                    isLiked={product.isLiked}
+                    productId={product.productId}
+                />
                 <InquireButton />
             </div>
         </div>
