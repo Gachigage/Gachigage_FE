@@ -12,6 +12,7 @@ export default async function ProductDetailPage({
 }) {
     const { id } = await params;
     const product = (await fetchProductDetail(Number(id))).data;
+    console.log(product);
 
     return (
         <div className="w-full flex-1 bg-gachigageWhite flex justify-center">
@@ -21,7 +22,7 @@ export default async function ProductDetailPage({
                     <ProductDetailImgs images={product.imageUrls} />
                     <ProductDetailInfo product={product} />
                 </div>
-                <RelatedProducts {...product.relatedProducts.products} />
+                <RelatedProducts products={product.relatedProducts.products} />
             </div>
         </div>
     );

@@ -9,20 +9,41 @@ import LikeButton from "../atoms/LikeButton";
 import InquireButton from "../atoms/InquireButton";
 import QuantityRadio from "../atoms/QuantityRadio";
 import { ProductDetail } from "@/types/Product";
+import { useProductCategories } from "@/hooks/useProductCategories";
 
 type ProductDetailInfoType = {
     product: ProductDetail;
 };
 
 export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
+    const { data: categories } = useProductCategories();
+
+    const getCategoryNames = () => {
+        if (!categories) return { main: "", sub: "" };
+
+        const mainCategory = categories.find(
+            (cat) => cat.id === product.category.mainCategoryId
+        );
+        const subCategory = mainCategory?.children.find(
+            (child) => child.id === product.category.subCategoryId
+        );
+
+        return {
+            main: mainCategory?.name ?? "",
+            sub: subCategory?.name ?? "",
+        };
+    };
+
+    const categoryNames = getCategoryNames();
+
     return (
         <div className="flex flex-1 flex-col gap-[36px]">
             <div className="flex w-full flex-col gap-[12px]">
                 {/* 카테고리 */}
                 <div className="flex gap-[4px] font-normal text-[13px] leading-[120%] text-gachigageDarkMint1">
-                    <span>{product.category.main}</span>
+                    <span>{categoryNames.main}</span>
                     <span>{">"}</span>
-                    <span>{product.category.sub}</span>
+                    <span>{categoryNames.sub}</span>
                 </div>
                 {/* 제목 */}
                 <p className="text-[18px] md:text-[28px] font-semibold leading-[120%] text-gachigageDark break-keep break-words">
@@ -105,12 +126,12 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
                         거래 희망 장소
                     </span>
                     <span className="font-normal text-[14px] text-gachigageDark/70">
-                        {product.preferredTradeLocations?.address}
+                        {product.preferredTradeLocation?.address}
                     </span>
                 </div>
                 <NaverMap
-                    latitude={product.preferredTradeLocations?.latitude}
-                    longitude={product.preferredTradeLocations?.longitude}
+                    latitude={product.preferredTradeLocation?.latitude}
+                    longitude={product.preferredTradeLocation?.longitude}
                 />
             </div>
 

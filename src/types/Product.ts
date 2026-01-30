@@ -36,14 +36,14 @@ export type ProductDetail = {
     detail: string;
     sellerName: string;
     category: {
-        main: string;
-        sub: string;
+        mainCategoryId: number;
+        subCategoryId: number;
     };
     tradeType: TradeType;
     imageUrls: string[];
     stock: number;
     priceTable: PriceTableItem[];
-    preferredTradeLocations: PreferredTradeLocation;
+    preferredTradeLocation: PreferredTradeLocation;
     viewCount: number;
     isLiked: boolean;
     relatedProducts: {
