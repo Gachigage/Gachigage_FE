@@ -2,6 +2,7 @@ import {
     CategoryResponse,
     CreateProductRequest,
     CreateProductResponse,
+    ProductDetailResponse,
     ProductImageUploadResponse,
     UpdateProductRequest,
     UpdateProductResponse,
@@ -11,6 +12,15 @@ import { axiosClient, axiosServer } from "./axiosInstance";
 export const fetchProductCategories = async (): Promise<CategoryResponse> => {
     const response =
         await axiosServer.get<CategoryResponse>("/products/category");
+    return response.data;
+};
+
+export const fetchProductDetail = async (
+    productId: number,
+): Promise<ProductDetailResponse> => {
+    const response = await axiosServer.get<ProductDetailResponse>(
+        `/products/${productId}`,
+    );
     return response.data;
 };
 

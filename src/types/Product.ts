@@ -18,6 +18,46 @@ export type ProductList = {
     products: Product[];
 };
 
+export type RelatedProduct = {
+    productId: number;
+    title: string;
+    thumbnailUrl: string;
+    price: number;
+    quantity: number;
+    province: string;
+    city: string;
+    viewCount: number;
+};
+
+export type ProductDetail = {
+    productId: number;
+    title: string;
+    detail: string;
+    sellerName: string;
+    category: {
+        main: string;
+        sub: string;
+    };
+    tradeType: TradeType;
+    imageUrls: string[];
+    stock: number;
+    priceTable: PriceTableItem[];
+    preferredTradeLocations: PreferredTradeLocation;
+    viewCount: number;
+    isLiked: boolean;
+    relatedProducts: {
+        size: number;
+        products: RelatedProduct[];
+    };
+};
+
+export type ProductDetailResponse = {
+    errorCode: string;
+    status: number;
+    message: string;
+    data: ProductDetail;
+};
+
 // 카테고리 관련 타입
 export type CategoryChild = {
     id: number;

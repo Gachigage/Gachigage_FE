@@ -12,6 +12,7 @@ export default function ProductLanding() {
     const handlePageChange = (page: number) => {
         setProductPage({ ...productPage, currentPage: page });
     };
+
     const product = {
         productId: 111,
         title: "Lorem ipsum",
