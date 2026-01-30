@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import kakao from "@/assets/icons/kakao.svg";
 
-const KAKAO_AUTH_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/oauth2/authorization/kakao`;
+const KAKAO_AUTH_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/oauth2/authorization/kakao`;
 
 export default function KakaoLoginButton() {
     return (

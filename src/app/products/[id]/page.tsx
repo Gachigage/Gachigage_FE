@@ -19,7 +19,7 @@ export default async function ProductDetailPage({
                 <BackButton pageName={"판매 상품 목록"} href={"/products"} />
                 <div className="w-full flex flex-col md:flex-row gap-[60px] justify-center">
                     <ProductDetailImgs images={product.imageUrls} />
-                    <ProductDetailInfo />
+                    <ProductDetailInfo product={product} />
                 </div>
                 <RelatedProducts {...product.relatedProducts.products} />
             </div>
