@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import gray1LeftArrow from "@/assets/icons/gray1LeftArrow.svg";
 import gray1RightArrow from "@/assets/icons/gray1RightArrow.svg";
+import sampleImg from "@/assets/images/sampleProduct1.png";
 
 interface ProductDetailImgsProps {
-    // 테스트용 StaticImageData
-    // TODO: 실제 이미지 연동 과정에서 StaticImageData 삭제
-    images: (string | StaticImageData)[];
+    images: string[];
 }
 
 export default function ProductDetailImgs({ images }: ProductDetailImgsProps) {

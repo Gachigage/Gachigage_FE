@@ -16,12 +16,12 @@ export default function Product(product: ProductType) {
     //TODO: 좋아요 취소 로직 연동
     //TODO: 조회수 로직 연동
 
-    const [isLike, setIsLike] = useState(product.isLike);
+    const [isLiked, setIsLiked] = useState(product.isLiked);
 
     const handleLike = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        setIsLike(!isLike);
+        setIsLiked(!isLiked);
     };
 
     return (
@@ -37,7 +37,7 @@ export default function Product(product: ProductType) {
                     height={165}
                     className="w-[165px] h-[165px] md:w-[224px] md:h-[224px] xl:w-[270px] xl:h-[270px]"
                 />
-                {isLike ? (
+                {isLiked ? (
                     <Image
                         src={heart}
                         alt="상품 좋아요 취소"

@@ -9,7 +9,7 @@ import ProductList from "@/components/molecules/ProductList";
 
 export default function Sales() {
     const { productPage, setProductPage } = useProductSearchFilterStore();
-    
+
     const handlePageChange = (page: number) => {
         setProductPage({ ...productPage, currentPage: page });
     };
@@ -28,7 +28,7 @@ export default function Sales() {
         district: "역삼동",
         tradeType: "직거래",
         viewCount: 32,
-        isLike: true, // 내가 좋아요 했는지 (추가)
+        isLiked: true, // 내가 좋아요 했는지 (추가)
         createdAt: "2024-01-10T12:30:00",
     };
     const products = [
@@ -50,7 +50,7 @@ export default function Sales() {
         product,
         product,
         product,
-    ]; 
+    ];
 
     return (
         <div className="w-full h-full bg-gachigageWhite flex justify-center">
@@ -71,5 +71,5 @@ export default function Sales() {
                 </div>
             </div>
         </div>
-    )
+    );
 }
