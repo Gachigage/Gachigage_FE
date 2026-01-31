@@ -13,7 +13,7 @@ const middleware = auth((req) => {
 
     if (protectedRoutes.some((route) => nextUrl.pathname.startsWith(route))) {
         if (!isLoggedIn) {
-            return NextResponse.redirect(new URL("/login", nextUrl));
+            // return NextResponse.redirect(new URL("/login", nextUrl));
         }
     }
 

@@ -25,12 +25,12 @@ export default function ChatTradeContent() {
         content2
     ]
 
-    // 날짜가 바뀌었는지 확인 (string 기준)
+    // 날짜가 바뀌었는지 확인
     function isDifferentDay(a: string, b: string) {
         return new Date(a).toDateString() !== new Date(b).toDateString();
     }
 
-    // 날짜 구분선용 포맷 (string 기준)
+    // 날짜 구분선용
     function formatDateDivider(ts: string) {
         const d = new Date(ts);
         return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
