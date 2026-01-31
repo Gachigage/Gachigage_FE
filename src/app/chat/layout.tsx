@@ -7,7 +7,7 @@ export default function ChatLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="flex flex-col w-screen">
+        <div className="flex flex-col w-screen h-screen overflow-hidden">
             <Header />
             {children}
             <MobileNavigation />
