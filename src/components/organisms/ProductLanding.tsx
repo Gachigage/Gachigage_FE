@@ -12,6 +12,7 @@ export default function ProductLanding() {
     const handlePageChange = (page: number) => {
         setProductPage({ ...productPage, currentPage: page });
     };
+
     const product = {
         productId: 111,
         title: "Lorem ipsum",
@@ -26,7 +27,7 @@ export default function ProductLanding() {
         district: "역삼동",
         tradeType: "직거래",
         viewCount: 32,
-        isLike: true, // 내가 좋아요 했는지 (추가)
+        isLiked: true, // 내가 좋아요 했는지 (추가)
         createdAt: "2024-01-10T12:30:00",
     };
     const products = [

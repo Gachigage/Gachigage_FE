@@ -205,7 +205,7 @@ export default function ProductMoneyFilter() {
                             min={0}
                             max={PRICE_STEPS.length - 1}
                             step={1}
-                            className="w-full z-2 [&_[data-slot=slider-track]]:h-[4px] [&_[data-slot=slider-track]]:bg-gachigageGray2 [&_[data-slot=slider-range]]:bg-gachigageGray5 [&_[data-slot=slider-thumb]]:w-[20px] [&_[data-slot=slider-thumb]]:h-[20px] [&_[data-slot=slider-thumb]]:border-2 [&_[data-slot=slider-thumb]]:border-gachigageGray5"
+                            className="w-full z-2 [&_[data-slot=slider-track]]:h-[4px] [&_[data-slot=slider-track]]:bg-gachigageGray1 [&_[data-slot=slider-range]]:bg-gachigageGray5 [&_[data-slot=slider-thumb]]:w-[20px] [&_[data-slot=slider-thumb]]:h-[20px] [&_[data-slot=slider-thumb]]:border-2 [&_[data-slot=slider-thumb]]:border-gachigageGray5"
                         />
                     </div>
 

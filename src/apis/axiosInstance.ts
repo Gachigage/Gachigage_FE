@@ -1,8 +1,8 @@
 import axios, { AxiosInstance } from "axios";
 import { getSession } from "next-auth/react";
 
-const BASE_URL =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
+const BASE_URL = "/api";
+const isServer = typeof window === "undefined";
 
 const axiosClient: AxiosInstance = axios.create({
     baseURL: BASE_URL,
@@ -36,7 +36,7 @@ axiosClient.interceptors.response.use(
 );
 
 const axiosServer: AxiosInstance = axios.create({
-    baseURL: BASE_URL,
+    baseURL: isServer ? process.env.NEXT_PUBLIC_API_BASE_URL : BASE_URL,
     headers: {
         "Content-Type": "application/json",
     },
