@@ -2,19 +2,21 @@
 
 import { useEffect } from "react";
 import { connectStomp, disconnectStomp } from "@/lib/stomp/stompManager";
+import { useSession } from "next-auth/react";
 
-/**
- * 
- * @param enabled 소켓 on/off flag값
- */
 export const useStomp = (enabled: boolean) => {
+  const { data: session, status } = useSession();
+  const accessToken = session?.accessToken;
+
   useEffect(() => {
     if (!enabled) return;
+    if (status !== "authenticated") return;
+    if (!accessToken) return;
 
-    connectStomp();
+    connectStomp(accessToken);
 
     return () => {
       disconnectStomp();
     };
-  }, [enabled]);
+  }, [enabled, status, accessToken]);
 };

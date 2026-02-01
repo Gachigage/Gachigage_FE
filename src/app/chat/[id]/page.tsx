@@ -8,7 +8,7 @@ import ChatTradeContent from "@/components/organisms/ChatRoom/ChatTradeContent";
 import ChatInput from "@/components/organisms/ChatRoom/ChatInput";
 import ChatUserInfo from "@/components/organisms/ChatRoom/ChatUserInfo";
 
-export default function ChatRoom() {
+export default async function ChatRoom() {
     const {isOpenOrderModal, isOpenChatTradeModal, closeTradeModal, closeOrderModal} = useChatUIStore();
     return (
         <div className="w-full min-h-screen flex justify-center">

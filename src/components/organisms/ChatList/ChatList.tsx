@@ -2,8 +2,10 @@ import DefaultButton from "@/components/atoms/DefaultButton";
 import ChatItem from "./ChatItem";
 import profileImage from "@/assets/images/profileImage.png";
 import { useChatList } from "@/hooks/useChatList";
+import { useSession } from "next-auth/react";
 
 export default function ChatList() {
+    const { data: session, status } = useSession();
     const chat = {
         username: "이태경",
         profileImage: profileImage,
@@ -25,7 +27,8 @@ export default function ChatList() {
         chat,
     ]
 
-    const { data, isLoading } = useChatList();
+    const { data, isLoading } = useChatList({accessToken: session?.accessToken});
+    // console.info(isLoading)
     console.info(data)
     return (
         <div className="

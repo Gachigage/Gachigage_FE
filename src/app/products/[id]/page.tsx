@@ -13,6 +13,7 @@ export default async function ProductDetailPage({
 }) {
     const { id } = await params;
     const session = await auth();
+    console.info(session)
     const product = (
         await fetchProductDetail(Number(id), session?.accessToken)
     ).data;

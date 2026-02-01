@@ -12,7 +12,7 @@ export default function ChatTradeInfo() {
     const [isOpenProfileImage, setIsOpenProfileImage] = useState<boolean>(true);
     const {openTradeModal} = useChatUIStore();
     return (
-        <div className="w-full h-[180px] flex flex-row shrink-0 gap-3 p-[20px] bg-[#ffffff]">
+        <div className={`w-full ${isOpenProfileImage ? 'h-[180px]' : 'h-[126px]'} flex flex-row shrink-0 gap-3 p-[20px] bg-[#ffffff]`}>
             {isOpenProfileImage && <Image src={sampleProduct1} alt="Sample Product 1" width={123} height={123}/>}
             <div className="w-full flex flex-col justify-between">
                 <div className="flex justify-between">

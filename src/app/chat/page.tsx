@@ -3,11 +3,13 @@ import ChatList from "@/components/organisms/ChatList/ChatList";
 import ChatRoom from "@/components/organisms/ChatRoom/ChatRoom";
 import { useStomp } from "@/hooks/useStomp";
 import { useMediaQuery } from "@/lib/useMediaQuery";
+import { useProductInfoStore } from "@/store/useProductInfoStore";
 
 export default function Chat() {
     const isDesktop = useMediaQuery("(min-width: 1024px)");
+    const {productInfo, setProductInfo} = useProductInfoStore();
     
-    useStomp(isDesktop ?? false); 
+    // useStomp(isDesktop ?? false); 
 
     if (isDesktop === null) return null;
 

@@ -7,7 +7,7 @@ import { useSendMessage } from "@/hooks/useSendMessage";
 export default function ChatInput() {
     const roomId = "111";
     const [message, setMessage] = useState("");
-    const { messages } = useChatRoom(roomId);
+    // const { messages } = useChatRoom(roomId);
     const { send } = useSendMessage(roomId);
 
     const handleSendMessage = () => {

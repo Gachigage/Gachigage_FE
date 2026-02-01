@@ -14,9 +14,14 @@ export type ChatListResponse = {
 }
 
 export type ChatSendMessage = {
-  chatroomId: string;
+  chatroomId: number;
   senderId: number;
   content: string;
   sendAt: string;
   messageType: string;
+}
+
+export type ChatRoomResponse = {
+    productId: number;
+    chatRoomId: number;
 }

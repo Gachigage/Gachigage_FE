@@ -1,25 +1,38 @@
 // lib/stomp/stompManager.ts
 import { Client, IMessage } from "@stomp/stompjs";
-import SockJS from "sockjs-client";
 
 let client: Client | null = null;
 let subscription: any = null;
 
-export const connectStomp = (onMessage?: (message: any) => void) => {
+
+
+export const connectStomp = (
+  accessToken: string,
+  onMessage?: (message: any) => void
+) => {
   if (client?.connected) return;
 
   client = new Client({
-    webSocketFactory: () =>
-      new SockJS("http://localhost:3306/stomp"),
+    brokerURL: "ws://gachigage.com/stomp",
+    connectHeaders: {
+      Authorization: `Bearer ${accessToken}`,
+    },
     reconnectDelay: 5000,
   });
+
+    console.info(client)
 
   client.onConnect = () => {
     console.log("✅ STOMP connected");
   };
 
+  client.onStompError = (frame) => {
+    console.error("❌ STOMP error", frame);
+  };
+
   client.activate();
 };
+
 
 export const disconnectStomp = () => {
   if (subscription) {

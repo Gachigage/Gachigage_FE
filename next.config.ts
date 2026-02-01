@@ -1,6 +1,19 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+    images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+    domains: [
+        'gachigage-bucket.s3.ap-northeast-2.amazonaws.com',
+        ],
+  },
     output: "standalone",
     async rewrites() {
         return [
@@ -14,7 +27,7 @@ const nextConfig: NextConfig = {
             },
             {
                 source: "/api/:path*",
-                destination: "http://localhost:8080/api/:path*",
+                destination: "https://gachigage.com/api/:path*",
             },
         ];
     },
