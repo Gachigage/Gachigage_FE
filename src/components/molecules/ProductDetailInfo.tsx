@@ -141,7 +141,7 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
                     isLiked={product.isLiked}
                     productId={product.productId}
                 />
-                <InquireButton />
+                <InquireButton productId={product.productId} />
             </div>
         </div>
     );

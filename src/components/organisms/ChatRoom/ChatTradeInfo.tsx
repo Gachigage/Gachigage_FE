@@ -4,16 +4,15 @@ import React, { useState } from "react";
 import sampleProduct1 from "@/assets/images/sampleProduct1.png";
 import Image from "next/image";
 import DefaultButton from "@/components/atoms/DefaultButton";
-import ChatTradeModal from "@/components/molecules/ChatTradeModal";
 import foldIcon from "@/assets/icons/fold.svg";
 import expandIcon from "@/assets/icons/expand.svg";
+import { useChatUIStore } from "@/store/chat/useChatUIStore";
 
 export default function ChatTradeInfo() {
     const [isOpenProfileImage, setIsOpenProfileImage] = useState<boolean>(true);
-    const [flagChatTradeModal, setFlagChatTradeModal] = useState<boolean>(false);
-    
+    const {openTradeModal} = useChatUIStore();
     return (
-        <div className="w-full h-[180px] flex flex-row gap-3 p-[20px] bg-[#ffffff] rounded-t-[8px]">
+        <div className="w-full h-[180px] flex flex-row shrink-0 gap-3 p-[20px] bg-[#ffffff]">
             {isOpenProfileImage && <Image src={sampleProduct1} alt="Sample Product 1" width={123} height={123}/>}
             <div className="w-full flex flex-col justify-between">
                 <div className="flex justify-between">
@@ -37,14 +36,8 @@ export default function ChatTradeInfo() {
                             }
                     </div>
                 </div>
-                <DefaultButton name="거래요청" className="w-full h-[40px] text-gachigageSubMint bg-white" onClick={() => setFlagChatTradeModal(true)}/>
+                <DefaultButton name="거래요청" className="w-full h-[40px] text-gachigageSubMint bg-white" onClick={openTradeModal}/>
             </div>
-            {flagChatTradeModal &&
-                <ChatTradeModal 
-                    isOpen={flagChatTradeModal}
-                    onClose={() => setFlagChatTradeModal(false)}
-                />
-            }
         </div>
     )
 }

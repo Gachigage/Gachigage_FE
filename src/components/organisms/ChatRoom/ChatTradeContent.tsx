@@ -22,6 +22,10 @@ export default function ChatTradeContent() {
     }
     const chattings = [
         content,
+        content2,
+        content,
+        content2,
+        content,
         content2
     ]
 
@@ -37,7 +41,7 @@ export default function ChatTradeContent() {
     }
 
     return (
-        <div className="w-full h-full bg-gachigageGray0 p-[15px]">
+        <div className="flex-1 min-h-0 overflow-hidden w-full h-full bg-gachigageGray0 p-[15px] overflow-y-auto no-scrollbar">
             {chattings.map((chat, index) => {
                 const prev = chattings[index - 1];
                 const showDateDivider = !prev || isDifferentDay(prev.createdAt, chat.createdAt);

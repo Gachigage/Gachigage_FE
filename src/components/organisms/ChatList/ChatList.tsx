@@ -1,6 +1,7 @@
 import DefaultButton from "@/components/atoms/DefaultButton";
 import ChatItem from "./ChatItem";
 import profileImage from "@/assets/images/profileImage.png";
+import { useChatList } from "@/hooks/useChatList";
 
 export default function ChatList() {
     const chat = {
@@ -8,6 +9,7 @@ export default function ChatList() {
         profileImage: profileImage,
         lastMessage: "안녕하세요, 의자 문의 드립니다. 의자 너무 예쁘네요. 꼭 사고 싶습니다. 제가기 전까지 팔지 말아 주세요.",
         timestamp: "2024-01-15T14:30:00",
+        chatId: '111'
     }
 
     const chatList = [
@@ -22,7 +24,9 @@ export default function ChatList() {
         chat,
         chat,
     ]
-    
+
+    const { data, isLoading } = useChatList();
+    console.info(data)
     return (
         <div className="
                 flex flex-col
@@ -33,6 +37,7 @@ export default function ChatList() {
                 lg:w-[270px]
                 shrink-0
                 gap-1
+                no-scrollbar
         ">
             <div className="flex flex-row gap-2 shrink-0">
                 <DefaultButton

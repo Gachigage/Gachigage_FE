@@ -1,11 +1,16 @@
 "use client";
 import ChatList from "@/components/organisms/ChatList/ChatList";
 import ChatRoom from "@/components/organisms/ChatRoom/ChatRoom";
+import { useStomp } from "@/hooks/useStomp";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 
 export default function Chat() {
     const isDesktop = useMediaQuery("(min-width: 1024px)");
+    
+    useStomp(isDesktop ?? false); 
+
     if (isDesktop === null) return null;
+
 
     return (
         <div className="w-full min-h-screen flex justify-center">

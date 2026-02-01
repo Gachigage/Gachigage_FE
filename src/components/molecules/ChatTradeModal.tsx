@@ -5,7 +5,7 @@ import Image from 'next/image';
 import removeIcon from "@/assets/icons/remove.svg";
 import subtractIcon from "@/assets/icons/subtract.svg";
 import addIcon from "@/assets/icons/add.svg";
-import OrderSheetModal from './OrderSheetModal';
+import { useChatUIStore } from '@/store/chat/useChatUIStore';
 
 interface ChatTradeModalProps {
     isOpen: boolean;
@@ -25,6 +25,8 @@ export default function ChatTradeModal({isOpen, onClose}:ChatTradeModalProps) {
         {count: 100, price: 1000000, isChecked: false, selectCnt: 0 },
         {count: 500, price: 5000000, isChecked: false, selectCnt: 0 },
     ]);
+
+    const {openOrderModal} = useChatUIStore();
     
     useEffect(() => {
         // 재고수량 * 금액 -> 구매가능한 토탈금액 계산
@@ -43,11 +45,21 @@ export default function ChatTradeModal({isOpen, onClose}:ChatTradeModalProps) {
         return tradeList.some(i => i.isChecked);
     },[tradeList])
 
+    // 거래가능금액을 넘어간 경우
+    const isOverLimit = useMemo(() => {
+        return  totalValue > tradeTotalAmount;
+    },[totalValue, tradeTotalAmount])
+
+    // 거래불가한 경우
+    const isDisabled = useMemo(() => {
+        return totalValue <= 0 || isOverLimit;
+    },[totalValue, isOverLimit])
+
     const handleCheckTrade = (item: TradeListProps) => {
         setTradeList(prev =>
             prev.map(trade =>
                 trade.price === item.price
-                    ? { ...trade, isChecked: true }
+                    ? { ...trade, isChecked: !item.isChecked }
                     : trade
             )
         );
@@ -68,7 +80,6 @@ export default function ChatTradeModal({isOpen, onClose}:ChatTradeModalProps) {
         );
     };
 
-    const isOverLimit = totalValue > tradeTotalAmount;
     if (!isOpen) return null;
 
     return createPortal(
@@ -171,7 +182,17 @@ export default function ChatTradeModal({isOpen, onClose}:ChatTradeModalProps) {
                     }
                     <div className="flex flex-row gap-2 text-[16px]">
                         <DefaultButton name="취소" className="w-[155px] h-[40px] border-gachigageGray3 text-gachigageGray7" onClick={onClose}/>
-                        <DefaultButton name="거래 요청" className={`w-[155px] h-[40px] border-gachigageGray5 bg-gachigageGray3 text-gachigageGray5 ${isOverLimit ? 'disabled:cursor-not-allowed' : ''}`} onClick={() => setIsOpenOrderModal(true)}/>
+                        <DefaultButton 
+                            name="거래 요청" 
+                            className={`w-[155px] h-[40px] 
+                                ${isDisabled ? 'border-gachigageGray5' : 'border-gachigageBrightMint1'} 
+                                ${isDisabled ? 'text-gachigageGray5 ' : 'text-[#ffffff]'}
+                                ${isDisabled ? 'bg-gachigageGray3' : 'bg-gachigageMint'}
+                                ${isDisabled ? 'disabled:cursor-not-allowed' : 'cursor-pointer'}`
+                            } 
+                            onClick={openOrderModal}
+                            disabled={isDisabled ? true : false}
+                        />
                     </div>
                 </div>
             </div>
