@@ -5,9 +5,9 @@ import rightArrow from "@/assets/icons/rightArrow.svg";
 import Image from "next/image";
 
 interface PagenationProps {
-    currentPage: number;
+    currentPage: number; // 0-indexed
     totalPages: number;
-    onPageChange: (page: number) => void;
+    onPageChange: (page: number) => void; // 0-indexed 값 전달
 }
 
 export default function Pagenation({
@@ -15,11 +15,11 @@ export default function Pagenation({
     totalPages,
     onPageChange,
 }: PagenationProps) {
-    // 페이지 범위 계산
+    // 페이지 범위 계산 (0-indexed 기반)
     const getPageRange = (perGroup: number) => {
-        const groupIndex = Math.floor((currentPage - 1) / perGroup);
-        const start = groupIndex * perGroup + 1;
-        const end = Math.min(start + perGroup - 1, totalPages);
+        const groupIndex = Math.floor(currentPage / perGroup);
+        const start = groupIndex * perGroup;
+        const end = Math.min(start + perGroup - 1, totalPages - 1);
         const pages = [];
         for (let i = start; i <= end; i++) {
             pages.push(i);
@@ -30,8 +30,8 @@ export default function Pagenation({
     const mobilePages = getPageRange(5);
     const desktopPages = getPageRange(10);
 
-    const isFirstPage = currentPage === 1;
-    const isLastPage = currentPage === totalPages;
+    const isFirstPage = currentPage === 0;
+    const isLastPage = currentPage === totalPages - 1;
 
     const handlePrev = () => {
         if (!isFirstPage) {
@@ -69,7 +69,7 @@ export default function Pagenation({
                                 ${page === currentPage ? "font-medium text-gachigageDark" : "font-normal text-gachigageGray5"}
                             `}
                         >
-                            {page}
+                            {page + 1}
                         </button>
                     ))}
                 </div>
@@ -83,7 +83,7 @@ export default function Pagenation({
                                 ${page === currentPage ? "font-medium text-gachigageDark" : "font-normal text-gachigageGray5"}
                             `}
                         >
-                            {page}
+                            {page + 1}
                         </button>
                     ))}
                 </div>
