@@ -4,14 +4,12 @@ import Image from "next/image";
 import emptyHeart from "@/assets/icons/emptyHeart.svg";
 import heart from "@/assets/icons/heart.svg";
 import eye from "@/assets/icons/eye.svg";
-import smapleProduct1 from "@/assets/images/sampleProduct1.png";
 import { useState } from "react";
 import { formatNumber } from "@/lib/utils";
 import { Product as ProductType } from "@/types/Product";
 import Link from "next/link";
 
 export default function Product(product: ProductType) {
-    //TODO: 이미지 실제 이미지로 바꾸기
     //TODO: 좋아요 로직 연동
     //TODO: 좋아요 취소 로직 연동
     //TODO: 조회수 로직 연동
@@ -31,7 +29,7 @@ export default function Product(product: ProductType) {
         >
             <div className="w-full relative mb-[7px]">
                 <Image
-                    src={smapleProduct1}
+                    src={product.thumbnailUrl}
                     alt="상품 이미지"
                     width={165}
                     height={165}

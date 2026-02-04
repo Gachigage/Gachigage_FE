@@ -39,8 +39,7 @@ const initialState: ProductSearchFilterState = {
     productType: { primary: "", secondary: "" },
     productPrice: { minPrice: 0, maxPrice: 0 },
     productLocation: { province: "", city: "" },
-    // 임시로 totalPage 변경. TODO:추후 1로 변경
-    productPage: { currentPage: 1, totalPages: 21 },
+    productPage: { currentPage: 0, totalPages: 0 },
     productGroup: "전체",
 };
 

@@ -144,3 +144,49 @@ export type ProductLikeResponse = {
         likeCount: number;
     };
 };
+
+export type ProductLandingRequest = {
+    query?: string;
+    categoryId?: number;
+    priceArrange?: {
+        minPrice: number;
+        maxPrice: number;
+    };
+    locationDto?: {
+        province: string;
+        city: string;
+    };
+    group?: string;
+    page: number;
+    size: number;
+};
+
+export type ProductLandingResponse = {
+    errorCode: string;
+    status: number;
+    message: string;
+    data: {
+        totalElements: number;
+        totalPages: number;
+        first: boolean;
+        last: boolean;
+        size: number;
+        content: {
+            productId: number;
+            title: string;
+            mainImageUrl: string;
+            province: string;
+            city: string;
+            group: string;
+            tradeType: TradeType;
+            price: number;
+            quantity: number;
+            viewCount: number;
+            createdAt: string;
+            liked: boolean;
+        }[];
+        number: number;
+        numberOfElements: number;
+        empty: boolean;
+    };
+};

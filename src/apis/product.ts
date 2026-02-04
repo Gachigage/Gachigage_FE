@@ -4,6 +4,8 @@ import {
     CreateProductResponse,
     ProductDetailResponse,
     ProductImageUploadResponse,
+    ProductLandingRequest,
+    ProductLandingResponse,
     ProductLikeResponse,
     UpdateProductRequest,
     UpdateProductResponse,
@@ -92,5 +94,30 @@ export const productLike = async (
     const response = await axiosClient.post<ProductLikeResponse>(
         `/products/${productId}/like`,
     );
+    return response.data;
+};
+
+export const fetchProducts = async (
+    data: ProductLandingRequest,
+): Promise<ProductLandingResponse> => {
+    const { priceArrange, locationDto, ...rest } = data;
+
+    const params = {
+        ...rest,
+        ...(priceArrange && {
+            minPrice: priceArrange?.minPrice,
+            maxPrice: priceArrange?.maxPrice,
+        }),
+        ...(locationDto && {
+            province: locationDto.province,
+            city: locationDto.city,
+        }),
+    };
+
+    const response = await axiosServer.get<ProductLandingResponse>(
+        `/products`,
+        { params },
+    );
+
     return response.data;
 };
