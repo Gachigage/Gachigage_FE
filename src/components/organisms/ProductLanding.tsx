@@ -22,11 +22,13 @@ export default function ProductLanding() {
                 <ProductAddButton />
             </div>
             <ProductList products={products} />
-            <Pagenation
-                currentPage={productPage.currentPage}
-                totalPages={productPage.totalPages}
-                onPageChange={handlePageChange}
-            />
+            {totalPages > 0 && (
+                <Pagenation
+                    currentPage={productPage.currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
+            )}
         </div>
     );
 }
