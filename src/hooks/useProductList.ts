@@ -25,10 +25,11 @@ export const useProductList = () => {
             params.query = searchKeyword;
         }
 
-        if (productType.secondary) {
-            params.categoryId = Number(productType.secondary);
-        } else if (productType.primary) {
-            params.categoryId = Number(productType.primary);
+        // secondaryId가 있으면 secondaryId, 없으면 primaryId 사용
+        if (productType.secondaryId !== null) {
+            params.categoryId = productType.secondaryId;
+        } else if (productType.primaryId !== null) {
+            params.categoryId = productType.primaryId;
         }
 
         if (productPrice.minPrice > 0 || productPrice.maxPrice > 0) {

@@ -1,8 +1,15 @@
 import { create } from "zustand";
 
+interface ProductType {
+    primaryId: number | null;
+    primaryName: string;
+    secondaryId: number | null;
+    secondaryName: string;
+}
+
 interface ProductSearchFilterState {
     searchKeyword: string;
-    productType: { primary: string; secondary: string };
+    productType: ProductType;
     productPrice: { minPrice: number; maxPrice: number };
     productLocation: { province: string; city: string };
     productGroup: string;
@@ -11,10 +18,7 @@ interface ProductSearchFilterState {
 
 interface ProductSearchFilterActions {
     setSearchKeyword: (keyword: string) => void;
-    setProductType: (productType: {
-        primary: string;
-        secondary: string;
-    }) => void;
+    setProductType: (productType: ProductType) => void;
     setProductPrice: (productPrice: {
         minPrice: number;
         maxPrice: number;
@@ -36,7 +40,12 @@ type ProductSearchFilterStore = ProductSearchFilterState &
 
 const initialState: ProductSearchFilterState = {
     searchKeyword: "",
-    productType: { primary: "", secondary: "" },
+    productType: {
+        primaryId: null,
+        primaryName: "",
+        secondaryId: null,
+        secondaryName: "",
+    },
     productPrice: { minPrice: 0, maxPrice: 0 },
     productLocation: { province: "", city: "" },
     productPage: { currentPage: 0, totalPages: 0 },

@@ -49,14 +49,29 @@ export default function ProductTypeFilter() {
 
         // "전체" 카테고리 클릭 시 바로 store 업데이트
         if (index === 0) {
-            setProductType({ primary: "전체", secondary: "전체" });
+            setProductType({
+                primaryId: null,
+                primaryName: "전체",
+                secondaryId: null,
+                secondaryName: "전체",
+            });
             setIsOpen(false);
             setHoveredPrimaryIndex(null);
         }
     };
 
-    const handleSecondaryClick = (primary: string, secondary: string) => {
-        setProductType({ primary, secondary });
+    const handleSecondaryClick = (
+        primaryId: number | null,
+        primaryName: string,
+        secondaryId: number | null,
+        secondaryName: string,
+    ) => {
+        setProductType({
+            primaryId,
+            primaryName,
+            secondaryId,
+            secondaryName,
+        });
         setIsOpen(false);
         setHoveredPrimaryIndex(null);
         setHoveredSecondaryIndex(null);
@@ -64,14 +79,17 @@ export default function ProductTypeFilter() {
 
     const getDisplayText = () => {
         if (
-            productType.primary === "전체" &&
-            productType.secondary.trim() !== ""
+            productType.primaryName === "전체" &&
+            productType.secondaryName.trim() !== ""
         )
             return "전체";
-        if (productType.primary === "" || productType.secondary === "")
+        if (
+            productType.primaryName === "" ||
+            productType.secondaryName === ""
+        )
             return "물품 유형";
 
-        return `${productType.primary} - ${productType.secondary}`;
+        return `${productType.primaryName} - ${productType.secondaryName}`;
     };
 
     const currentSecondaries =
@@ -88,8 +106,8 @@ export default function ProductTypeFilter() {
             <div
                 className={`w-full h-[56px] rounded-[12px] border border-gachigageGray1 font-normal text-gachigageGray5 text-[16px] flex items-center pl-[10px] gap-[10px] cursor-pointer transition-colors hover:bg-gachigageGray0 ${
                     isOpen ||
-                    (productType.primary.trim() !== "" &&
-                        productType.secondary.trim() !== "")
+                    (productType.primaryName.trim() !== "" &&
+                        productType.secondaryName.trim() !== "")
                         ? "bg-gachigageGray0"
                         : ""
                 }`}
@@ -102,8 +120,8 @@ export default function ProductTypeFilter() {
                 />
                 <span
                     className={`truncate pr-[10px] ${
-                        productType.primary.trim() !== "" &&
-                        productType.secondary.trim() !== ""
+                        productType.primaryName.trim() !== "" &&
+                        productType.secondaryName.trim() !== ""
                             ? "text-gachigageGray7 font-medium"
                             : ""
                     }`}
@@ -172,7 +190,10 @@ export default function ProductTypeFilter() {
                                         onClick={() =>
                                             handleSecondaryClick(
                                                 categories[selectedPrimaryIndex]
+                                                    .primaryId,
+                                                categories[selectedPrimaryIndex]
                                                     .primary,
+                                                secondary.id,
                                                 secondary.name,
                                             )
                                         }

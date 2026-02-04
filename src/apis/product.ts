@@ -104,14 +104,8 @@ export const fetchProducts = async (
 
     const params = {
         ...rest,
-        ...(priceArrange && {
-            minPrice: priceArrange?.minPrice,
-            maxPrice: priceArrange?.maxPrice,
-        }),
-        ...(locationDto && {
-            province: locationDto.province,
-            city: locationDto.city,
-        }),
+        ...(priceArrange && { priceArrange }),
+        ...(locationDto && { locationDto }),
     };
 
     const response = await axiosServer.get<ProductLandingResponse>(
