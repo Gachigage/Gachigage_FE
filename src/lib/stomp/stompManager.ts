@@ -1,26 +1,20 @@
-// lib/stomp/stompManager.ts
 import { Client, IMessage } from "@stomp/stompjs";
 
 let client: Client | null = null;
 let subscription: any = null;
 
-
-
 export const connectStomp = (
   accessToken: string,
-  onMessage?: (message: any) => void
 ) => {
   if (client?.connected) return;
 
   client = new Client({
-    brokerURL: "ws://gachigage.com/stomp",
+    brokerURL: "wss://gachigage.com/api/stomp",
     connectHeaders: {
       Authorization: `Bearer ${accessToken}`,
     },
     reconnectDelay: 5000,
   });
-
-    console.info(client)
 
   client.onConnect = () => {
     console.log("✅ STOMP connected");
@@ -44,13 +38,13 @@ export const disconnectStomp = () => {
 };
 
 export const subscribeRoom = (
-  roomId: string,
+  chatRoomId: string,
   callback: (message: any) => void
 ) => {
   if (!client || !client.connected) return;
 
   subscription = client.subscribe(
-    `/sub/chat/room/${roomId}`,
+    `/sub/chat/room/${chatRoomId}`,
     (message: IMessage) => {
       callback(JSON.parse(message.body));
     }
@@ -58,13 +52,19 @@ export const subscribeRoom = (
 };
 
 export const sendMessage = (payload: {
-  roomId: string;
+  chatRoomId: number;
+  messageType: string;
   content: string;
 }) => {
+  console.info(payload)
   if (!client || !client.connected) return;
 
-  client.publish({
+   client.publish({
     destination: "/pub/chat/message",
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      chatRoomId: String(payload.chatRoomId),
+      messageType: payload.messageType,
+      content: payload.content,
+    }),
   });
 };

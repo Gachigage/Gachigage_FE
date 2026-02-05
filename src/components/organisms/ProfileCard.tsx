@@ -1,15 +1,40 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+
+import Image from "next/image";
+import { useSession } from "next-auth/react";
+
 import DefaultButton from "@/components/atoms/DefaultButton";
-import PageName from "../atoms/PageName";
-import NicknameChangeModal from "@/components/molecules/NicknameChangeModal";
+import PageName from "@/components/atoms/PageName";
+import NicknameChangeModal from "@/components/atoms/NicknameChangeModal";
+
+import { useMyPageInfo } from "@/hooks/useMypageInfo";
+import { useProfileImageMutation } from "@/hooks/useProfileImageMutation";
+
 
 export default function ProfileCard() {
-    const [changeNickName, setChangeNickName] = useState(false);
+    const { mutate: changeProfileImage, isPending } = useProfileImageMutation();
+    const { data: session, status } = useSession();
 
-    const handleClickChangeNickName = () => {
-        setChangeNickName(true);
-    }
+    const [changeNickName, setChangeNickName] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    
+    const { data: userInfo, isLoading } = useMyPageInfo({
+        accessToken: session?.accessToken,
+        enabled: !!session?.accessToken,
+    });      
+
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        changeProfileImage({
+            file,
+            accessToken: session?.accessToken,
+        });
+
+        e.target.value = "";
+    };
 
     return (
         <div className="w-full">
@@ -31,21 +56,32 @@ export default function ProfileCard() {
                 border border-[#E7E6E6]
             ">
                 <div className="w-[172px] h-[172px]">
-                    <div className="w-full h-full bg-gray-300 rounded-full" />
+                   <Image
+                     src={userInfo?.profileImage ?? ''}
+                     alt={'profileImage'}
+                     width={172}
+                     height={172}
+                     className="w-[172px] h-[172px] rounded-[50%]"
+                   />
                 </div>
                 <div className="flex flex-col gap-3">
-                    <div className="text-dSubTitle">닉네임</div>
+                    <div className="text-dSubTitle">{userInfo?.nickname}</div>
                     <div className="--text-dBody text-[var(--color-gachigageGray7)] flex flex-col gap-1">
                         <div className="flex flex-row">
                             <span className="pr-[5px]">이메일:</span>
-                            <span>abcedf11111@naver.com</span>
+                            <span>{userInfo?.email}</span>
                         </div>
-                        <div>최근 3일 이내 활동</div>
-                        <div>2026년 1월 13일 가입</div>
                     </div>
                     <div className="flex flex-row gap-2">
-                        <DefaultButton className="text-gachigageSubMint bg-white" name="프로필 사진 등록"/>
-                        <DefaultButton className="text-gachigageSubMint bg-white" name="닉네임 변경" onClick={handleClickChangeNickName}/>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleFileUpload}
+                        />
+                        <DefaultButton className="w-[148px] md:w-[245px] lg:w-[245px] h-[40px] text-gachigageSubMint bg-white" name="프로필 사진 변경" onClick={() => fileInputRef.current?.click()}/>
+                        <DefaultButton className="w-[148px] md:w-[245px] lg:w-[245px] h-[40px] text-gachigageSubMint bg-white" name="닉네임 변경" onClick={() => setChangeNickName(true)}/>
                     </div>
                 </div>
                  <NicknameChangeModal

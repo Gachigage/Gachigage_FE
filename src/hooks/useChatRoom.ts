@@ -1,30 +1,28 @@
-"use client";
-
 import { useEffect, useState } from "react";
-import {
-  connectStomp,
-  subscribeRoom,
-  disconnectStomp,
-} from "@/lib/stomp/stompManager";
-import { ChatSendMessage } from "@/types/Chat";
+import { connectStomp, disconnectStomp, subscribeRoom } from "@/lib/stomp/stompManager";
 
-
-export const useChatRoom = (roomId: string | null) => {
-  const [messages, setMessages] = useState<ChatSendMessage[]>([]);
+export const useChatRoom = (
+  chatRoomId: number,
+  accessToken?: string
+) => {
+  const [messages, setMessages] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!roomId) return;
+    if (!chatRoomId || !accessToken) return;
 
-    connectStomp();
+    connectStomp(accessToken);
 
-    subscribeRoom(roomId, (message: ChatSendMessage) => {
-      setMessages(prev => [...prev, message]);
-    });
+    const timer = setTimeout(() => {
+      subscribeRoom(chatRoomId.toString(), (message) => {
+        setMessages((prev) => [...prev, message]);
+      });
+    }, 300); // 연결 완료 대기 (중요)
 
     return () => {
+      clearTimeout(timer);
       disconnectStomp();
     };
-  }, [roomId]);
+  }, [chatRoomId, accessToken]);
 
   return { messages };
 };

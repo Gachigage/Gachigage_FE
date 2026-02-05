@@ -1,11 +1,11 @@
 import { sendMessage } from "@/lib/stomp/stompManager";
 
-export const useSendMessage = (roomId: string) => {
+export const useSendMessage = (chatRoomId: number) => {
   const send = (content: string) => {
     if (!content.trim()) return;
 
     sendMessage({
-      roomId,
+      chatRoomId,
       content,
     });
   };

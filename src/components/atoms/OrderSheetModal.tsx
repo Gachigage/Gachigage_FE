@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import { createPortal } from "react-dom";
-import DefaultButton from "../atoms/DefaultButton";
+import DefaultButton from "./DefaultButton";
 import { useChatUIStore } from '@/store/chat/useChatUIStore';
 
 interface OrderSheetModalProps {

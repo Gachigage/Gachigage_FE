@@ -1,18 +1,17 @@
 "use client";
-import ChatList from "@/components/organisms/ChatList/ChatList";
-import ChatRoom from "@/components/organisms/ChatRoom/ChatRoom";
+
 import { useStomp } from "@/hooks/useStomp";
 import { useMediaQuery } from "@/lib/useMediaQuery";
-import { useProductInfoStore } from "@/store/useProductInfoStore";
+
+import ChatList from "@/components/organisms/ChatList/ChatList";
+// import ChatRoom from "@/components/organisms/ChatRoom/ChatRoom";
 
 export default function Chat() {
     const isDesktop = useMediaQuery("(min-width: 1024px)");
-    const {productInfo, setProductInfo} = useProductInfoStore();
     
-    // useStomp(isDesktop ?? false); 
+    useStomp(true); 
 
     if (isDesktop === null) return null;
-
 
     return (
         <div className="w-full min-h-screen flex justify-center">
@@ -33,7 +32,7 @@ export default function Chat() {
             ">
                 <div className="flex flex-row gap-3 flex-1 min-h-0">
                     <ChatList />
-                    {isDesktop && <ChatRoom />}
+                    {/* {isDesktop && <ChatRoom />} */}
                 </div>
             </div>
         </div>

@@ -1,16 +1,50 @@
 export type ChatDetail = {
-    chatRoomId: number;
-    otherName: string;
-    otherProfileImage: string;
-    lastMessage: string;
-    lastMessageTime: string;
-    unreadCount: number;
+  chatRoomId: number;
+  otherName: string;
+  otherProfileImage: string;
+  lastMessage: string;
+  lastMessageTime: string;
+  unreadCount: number;
 }
 
-export type ChatListResponse = {
-    status: number;
-    message: string;
-    data: ChatDetail;
+export interface ChatListResponse {
+  chatRoomId: number;
+  productId: number;
+  otherName: string;
+  otherProfileImage: string;
+  lastMessage: string;
+  lastMessageTime: string;
+  unreadCount: number;
+}
+
+export interface ChatRoomInfo {
+  chatRoomId: number;
+  sellerName: string;
+  sellerImageUrl: string;
+  buyerName: string;
+  buyerImageUrl: string;
+  productTitle: string;
+  productImageUrl: string;
+  productStatus: "SELLING" | "SOLD";
+  unreadCount: number;
+}
+export interface ChatMessage {
+  chatRoomId: number;
+  content: string;
+  senderId: number;
+  messageType: "TEXT" | "IMAGE";
+  sendAt: string;
+  read: boolean;
+  senderIsBuyer: boolean;
+}
+export interface PageResponse<T> {
+  content: T[];
+  first: boolean;
+  last: boolean;
+  size: number;
+  number: number;
+  numberOfElements: number;
+  empty: boolean;
 }
 
 export type ChatSendMessage = {
@@ -22,6 +56,6 @@ export type ChatSendMessage = {
 }
 
 export type ChatRoomResponse = {
-    productId: number;
-    chatRoomId: number;
+  productId: number;
+  chatRoomId: number;
 }

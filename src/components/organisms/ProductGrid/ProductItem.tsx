@@ -13,7 +13,7 @@ export default function ProductItem(props: {product: ProductGridProps, index: nu
                 className="w-[171px] h-[171px] md:w-[120px] md:h-[120px] xl:w-[185px] xl:h-[185px] mb-[10px]"
             />
             <div className="flex flex-col gap-2">
-                <div className="text-[16px]">{product.name}</div>
+                <div className="text-[16px] line-clamp-1">{product.title}</div>
                 <div className="flex flex-row text-[16px] font-semibold gap-1">
                     <div className="flex flex-row">
                         <span className="text-gachigageDarkMint1">{product.price}</span>

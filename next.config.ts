@@ -1,19 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-    images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-        port: '',
-        pathname: '/**',
-      },
-    ],
-    domains: [
-        'gachigage-bucket.s3.ap-northeast-2.amazonaws.com',
-        ],
-  },
     output: "standalone",
     async rewrites() {
         return [

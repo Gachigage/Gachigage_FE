@@ -1,9 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
+
+import { ChatRoomInfo } from "@/types/Chat";
+
 import backArrow from "@/assets/icons/backArrow.svg";
 
-
-export default function ChatUserInfo() {
+interface ChatUserInfoProps {
+    chatInfo: ChatRoomInfo
+}
+export default function ChatUserInfo({chatInfo}: ChatUserInfoProps) {
+ 
     return (
         <div className="w-full px-[10px] h-[62px] flex items-center bg-[#ffffff] shrink-0">
             <div className="flex items-center gap-2 cursor-pointer">
@@ -15,7 +21,7 @@ export default function ChatUserInfo() {
                     height={28}
                 />
                 </Link>
-            <span className="text-[20px] font-bold">2</span>
+            <span className="text-[20px] font-bold">{chatInfo.unreadCount}</span>
         </div>
             <span className="
                 absolute
@@ -27,7 +33,7 @@ export default function ChatUserInfo() {
                 leading-[120%]
                 whitespace-nowrap
             ">
-                PM 이태경
+                {chatInfo.sellerName}
             </span>
         </div>
     )
