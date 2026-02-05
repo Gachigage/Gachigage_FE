@@ -1,4 +1,8 @@
-import { createProduct, uploadProductImages } from "@/apis/product";
+import {
+    createProduct,
+    editProduct,
+    uploadProductImages,
+} from "@/apis/product";
 import { useProductFormStore } from "@/store/useProductFormStore";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -29,6 +33,57 @@ export const useCreateProduct = (options?: MutationOptions) => {
         },
         onError: (error) => {
             console.error("상품 등록 실패:", error);
+            if (options?.onError) options.onError(error);
+        },
+    });
+};
+
+export const useEditProduct = (options?: MutationOptions) => {
+    const router = useRouter();
+
+    return useMutation({
+        mutationFn: async (productId: number) => {
+            const { images, imageFiles, toCreateRequest } =
+                useProductFormStore.getState();
+
+            let uploadedUrls: string[] = [];
+            const validImageFiles = imageFiles.filter(
+                (file): file is File => file !== undefined && file !== null,
+            );
+            if (validImageFiles.length > 0) {
+                uploadedUrls = await uploadProductImages(validImageFiles);
+            }
+
+            let newImageIndex = 0;
+            const finalImageUrls = images.map((url) => {
+                if (url.startsWith("https://") || url.startsWith("http://")) {
+                    return url;
+                }
+                return uploadedUrls[newImageIndex++];
+            });
+
+            const requestData = toCreateRequest(finalImageUrls);
+            return editProduct(
+                {
+                    categoryId: requestData.categoryId,
+                    title: requestData.title,
+                    detail: requestData.detail,
+                    stock: requestData.stock,
+                    priceTable: requestData.priceTable,
+                    tradeType: requestData.tradeType,
+                    preferredTradeLocation: requestData.preferredTradeLocations,
+                    imageUrls: requestData.imageUrls,
+                },
+                productId,
+            );
+        },
+        onSuccess: (_data, variables) => {
+            useProductFormStore.getState().resetForm();
+            router.push(`/products/${variables}`);
+            if (options?.onSuccess) options.onSuccess();
+        },
+        onError: (error) => {
+            console.error("상품 수정 실패:", error);
             if (options?.onError) options.onError(error);
         },
     });

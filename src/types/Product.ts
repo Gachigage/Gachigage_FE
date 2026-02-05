@@ -50,6 +50,7 @@ export type ProductDetail = {
         size: number;
         products: RelatedProduct[];
     };
+    isOwner: boolean;
 };
 
 export type ProductDetailResponse = {
@@ -107,16 +108,6 @@ export type CreateProductRequest = {
 };
 
 export type CreateProductResponse = {
-    status: number;
-    message: string;
-    data: {
-        productId: number;
-    };
-};
-
-export type UpdateProductRequest = CreateProductRequest;
-
-export type UpdateProductResponse = {
     status: number;
     message: string;
     data: {
@@ -189,4 +180,22 @@ export type ProductLandingResponse = {
         numberOfElements: number;
         empty: boolean;
     };
+};
+
+export type EditProductRequest = {
+    categoryId: number;
+    title: string;
+    detail: string;
+    stock: number;
+    priceTable: PriceTableItem[];
+    tradeType: TradeType;
+    preferredTradeLocation: PreferredTradeLocation | null;
+    imageUrls: string[];
+};
+
+export type EditProductResponse = {
+    errorCode: string;
+    status: number;
+    message: string;
+    data: EditProductRequest;
 };

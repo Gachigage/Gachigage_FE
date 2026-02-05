@@ -2,13 +2,13 @@ import {
     CategoryResponse,
     CreateProductRequest,
     CreateProductResponse,
+    EditProductRequest,
+    EditProductResponse,
     ProductDetailResponse,
     ProductImageUploadResponse,
     ProductLandingRequest,
     ProductLandingResponse,
     ProductLikeResponse,
-    UpdateProductRequest,
-    UpdateProductResponse,
 } from "@/types/Product";
 import { axiosClient, axiosServer } from "./axiosInstance";
 
@@ -71,23 +71,6 @@ export const createProduct = async (
     return response.data;
 };
 
-/**
- * 상품 수정
- * @param productId 수정할 상품 ID
- * @param data 상품 수정 요청 데이터
- * @returns 수정된 상품 ID
- */
-export const updateProduct = async (
-    productId: number,
-    data: UpdateProductRequest,
-): Promise<UpdateProductResponse> => {
-    const response = await axiosClient.put<UpdateProductResponse>(
-        `/products/${productId}`,
-        data,
-    );
-    return response.data;
-};
-
 export const productLike = async (
     productId: number,
 ): Promise<ProductLikeResponse> => {
@@ -111,6 +94,24 @@ export const fetchProducts = async (
     const response = await axiosServer.get<ProductLandingResponse>(
         `/products`,
         { params },
+    );
+
+    return response.data;
+};
+
+/**
+ * 상품 수정
+ * @param productId 수정할 상품 ID
+ * @param data 상품 수정 요청 데이터
+ * @returns 수정된 상품 ID
+ */
+export const editProduct = async (
+    data: EditProductRequest,
+    productId: number,
+): Promise<EditProductResponse> => {
+    const response = await axiosClient.put<EditProductResponse>(
+        `/products/${productId}`,
+        data,
     );
 
     return response.data;
