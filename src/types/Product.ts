@@ -115,16 +115,6 @@ export type CreateProductResponse = {
     };
 };
 
-export type UpdateProductRequest = CreateProductRequest;
-
-export type UpdateProductResponse = {
-    status: number;
-    message: string;
-    data: {
-        productId: number;
-    };
-};
-
 export type ProductImageUploadResponse = {
     errorCode: string;
     status: number;
@@ -190,4 +180,22 @@ export type ProductLandingResponse = {
         numberOfElements: number;
         empty: boolean;
     };
+};
+
+export type EditProductRequest = {
+    categoryId: number;
+    title: string;
+    detail: string;
+    stock: number;
+    priceTable: PriceTableItem[];
+    tradeType: TradeType;
+    preferredTradeLocation: PreferredTradeLocation | null;
+    imageUrls: string[];
+};
+
+export type EditProductResponse = {
+    errorCode: string;
+    status: number;
+    message: string;
+    data: EditProductRequest;
 };
