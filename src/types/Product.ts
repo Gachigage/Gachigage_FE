@@ -50,6 +50,7 @@ export type ProductDetail = {
         size: number;
         products: RelatedProduct[];
     };
+    isOwner: boolean;
 };
 
 export type ProductDetailResponse = {

@@ -1,6 +1,5 @@
 import BackButton from "@/components/atoms/BackButton";
 import ProductDetailImgs from "@/components/atoms/ProductDetailImgs";
-import sampleImg from "@/assets/images/sampleProduct1.png";
 import ProductDetailInfo from "@/components/molecules/ProductDetailInfo";
 import RelatedProducts from "@/components/molecules/RelatedProducts";
 import { fetchProductDetail } from "@/apis/product";
@@ -13,9 +12,8 @@ export default async function ProductDetailPage({
 }) {
     const { id } = await params;
     const session = await auth();
-    const product = (
-        await fetchProductDetail(Number(id), session?.accessToken)
-    ).data;
+    const product = (await fetchProductDetail(Number(id), session?.accessToken))
+        .data;
     console.log(product);
 
     return (

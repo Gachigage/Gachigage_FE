@@ -1,15 +1,17 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import person from "@/assets/icons/person.svg";
 import eyeLine from "@/assets/icons/eyeLine.svg";
 import { formatNumber } from "@/lib/utils";
 import NaverMap from "@/components/atoms/NaverMap";
 import LikeButton from "../atoms/LikeButton";
-import InquireButton from "../atoms/InquireButton";
+import InquireOrEditButton from "../atoms/InquireOrEditButton";
 import QuantityRadio from "../atoms/QuantityRadio";
 import { ProductDetail } from "@/types/Product";
 import { useProductCategories } from "@/hooks/useProductCategories";
+import { useProductFormStore } from "@/store/useProductFormStore";
 
 type ProductDetailInfoType = {
     product: ProductDetail;
@@ -17,6 +19,8 @@ type ProductDetailInfoType = {
 
 export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
     const { data: categories } = useProductCategories();
+    const router = useRouter();
+    const { loadProductData } = useProductFormStore();
 
     const getCategoryNames = () => {
         if (!categories) return { main: "", sub: "" };
@@ -35,6 +39,32 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
     };
 
     const categoryNames = getCategoryNames();
+
+    const handleEditOrInquire = () => {
+        if (product.isOwner) {
+            router.push(`/products/${product.productId}/edit`);
+            loadProductData({
+                images: product.imageUrls,
+                primaryCategoryId: product.category.mainCategoryId,
+                secondaryCategoryId: product.category.subCategoryId,
+                title: product.title,
+                detail: product.detail,
+                stock: product.stock,
+                priceTable: product.priceTable,
+                tradeType: {
+                    direct:
+                        product.tradeType === "DIRECT" ||
+                        product.tradeType === "ALL",
+                    delivery:
+                        product.tradeType === "DELIVERY" ||
+                        product.tradeType === "ALL",
+                },
+                preferredLocation: product.preferredTradeLocation,
+            });
+        } else {
+            // TODO: 채팅 페이지로 라우팅.. (의진님)
+        }
+    };
 
     return (
         <div className="flex flex-1 flex-col gap-[36px]">
@@ -142,7 +172,10 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
                     productId={product.productId}
                     isInside={false}
                 />
-                <InquireButton />
+                <InquireOrEditButton
+                    isOwner={true}
+                    isEditorInquireClick={handleEditOrInquire}
+                />
             </div>
         </div>
     );
