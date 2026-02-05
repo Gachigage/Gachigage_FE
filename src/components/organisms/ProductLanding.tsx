@@ -6,6 +6,7 @@ import ProductAddButton from "../atoms/ProductAddButton";
 import ProductGroupFilter from "../atoms/ProductGroupFilter";
 import ProductList from "../molecules/ProductList";
 import { useProductList } from "@/hooks/useProductList";
+import { useEffect } from "react";
 
 export default function ProductLanding() {
     const { productPage, setProductPage } = useProductSearchFilterStore();
@@ -14,6 +15,11 @@ export default function ProductLanding() {
     const handlePageChange = (page: number) => {
         setProductPage({ ...productPage, currentPage: page });
     };
+
+    // TODO: 디버깅용 console 삭제
+    useEffect(() => {
+        console.log("products", products);
+    }, [products]);
 
     return (
         <div className="w-full flex flex-col gap-[24px]">

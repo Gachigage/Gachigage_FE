@@ -79,6 +79,7 @@ export default function ProductCreatePage() {
         <div className="w-full flex-1 bg-gachigageWhite flex justify-center">
             <AlertModal
                 isOpen={modalState.isOpen}
+                onCancel={handleCloseModal}
                 onClose={handleCloseModal}
                 title={modalState.title}
                 description={modalState.description}

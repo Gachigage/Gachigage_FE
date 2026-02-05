@@ -11,6 +11,7 @@ type AlertModalProps = {
     title: string;
     description: string;
     isOpen: boolean;
+    onCancel: () => void;
     onClose: () => void;
     type: "error" | "confirm" | "warning" | "question" | "info";
 };
@@ -27,6 +28,7 @@ export default function AlertModal({
     title,
     description,
     isOpen,
+    onCancel,
     onClose,
     type,
 }: AlertModalProps) {
@@ -55,17 +57,17 @@ export default function AlertModal({
                             : ""
                     }`}
                 />
-                <p className="break-words text-center">{description}</p>{" "}
+                <p className="break-words text-center whitespace-pre-line">{description}</p>{" "}
                 {/* [수정됨] 텍스트 중앙 정렬 */}
                 <div className="w-full flex gap-[8px]">
                     <button
-                        onClick={onClose} // [수정됨] 닫기 이벤트 연결
+                        onClick={onCancel}
                         className="w-full h-[40px] rounded-[8px] flex items-center justify-center font-normal text-gachigageGray7  border-[0.5px] border-gachigageGray3 bg-gachigageWhite cursor-pointer"
                     >
                         취소
                     </button>
                     <button
-                        onClick={onClose} // [수정됨] 닫기 이벤트 연결 (확인 버튼도 일단 닫기로 설정)
+                        onClick={onClose}
                         className="w-full h-[40px] rounded-[8px] flex items-center justify-center font-normal text-gachigageWhite  border-[0.5px] border-gachigageBrightMint1 bg-gachigageMint cursor-pointer"
                     >
                         확인
