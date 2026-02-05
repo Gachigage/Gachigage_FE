@@ -4,6 +4,7 @@ import {
     uploadProductImages,
 } from "@/apis/product";
 import { useProductFormStore } from "@/store/useProductFormStore";
+import { PriceTableStatus, ProductDetail } from "@/types/Product";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
@@ -85,6 +86,77 @@ export const useEditProduct = (options?: MutationOptions) => {
         onError: (error) => {
             console.error("상품 수정 실패:", error);
             if (options?.onError) options.onError(error);
+        },
+    });
+};
+
+export const useEditPriceTableStatus = () => {
+    const router = useRouter();
+
+    return useMutation({
+        mutationFn: async ({
+            productId,
+            product,
+            index,
+            newStatus,
+        }: {
+            productId: number;
+            product: ProductDetail;
+            index: number;
+            newStatus: PriceTableStatus;
+        }) => {
+            const updatedPriceTable = product.priceTable.map((item, i) =>
+                i === index ? { ...item, status: newStatus } : item,
+            );
+            return editProduct(
+                {
+                    categoryId: product.category.subCategoryId,
+                    title: product.title,
+                    detail: product.detail,
+                    stock: product.stock,
+                    priceTable: updatedPriceTable,
+                    tradeType: product.tradeType,
+                    preferredTradeLocation: product.preferredTradeLocation,
+                    imageUrls: product.imageUrls,
+                },
+                productId,
+            );
+        },
+        onSuccess: () => {
+            router.refresh();
+        },
+    });
+};
+
+export const useEditStock = () => {
+    const router = useRouter();
+
+    return useMutation({
+        mutationFn: async ({
+            productId,
+            product,
+            newStock,
+        }: {
+            productId: number;
+            product: ProductDetail;
+            newStock: number;
+        }) => {
+            return editProduct(
+                {
+                    categoryId: product.category.subCategoryId,
+                    title: product.title,
+                    detail: product.detail,
+                    stock: newStock,
+                    priceTable: product.priceTable,
+                    tradeType: product.tradeType,
+                    preferredTradeLocation: product.preferredTradeLocation,
+                    imageUrls: product.imageUrls,
+                },
+                productId,
+            );
+        },
+        onSuccess: () => {
+            router.refresh();
         },
     });
 };
