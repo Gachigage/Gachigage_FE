@@ -127,3 +127,36 @@ export const useEditPriceTableStatus = () => {
         },
     });
 };
+
+export const useEditStock = () => {
+    const router = useRouter();
+
+    return useMutation({
+        mutationFn: async ({
+            productId,
+            product,
+            newStock,
+        }: {
+            productId: number;
+            product: ProductDetail;
+            newStock: number;
+        }) => {
+            return editProduct(
+                {
+                    categoryId: product.category.subCategoryId,
+                    title: product.title,
+                    detail: product.detail,
+                    stock: newStock,
+                    priceTable: product.priceTable,
+                    tradeType: product.tradeType,
+                    preferredTradeLocation: product.preferredTradeLocation,
+                    imageUrls: product.imageUrls,
+                },
+                productId,
+            );
+        },
+        onSuccess: () => {
+            router.refresh();
+        },
+    });
+};

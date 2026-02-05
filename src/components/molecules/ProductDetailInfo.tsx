@@ -1,11 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import person from "@/assets/icons/person.svg";
 import eyeLine from "@/assets/icons/eyeLine.svg";
 import editPen from "@/assets/icons/editPen.svg";
-import { formatNumber } from "@/lib/utils";
+import { formatNumber, parseFormattedNumber } from "@/lib/utils";
 import NaverMap from "@/components/atoms/NaverMap";
 import LikeButton from "../atoms/LikeButton";
 import InquireOrEditButton from "../atoms/InquireOrEditButton";
@@ -13,7 +14,10 @@ import QuantityRadio from "../atoms/QuantityRadio";
 import { PriceTableStatus, ProductDetail } from "@/types/Product";
 import { useProductCategories } from "@/hooks/useProductCategories";
 import { useProductFormStore } from "@/store/useProductFormStore";
-import { useEditPriceTableStatus } from "@/hooks/useProductMutation";
+import {
+    useEditPriceTableStatus,
+    useEditStock,
+} from "@/hooks/useProductMutation";
 
 type ProductDetailInfoType = {
     product: ProductDetail;
@@ -24,6 +28,40 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
     const router = useRouter();
     const { loadProductData } = useProductFormStore();
     const { mutate: editPriceTableStatus } = useEditPriceTableStatus();
+    const { mutate: editStock } = useEditStock();
+
+    const [isStockModalOpen, setIsStockModalOpen] = useState(false);
+    const [stockInput, setStockInput] = useState(formatNumber(product.stock));
+
+    const handleOpenStockModal = () => {
+        setStockInput(formatNumber(product.stock));
+        setIsStockModalOpen(true);
+    };
+
+    const handleCloseStockModal = () => {
+        setIsStockModalOpen(false);
+    };
+
+    const handleStockInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const numericValue = parseFormattedNumber(e.target.value);
+        setStockInput(formatNumber(numericValue));
+    };
+
+    const handleStockSubmit = () => {
+        const newStock = parseFormattedNumber(stockInput);
+        editStock(
+            {
+                productId: product.productId,
+                product,
+                newStock,
+            },
+            {
+                onSuccess: () => {
+                    setIsStockModalOpen(false);
+                },
+            },
+        );
+    };
 
     const getCategoryNames = () => {
         if (!categories) return { main: "", sub: "" };
@@ -157,7 +195,10 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
                                 </span>
                                 <span>개</span>
                             </div>
-                            <button className="cursor-pointer">
+                            <button
+                                className="cursor-pointer"
+                                onClick={handleOpenStockModal}
+                            >
                                 <Image
                                     src={editPen}
                                     alt="editPen icon"
@@ -224,6 +265,48 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
                     isEditorInquireClick={handleEditOrInquire}
                 />
             </div>
+
+            {/* 남은 수량 수정 모달 (화면 가운데) */}
+            {isStockModalOpen && (
+                <div
+                    className="fixed inset-0 z-[100] flex items-center justify-center"
+                    onClick={handleCloseStockModal}
+                >
+                    <div
+                        className="w-[378px] items-center flex flex-col bg-gachigageWhite border border-gachigageGray1 shadow-[0_0_9px_0_rgba(0,0,0,0.2)] rounded-[16px] pt-[32px] pb-[24px] px-[24px] gap-[12px]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <p className="font-semibold leading-[120%]">
+                            남은 수량 변경
+                        </p>
+                        <div className="w-full h-[40px] items-center px-[7px] gap-[8px] flex rounded-[8px] border border-gachigageGray7">
+                            <input
+                                type="text"
+                                className="w-full text-right outline-none"
+                                value={stockInput}
+                                onChange={handleStockInputChange}
+                            />
+                            <span className="font-normal text-gachigageGray5">
+                                개
+                            </span>
+                        </div>
+                        <div className="w-full flex gap-[8px]">
+                            <button
+                                className="w-full h-[40px] rounded-[8px] flex items-center justify-center border-[0.5px] cursor-pointer font-normal text-gachigageGray7 bg-gachigageWhite border-gachigageGray3"
+                                onClick={handleCloseStockModal}
+                            >
+                                취소
+                            </button>
+                            <button
+                                className="w-full h-[40px] rounded-[8px] flex items-center justify-center border-[0.5px] cursor-pointer font-medium text-gachigageWhite bg-gachigageMint border-gachigageBrightMint1"
+                                onClick={handleStockSubmit}
+                            >
+                                변경하기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
