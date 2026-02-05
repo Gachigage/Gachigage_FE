@@ -4,14 +4,16 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import person from "@/assets/icons/person.svg";
 import eyeLine from "@/assets/icons/eyeLine.svg";
+import editPen from "@/assets/icons/editPen.svg";
 import { formatNumber } from "@/lib/utils";
 import NaverMap from "@/components/atoms/NaverMap";
 import LikeButton from "../atoms/LikeButton";
 import InquireOrEditButton from "../atoms/InquireOrEditButton";
 import QuantityRadio from "../atoms/QuantityRadio";
-import { ProductDetail } from "@/types/Product";
+import { PriceTableStatus, ProductDetail } from "@/types/Product";
 import { useProductCategories } from "@/hooks/useProductCategories";
 import { useProductFormStore } from "@/store/useProductFormStore";
+import { useEditPriceTableStatus } from "@/hooks/useProductMutation";
 
 type ProductDetailInfoType = {
     product: ProductDetail;
@@ -21,6 +23,7 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
     const { data: categories } = useProductCategories();
     const router = useRouter();
     const { loadProductData } = useProductFormStore();
+    const { mutate: editPriceTableStatus } = useEditPriceTableStatus();
 
     const getCategoryNames = () => {
         if (!categories) return { main: "", sub: "" };
@@ -64,6 +67,15 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
         } else {
             // TODO: 채팅 페이지로 라우팅.. (의진님)
         }
+    };
+
+    const handleStatusChange = (index: number, newStatus: PriceTableStatus) => {
+        editPriceTableStatus({
+            productId: product.productId,
+            product,
+            index,
+            newStatus,
+        });
     };
 
     return (
@@ -133,21 +145,56 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
             </p>
 
             {/* 수량 선택 */}
-            <div className="flex flex-col gap-[8px]">
-                {/* 남은 수량 */}
-                <div className="flex items-center gap-[8px] font-normal">
-                    <span>남은 수량:</span>
-                    <div className="flex items-center justify-center gap-[4px] text-gachigageDarkMint1">
-                        <span className="font-medium">
-                            {formatNumber(product.stock)}
-                        </span>
-                        <span>개</span>
+            {product.isOwner ? (
+                <div className="flex flex-col gap-[8px]">
+                    {/* 남은 수량 */}
+                    <div className="flex items-center gap-[8px] font-normal">
+                        <span>남은 수량:</span>
+                        <div className="flex items-center gap-[4px]">
+                            <div className="flex items-center justify-center gap-[4px] text-gachigageDarkMint1">
+                                <span className="font-medium">
+                                    {formatNumber(product.stock)}
+                                </span>
+                                <span>개</span>
+                            </div>
+                            <button className="cursor-pointer">
+                                <Image
+                                    src={editPen}
+                                    alt="editPen icon"
+                                    width={24}
+                                    height={24}
+                                />
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                {/* 수량/가격 라디오 버튼 */}
-                <QuantityRadio options={product.priceTable} />
-            </div>
+                    {/* 수량/가격 라디오 버튼 */}
+                    <QuantityRadio
+                        options={product.priceTable}
+                        isOwner={product.isOwner}
+                        onStatusChange={handleStatusChange}
+                    />
+                </div>
+            ) : (
+                <div className="flex flex-col gap-[8px]">
+                    {/* 남은 수량 */}
+                    <div className="flex items-center gap-[8px] font-normal">
+                        <span>남은 수량:</span>
+                        <div className="flex items-center justify-center gap-[4px] text-gachigageDarkMint1">
+                            <span className="font-medium">
+                                {formatNumber(product.stock)}
+                            </span>
+                            <span>개</span>
+                        </div>
+                    </div>
+
+                    {/* 수량/가격 라디오 버튼 */}
+                    <QuantityRadio
+                        options={product.priceTable}
+                        isOwner={product.isOwner}
+                    />
+                </div>
+            )}
 
             {/* 거래 희망 장소 */}
             <div className="w-full flex flex-col gap-[20px]">
