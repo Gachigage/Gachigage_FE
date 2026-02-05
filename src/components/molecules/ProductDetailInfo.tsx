@@ -140,6 +140,7 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
                 <LikeButton
                     isLiked={product.isLiked}
                     productId={product.productId}
+                    isInside={false}
                 />
                 <InquireButton productId={product.productId} />
             </div>
