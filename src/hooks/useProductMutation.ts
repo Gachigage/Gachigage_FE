@@ -6,7 +6,7 @@ import {
 } from "@/apis/product";
 import { useProductFormStore } from "@/store/useProductFormStore";
 import { PriceTableStatus, ProductDetail } from "@/types/Product";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 interface MutationOptions {
@@ -164,12 +164,14 @@ export const useEditStock = () => {
 
 export const useDeleteProduct = () => {
     const router = useRouter();
+    const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async ({ productId }: { productId: number }) => {
             return deleteProduct(productId);
         },
         onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["products"] });
             router.replace("/products");
         },
     });
