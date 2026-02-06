@@ -15,7 +15,7 @@ export default function BackButton({
 }: BackButtonProps) {
     if (showBack && href) {
         return (
-            <Link href={href} className="flex items-center gap-[12px]">
+            <Link href={href} className="flex w-fit items-center gap-[12px]">
                 <Image
                     src={backArrow}
                     alt="뒤로가기 아이콘"
