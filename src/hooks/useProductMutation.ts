@@ -16,6 +16,7 @@ interface MutationOptions {
 
 export const useCreateProduct = (options?: MutationOptions) => {
     const router = useRouter();
+    const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async () => {
@@ -30,6 +31,7 @@ export const useCreateProduct = (options?: MutationOptions) => {
         },
         onSuccess: (data) => {
             useProductFormStore.getState().resetForm();
+            queryClient.invalidateQueries({ queryKey: ["products"] });
             router.push(`/products/${data.data.productId}`);
             if (options?.onSuccess) options.onSuccess();
         },
