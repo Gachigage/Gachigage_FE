@@ -199,3 +199,10 @@ export type EditProductResponse = {
     message: string;
     data: EditProductRequest;
 };
+
+export type ProductDeleteResponse = {
+    errorCode: string;
+    status: number;
+    message: string;
+    data: string;
+};

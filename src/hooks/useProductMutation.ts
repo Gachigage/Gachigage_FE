@@ -1,5 +1,6 @@
 import {
     createProduct,
+    deleteProduct,
     editProduct,
     uploadProductImages,
 } from "@/apis/product";
@@ -157,6 +158,19 @@ export const useEditStock = () => {
         },
         onSuccess: () => {
             router.refresh();
+        },
+    });
+};
+
+export const useDeleteProduct = () => {
+    const router = useRouter();
+
+    return useMutation({
+        mutationFn: async ({ productId }: { productId: number }) => {
+            return deleteProduct(productId);
+        },
+        onSuccess: () => {
+            router.replace("/products");
         },
     });
 };
