@@ -19,14 +19,14 @@ export default function LikeButton({
     isInside = true,
 }: LikeButtonProps) {
     const [isLiked, setIsLiked] = useState(initialIsLiked);
-    const { toggleLike } = useProductLike(productId);
+    const { toggleLike } = useProductLike();
 
     const handleClick = async (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
         setIsLiked((prev) => !prev);
         try {
-            await toggleLike();
+            await toggleLike(productId);
         } catch {
             setIsLiked((prev) => !prev);
         }

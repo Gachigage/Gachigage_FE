@@ -91,7 +91,7 @@ export const fetchProducts = async (
         ...(locationDto && { locationDto }),
     };
 
-    const response = await axiosServer.get<ProductLandingResponse>(
+    const response = await axiosClient.get<ProductLandingResponse>(
         `/products`,
         { params },
     );
