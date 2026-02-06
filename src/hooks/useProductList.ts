@@ -39,11 +39,19 @@ export const useProductList = () => {
             };
         }
 
-        if (productLocation.province && productLocation.city) {
-            params.locationDto = {
-                province: productLocation.province,
-                city: productLocation.city,
-            };
+        // 전국이면 locationDto 자체를 보내지 않음
+        if (productLocation.province && productLocation.province !== "전국") {
+            // 전체면 province만, 그 외에는 province + city 모두 전송
+            if (productLocation.city === "전체") {
+                params.locationDto = {
+                    province: productLocation.province,
+                };
+            } else if (productLocation.city) {
+                params.locationDto = {
+                    province: productLocation.province,
+                    city: productLocation.city,
+                };
+            }
         }
 
         if (productGroup && productGroup !== "전체") {
