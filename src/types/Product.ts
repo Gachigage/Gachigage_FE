@@ -145,7 +145,7 @@ export type ProductLandingRequest = {
     };
     locationDto?: {
         province: string;
-        city?: string;
+        city?: string | null;
     };
     group?: string;
     page: number;

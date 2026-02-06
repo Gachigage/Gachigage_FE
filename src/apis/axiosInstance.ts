@@ -13,7 +13,12 @@ const flattenParams = (
     Object.entries(obj).forEach(([key, value]) => {
         const newKey = prefix ? `${prefix}.${key}` : key;
 
-        if (value === undefined || value === null) {
+        if (value === undefined) {
+            return;
+        }
+
+        if (value === null) {
+            result.push([newKey, ""]);
             return;
         }
 
