@@ -145,7 +145,7 @@ export type ProductLandingRequest = {
     };
     locationDto?: {
         province: string;
-        city: string;
+        city?: string | null;
     };
     group?: string;
     page: number;
@@ -198,4 +198,11 @@ export type EditProductResponse = {
     status: number;
     message: string;
     data: EditProductRequest;
+};
+
+export type ProductDeleteResponse = {
+    errorCode: string;
+    status: number;
+    message: string;
+    data: string;
 };

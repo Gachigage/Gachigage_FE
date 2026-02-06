@@ -4,6 +4,7 @@ import {
     CreateProductResponse,
     EditProductRequest,
     EditProductResponse,
+    ProductDeleteResponse,
     ProductDetailResponse,
     ProductImageUploadResponse,
     ProductLandingRequest,
@@ -91,7 +92,7 @@ export const fetchProducts = async (
         ...(locationDto && { locationDto }),
     };
 
-    const response = await axiosServer.get<ProductLandingResponse>(
+    const response = await axiosClient.get<ProductLandingResponse>(
         `/products`,
         { params },
     );
@@ -112,6 +113,16 @@ export const editProduct = async (
     const response = await axiosClient.put<EditProductResponse>(
         `/products/${productId}`,
         data,
+    );
+
+    return response.data;
+};
+
+export const deleteProduct = async (
+    productId: number,
+): Promise<ProductDeleteResponse> => {
+    const response = await axiosClient.delete<ProductDeleteResponse>(
+        `/products/${productId}`,
     );
 
     return response.data;
