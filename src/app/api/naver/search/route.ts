@@ -23,11 +23,7 @@ export async function GET(request: NextRequest) {
     const clientId = process.env.NAVER_CLIENT_ID;
     const clientSecret = process.env.NAVER_CLIENT_SECRET;
 
-    console.log("[Naver Search] NAVER_CLIENT_ID:", clientId ? `${clientId.slice(0, 4)}****` : "undefined");
-    console.log("[Naver Search] NAVER_CLIENT_SECRET:", clientSecret ? `${clientSecret.slice(0, 2)}****` : "undefined");
-
     if (!clientId || !clientSecret) {
-        console.log("[Naver Search] 환경변수 누락으로 500 반환");
         return NextResponse.json(
             { status: 500, message: "서버 설정 오류", data: [] },
             { status: 500 },
