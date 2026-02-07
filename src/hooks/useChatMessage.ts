@@ -16,9 +16,10 @@ export function useChatMessages({
     queryKey: ["chatMessages", chatRoomId],
     queryFn: () => fetchChatRoomMessages(chatRoomId, accessToken),
     enabled: !!chatRoomId && !!accessToken,
-    staleTime: 1000 * 60 * 60 * 24,
-     select: (data) => {
-      return [...data.content].reverse(); 
-    },
+    staleTime: 0,          
+    refetchOnMount: "always", // 같은 api여도 항상호출(url이 바뀔때)
+    refetchOnWindowFocus: false,
+    select: (data) => [...data.content].reverse(),
   });
 }
+

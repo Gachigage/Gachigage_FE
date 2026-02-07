@@ -4,25 +4,31 @@ import Link from "next/link";
 import { ChatRoomInfo } from "@/types/Chat";
 
 import backArrow from "@/assets/icons/backArrow.svg";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ChatUserInfoProps {
     chatInfo: ChatRoomInfo
 }
 export default function ChatUserInfo({chatInfo}: ChatUserInfoProps) {
- 
+    const queryClient = useQueryClient();
+
+    const handleBackClick = () => {
+        queryClient.invalidateQueries({ queryKey: ["chatList"] });
+    };
+
     return (
         <div className="w-full px-[10px] h-[62px] flex items-center bg-[#ffffff] shrink-0">
-            <div className="flex items-center gap-2 cursor-pointer">
+            <div className="flex items-center gap-2 cursor-pointer" onClick={handleBackClick}>
                 <Link href="/chat" className="flex items-center">
-                <Image
-                    src={backArrow}
-                    alt="back"
-                    width={28}
-                    height={28}
-                />
+                    <Image
+                        src={backArrow}
+                        alt="back"
+                        width={28}
+                        height={28}
+                    />
                 </Link>
-            <span className="text-[20px] font-bold">{chatInfo.unreadCount}</span>
-        </div>
+                {chatInfo.unreadCount > 0 && <span className="text-[20px] font-bold">{chatInfo.unreadCount}</span>}
+            </div>
             <span className="
                 absolute
                 left-1/2
@@ -33,7 +39,7 @@ export default function ChatUserInfo({chatInfo}: ChatUserInfoProps) {
                 leading-[120%]
                 whitespace-nowrap
             ">
-                {chatInfo.sellerName}
+                {chatInfo.amIBuyer ? chatInfo.sellerName : chatInfo.buyerName}
             </span>
         </div>
     )

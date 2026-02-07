@@ -3,11 +3,6 @@
 import { fetchChatRoomInfo } from "@/apis/chat";
 import { useQuery } from "@tanstack/react-query";
 
-interface UseChatMessagesProps {
-  chatRoomId: number;
-  accessToken?: string;
-}
-
 export function useChatInfo({
   chatRoomId,
   accessToken,

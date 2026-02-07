@@ -12,7 +12,7 @@ export default function ProductGrid(props: {
     const { title, href, columns = 6 } = props;
     const { data: session, status } = useSession();
     const { data: productList = [], isLoading } = useTradeHistory({
-        type: title === '판매 내역' ? "sales" : "likes",
+        type: title === '판매 내역' ? "sales" : "wishlist",
         page: 0,
         size: 6,
         accessToken: session?.accessToken,

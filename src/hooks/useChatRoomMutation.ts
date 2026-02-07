@@ -5,25 +5,33 @@ import { createChatRoom } from "@/apis/chat";
 import { useRouter } from "next/navigation";
 import { ChatRoomResponse } from "@/types/Chat";
 
-export function useCreateChatRoom() {
+interface createChatRoomProps {
+  productId: number;
+  accessToken: string;
+}
+export function useCreateChatRoom(options?: {
+    onError?: (error: unknown) => void;
+  }) {
   const queryClient = useQueryClient();
   const router = useRouter();
 
   return useMutation({
-    mutationFn: ({ productId, accessToken }: { productId: number; accessToken?: string }) => 
-      createChatRoom(productId, accessToken),
+    mutationFn: ({ productId, accessToken }: createChatRoomProps) => createChatRoom(productId, accessToken),
 
     onSuccess: (data: ChatRoomResponse) => {
-      queryClient.invalidateQueries({
-        queryKey: ["chatList"],
-      });
-      console.info(data);
+      if (!data?.chatRoomId) {
+        console.error("chatRoomId가 없습니다.");
+        return;
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["chatList"] });
+
       router.push(`/chat/${data.chatRoomId}`);
     },
     
     onError: (error) => {
       console.error("채팅방 생성 실패:", error);
-      // 에러 처리 (토스트 알림 등)
+      options?.onError?.(error);
     }
   });
 }

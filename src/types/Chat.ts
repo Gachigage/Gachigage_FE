@@ -27,15 +27,16 @@ export interface ChatRoomInfo {
   productImageUrl: string;
   productStatus: "SELLING" | "SOLD";
   unreadCount: number;
+  amIBuyer: boolean;
 }
 export interface ChatMessage {
   chatRoomId: number;
   content: string;
-  senderId: number;
   messageType: "TEXT" | "IMAGE";
   sendAt: string;
   read: boolean;
   senderIsBuyer: boolean;
+  me: boolean;
 }
 export interface PageResponse<T> {
   content: T[];

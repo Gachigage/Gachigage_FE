@@ -1,4 +1,4 @@
-import { ChatListResponse, ChatMessage, ChatRoomInfo, PageResponse } from "@/types/Chat";
+import { ChatListResponse, ChatMessage, ChatRoomInfo, ChatRoomResponse, PageResponse } from "@/types/Chat";
 import { axiosClient, axiosServer } from "@/apis/axiosInstance"
 
 interface ApiResponse<T> {
@@ -72,16 +72,17 @@ export const fetchChatRoomInfo = async (
  * @param productId 상품ID
  * @param accessToken 인증 토큰
  */
-export const createChatRoom = async(
-    productId: number,
-    accessToken?: string
-): Promise<number> => {
-    const response = await axiosClient.post<number>(
-        "/chats", 
-        { productId },
-        accessToken ? { 
-            headers: { Authorization: `Bearer ${accessToken}` } 
-        } : {}
-    );
-    return response.data;
-}
+export const createChatRoom = async (
+  productId: number,
+  accessToken?: string
+): Promise<ChatRoomResponse> => {
+  const response = await axiosClient.post<{ data: ChatRoomResponse }>(
+    "/chats",
+    { productId },
+    accessToken
+      ? { headers: { Authorization: `Bearer ${accessToken}` } }
+      : {}
+  );
+
+  return response.data.data; 
+};

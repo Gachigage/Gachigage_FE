@@ -10,7 +10,7 @@ export function useTradeHistory({
   accessToken,
   enabled,
 }: {
-  type: "purchases" | "sales" | "likes";
+  type: "purchases" | "sales" | "wishlist";
   page: number;
   size: number;
   accessToken?: string;

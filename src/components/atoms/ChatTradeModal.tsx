@@ -6,28 +6,43 @@ import removeIcon from "@/assets/icons/remove.svg";
 import subtractIcon from "@/assets/icons/subtract.svg";
 import addIcon from "@/assets/icons/add.svg";
 import { useChatUIStore } from '@/store/chat/useChatUIStore';
+import { useTradeList } from '@/hooks/useTradeList';
+import { useConfirmTrade } from '@/hooks/useConfirmTrade';
 
 interface ChatTradeModalProps {
     isOpen: boolean;
+    chatRoomId: number;
     onClose: () => void;
 }
 interface TradeListProps {
-    count: number;
+    id: number; 
+    quantity: number;
     price: number;
     isChecked: boolean;
     selectCnt: number;
 }
 
-export default function ChatTradeModal({isOpen, onClose}:ChatTradeModalProps) {
+export default function ChatTradeModal({isOpen, chatRoomId, onClose}:ChatTradeModalProps) {
     const [tradeTotalAmount, setTradeTotalAmount] = useState<number>(0);
-    const [tradeList, setTradeList] = useState<TradeListProps[]>([
-        {count: 10, price: 100000, isChecked: false, selectCnt: 0},
-        {count: 100, price: 1000000, isChecked: false, selectCnt: 0 },
-        {count: 500, price: 5000000, isChecked: false, selectCnt: 0 },
-    ]);
+    const { data: tradeData = [], isLoading, error } = useTradeList(chatRoomId);
+    const [tradeList, setTradeList] = useState<TradeListProps[]>([]);
+    const { mutate: confirmTradeMutate } = useConfirmTrade(chatRoomId);
 
-    const {openOrderModal} = useChatUIStore();
-    
+    useEffect(() => {
+        if (!tradeData.length) return;
+
+        setTradeList(
+            tradeData.map(item => ({
+            ...item,
+            isChecked: false,
+            selectCnt: 0,
+            }))
+        );
+    }, [tradeData]);
+
+    console.info(tradeData)
+    // const {openOrderModal} = useChatUIStore();
+    //id: 3023, quantity: 20, price: 1000000
     useEffect(() => {
         // 재고수량 * 금액 -> 구매가능한 토탈금액 계산
         setTradeTotalAmount(15000000);
@@ -55,13 +70,45 @@ export default function ChatTradeModal({isOpen, onClose}:ChatTradeModalProps) {
         return totalValue <= 0 || isOverLimit;
     },[totalValue, isOverLimit])
 
+    const selectedTrade = useMemo(
+        () => tradeList.find(item => item.isChecked),
+        [tradeList]
+    );
+
+    const handleConfirmTrade = () => {
+        if (!selectedTrade) return;
+
+        confirmTradeMutate(selectedTrade.id);
+    };
+
+    // 8일이후는 이걸로
+    // const handleCheckTrade = (item: TradeListProps) => {
+    //     setTradeList(prev =>
+    //         prev.map(trade =>
+    //             trade.price === item.price
+    //                 ? { ...trade, isChecked: !item.isChecked }
+    //                 : trade
+    //         )
+    //     );
+    // };
     const handleCheckTrade = (item: TradeListProps) => {
         setTradeList(prev =>
-            prev.map(trade =>
-                trade.price === item.price
-                    ? { ...trade, isChecked: !item.isChecked }
-                    : trade
-            )
+            prev.map(trade => {
+            if (trade.price === item.price) {
+                const nextChecked = !trade.isChecked;
+
+                return {
+                ...trade,
+                isChecked: nextChecked,
+                selectCnt: nextChecked ? 1 : 0,
+                };
+            }
+            return {
+                ...trade,
+                isChecked: false,
+                selectCnt: 0,
+            };
+            })
         );
     };
 
@@ -102,11 +149,11 @@ export default function ChatTradeModal({isOpen, onClose}:ChatTradeModalProps) {
                 <div className="flex flex-col w-[318px] gap-3">
                     <div className="w-full flex flex-row justify-between">
                         <span className="text-[16px] font-bold">거래 수량</span>
-                        <div className="flex flex-row gap-1 text-[13px] text-gachigageDarkMint1">
+                        {/* <div className="flex flex-row gap-1 text-[13px] text-gachigageDarkMint1">
                             <span>재고 수량</span>
                             <span>1,500</span>
                             <span>개</span>
-                        </div>
+                        </div> */}
                     </div>
                     <div className="flex flex-col gap-2">
                         {tradeList.map((item, index) => {
@@ -122,7 +169,7 @@ export default function ChatTradeModal({isOpen, onClose}:ChatTradeModalProps) {
                                             onChange={() => handleCheckTrade(item)}
                                             className="w-[16px] h-[16px] mr-3"
                                         />
-                                        <span>{item.count}개</span>
+                                        <span>{item.quantity}개</span>
                                     </div>
                                     <span>{item.price.toLocaleString()}원</span>
                                 </div>
@@ -130,7 +177,7 @@ export default function ChatTradeModal({isOpen, onClose}:ChatTradeModalProps) {
                         })}
                     </div>
                     <p className="w-full border border-gachigageGray1"/>
-                    {isOneCheck &&
+                    {/* {isOneCheck &&
                         <>
                             <div className="flex flex-col gap-2">
                                 {tradeList.map((item, index) => {
@@ -179,18 +226,18 @@ export default function ChatTradeModal({isOpen, onClose}:ChatTradeModalProps) {
                                 <span>원</span>
                             </div>
                         </>
-                    }
+                    } */}
                     <div className="flex flex-row gap-2 text-[16px]">
                         <DefaultButton name="취소" className="w-[155px] h-[40px] border-gachigageGray3 text-gachigageGray7" onClick={onClose}/>
                         <DefaultButton 
-                            name="거래 요청" 
+                            name="거래 완료" 
                             className={`w-[155px] h-[40px] 
                                 ${isDisabled ? 'border-gachigageGray5' : 'border-gachigageBrightMint1'} 
                                 ${isDisabled ? 'text-gachigageGray5 ' : 'text-[#ffffff]'}
                                 ${isDisabled ? 'bg-gachigageGray3' : 'bg-gachigageMint'}
                                 ${isDisabled ? 'disabled:cursor-not-allowed' : 'cursor-pointer'}`
                             } 
-                            onClick={openOrderModal}
+                            onClick={handleConfirmTrade}
                             disabled={isDisabled ? true : false}
                         />
                     </div>

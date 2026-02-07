@@ -31,7 +31,7 @@ export const fetchMyPage = async (
  * @returns 
  */
 export const fetchTradeHistory = async (
-  type: "purchases" | "sales" | "likes",
+  type: "purchases" | "sales" | "wishlist",
   page: number,
   size: number,
   accessToken?: string

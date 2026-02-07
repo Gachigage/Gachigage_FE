@@ -64,7 +64,7 @@ export default function NicknameChangeModal({
                             focus:outline-none
                         "
                     />
-                    <span className="text-[13px] text-gachigageGray5">2~10자, 특수문자 공백 없이 입력해주세요.</span>
+                    {/* <span className="text-[13px] text-gachigageGray5">2~10자, 특수문자 공백 없이 입력해주세요.</span> */}
                 </div>
                 <div className="flex flex-row gap-1">
                     <DefaultButton className="w-[161px] h-[40px] text-gachigageGray7 border-gachigageGray7" name="취소" onClick={onClose} />

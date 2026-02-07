@@ -1,12 +1,12 @@
 "use client"
 
 import { isEmpty } from "lodash";
-
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 
 import { useChatInfo } from "@/hooks/useChatInfo";
 import { useChatSocket } from "@/hooks/useSocketChat";
+import { useChatMessages } from "@/hooks/useChatMessage";
 
 import { useChatUIStore } from "@/store/chat/useChatUIStore";
 
@@ -23,17 +23,22 @@ export default function ChatRoom() {
     const { data: session, status } = useSession();
     const params = useParams();
     const chatRoomId = Number(params.id); 
+
     const { data: chatInfo } = useChatInfo({
         chatRoomId,
         accessToken: session?.accessToken,
         enabled: status === "authenticated",
     });
-    const { messages, sendMessage } = useChatSocket({
+    const { data: chattings = [], isSuccess: isChatLoaded } = useChatMessages({ 
+        chatRoomId, accessToken: session?.accessToken 
+    });
+    const { sendMessage } = useChatSocket({
         chatRoomId,
         accessToken: session?.accessToken,
-        enabled: status === "authenticated",
+        enabled: status === "authenticated" && isChatLoaded,
+        amIBuyer: chatInfo?.amIBuyer,
     });
-
+    
     return (
         <>
             {chatInfo && !isEmpty(chatInfo) &&
@@ -56,7 +61,7 @@ export default function ChatRoom() {
                         <div className="flex flex-col w-full h-full border border-gachigageGray1 bg-gachigageGray0">
                             <ChatUserInfo chatInfo={chatInfo} />
                             <ChatTradeInfo chatInfo={chatInfo}/>
-                            <ChatTradeContent chatInfo={chatInfo} messages={messages}/>
+                            <ChatTradeContent chatInfo={chatInfo} chattings={chattings}/>
                             <ChatInput chatRoomId={chatInfo.chatRoomId} sendMessage={sendMessage}/>
                             {isOpenOrderModal &&
                                 <OrderSheetModal 
@@ -68,6 +73,7 @@ export default function ChatRoom() {
                                 <ChatTradeModal
                                     isOpen={isOpenChatTradeModal}
                                     onClose={closeTradeModal}
+                                    chatRoomId={chatInfo?.chatRoomId}
                                 />
                             }
                         </div>

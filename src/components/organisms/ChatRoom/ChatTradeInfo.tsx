@@ -1,5 +1,5 @@
 "use client";   
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Image from "next/image";
 
 import { useChatUIStore } from "@/store/chat/useChatUIStore";
@@ -19,6 +19,12 @@ export default function ChatTradeInfo({chatInfo}:ChatTradeInfoProps) {
     const [isOpenProfileImage, setIsOpenProfileImage] = useState<boolean>(true);
     const {openTradeModal} = useChatUIStore();
     
+    const isDisabled = useMemo(() => {
+        return chatInfo.amIBuyer
+    },[chatInfo.amIBuyer])
+
+    console.info(isDisabled)
+    console.info(chatInfo)
     return (
         <div className={`w-full ${isOpenProfileImage ? 'h-[180px]' : 'h-[126px]'} flex flex-row shrink-0 gap-3 p-[20px] bg-[#ffffff]`}>
             {isOpenProfileImage && 
@@ -51,7 +57,16 @@ export default function ChatTradeInfo({chatInfo}:ChatTradeInfoProps) {
                             }
                     </div>
                 </div>
-                <DefaultButton name="거래요청" className="w-full h-[40px] text-gachigageSubMint bg-white" onClick={openTradeModal}/>
+                <DefaultButton
+                    name="거래요청" 
+                    disabled={isDisabled}
+                    className={`w-full h-[40px] 
+                        ${isDisabled ? 'text-gachigageGray5 ' : 'text-gachigageSubMint'}
+                        ${isDisabled ? 'bg-gachigageGray3' : 'bg-white'}
+                        ${isDisabled ? 'disabled:cursor-not-allowed' : 'cursor-pointer'}
+                    `} 
+                    onClick={isDisabled ? '' : openTradeModal}
+                 />
             </div>
         </div>
     )

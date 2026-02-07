@@ -1,11 +1,10 @@
-import { Client, IMessage } from "@stomp/stompjs";
+import { Client, IMessage, StompSubscription } from "@stomp/stompjs";
 
 let client: Client | null = null;
-let subscription: any = null;
+const subscriptions = new Map<string, StompSubscription>();
 
-export const connectStomp = (
-  accessToken: string,
-) => {
+// STOMP 연결
+export const connectStomp = (accessToken: string) => {
   if (client?.connected) return;
 
   client = new Client({
@@ -18,6 +17,7 @@ export const connectStomp = (
 
   client.onConnect = () => {
     console.log("✅ STOMP connected");
+    // 구독은 subscribeRoom에서 처리
   };
 
   client.onStompError = (frame) => {
@@ -27,39 +27,60 @@ export const connectStomp = (
   client.activate();
 };
 
-
+// STOMP 연결 해제
 export const disconnectStomp = () => {
-  if (subscription) {
-    subscription.unsubscribe();
-    subscription = null;
-  }
+  subscriptions.forEach((sub) => sub.unsubscribe());
+  subscriptions.clear();
+
   client?.deactivate();
   client = null;
 };
 
+// 채팅방 구독
 export const subscribeRoom = (
   chatRoomId: string,
   callback: (message: any) => void
 ) => {
   if (!client || !client.connected) return;
 
-  subscription = client.subscribe(
+  // 이미 구독 중이면 기존 구독 해제
+  if (subscriptions.has(chatRoomId)) {
+    subscriptions.get(chatRoomId)?.unsubscribe();
+    subscriptions.delete(chatRoomId);
+  }
+
+  // 새 구독 생성
+  const subscription = client.subscribe(
     `/sub/chat/room/${chatRoomId}`,
     (message: IMessage) => {
-      callback(JSON.parse(message.body));
+      try {
+        const parsed = JSON.parse(message.body);
+        console.info(parsed)
+        callback(parsed);
+      } catch (e) {
+        console.error("Failed to parse STOMP message", e);
+      }
     }
   );
+
+  subscriptions.set(chatRoomId, subscription);
+
+  // 구독 해제 함수 반환
+  return () => {
+    subscription.unsubscribe();
+    subscriptions.delete(chatRoomId);
+  };
 };
 
+// 메시지 발송
 export const sendMessage = (payload: {
   chatRoomId: number;
   messageType: string;
   content: string;
 }) => {
-  console.info(payload)
   if (!client || !client.connected) return;
 
-   client.publish({
+  client.publish({
     destination: "/pub/chat/message",
     body: JSON.stringify({
       chatRoomId: String(payload.chatRoomId),
