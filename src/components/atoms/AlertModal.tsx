@@ -13,7 +13,7 @@ type AlertModalProps = {
     isOpen: boolean;
     onCancel: () => void;
     onClose: () => void;
-    type: "error" | "confirm" | "warning" | "question" | "info";
+    type?: "error" | "confirm" | "warning" | "question" | "info";
     cancelText?: string;
     confirmText?: string;
 };
@@ -50,17 +50,19 @@ export default function AlertModal({
                 <p className="text-gachigageDark font-semibold leading-[120%]">
                     {title}
                 </p>
-                <Image
-                    src={alertIconMap[type]}
-                    alt={`${type} 아이콘`}
-                    width={36}
-                    height={36}
-                    className={`${
-                        type === "error"
-                            ? "shadow-[0_0_4px_0_#D52E14] rounded-full"
-                            : ""
-                    }`}
-                />
+                {type && (
+                    <Image
+                        src={alertIconMap[type]}
+                        alt={`${type} 아이콘`}
+                        width={36}
+                        height={36}
+                        className={`${
+                            type === "error"
+                                ? "shadow-[0_0_4px_0_#D52E14] rounded-full"
+                                : ""
+                        }`}
+                    />
+                )}
                 <p className="break-words text-center whitespace-pre-line">{description}</p>{" "}
                 {/* [수정됨] 텍스트 중앙 정렬 */}
                 <div className="w-full flex gap-[8px]">
