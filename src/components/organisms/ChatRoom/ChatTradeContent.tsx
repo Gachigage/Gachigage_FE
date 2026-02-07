@@ -6,12 +6,14 @@ import { ChatMessage, ChatRoomInfo } from "@/types/Chat";
 import { formatChatTime } from "@/lib/formatTimeUtils";
 
 import DefaultProfileImage from "@/assets/images/defaultProfileImage.png";
+import { useEffect, useRef } from "react";
 interface ChatTradeContentProps {
   chatInfo: ChatRoomInfo;
   chattings: ChatMessage[];
 }
 
-export default function ChatTradeContent({chatInfo, chattings}:ChatTradeContentProps) { 
+export default function ChatTradeContent({chatInfo, chattings}:ChatTradeContentProps) {
+    const containerRef = useRef<HTMLDivElement>(null); 
     const isDifferentDay = (a: string, b: string) => {
         return new Date(a).toDateString() !== new Date(b).toDateString();
     }
@@ -29,10 +31,18 @@ export default function ChatTradeContent({chatInfo, chattings}:ChatTradeContentP
         }
     }
 
+    useEffect(() => {
+        if (containerRef.current) {
+            containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        }
+    }, [chattings]);
+
     return (
         <>
             {!isEmpty(chattings) ?
-                <div className="flex-1 min-h-0 overflow-hidden w-full h-full bg-gachigageGray0 p-[15px] overflow-y-auto no-scrollbar">
+                <div
+                    ref={containerRef} 
+                    className="flex-1 min-h-0 overflow-hidden w-full h-full bg-gachigageGray0 p-[15px] overflow-y-auto no-scrollbar">
                     {chattings.map((chat, index) => {
                         const prev = chattings[index - 1];
                         const showDateDivider = !prev || isDifferentDay(prev.sendAt, chat.sendAt);

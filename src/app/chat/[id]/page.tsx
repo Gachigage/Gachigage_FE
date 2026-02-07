@@ -36,7 +36,7 @@ export default function ChatRoom() {
         chatRoomId,
         accessToken: session?.accessToken,
         enabled: status === "authenticated" && isChatLoaded,
-        amIBuyer: chatInfo?.amIBuyer,
+        memberId: chatInfo?.memberId,
     });
     
     return (
