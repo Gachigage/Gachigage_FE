@@ -21,6 +21,8 @@ export default function ProductEdutPage() {
     const priceTable = useProductFormStore((state) => state.priceTable);
     const tradeType = useProductFormStore((state) => state.tradeType);
 
+    const stock = useProductFormStore((state) => state.stock);
+
     const validate = useProductFormStore((state) => state.validate);
     const resetForm = useProductFormStore((state) => state.resetForm);
 
@@ -79,6 +81,20 @@ export default function ProductEdutPage() {
             return;
         }
 
+        const overStockItem = priceTable.find(
+            (item) => item.quantity > 0 && item.quantity > stock,
+        );
+        if (overStockItem) {
+            setModalState({
+                isOpen: true,
+                title: "재고 확인",
+                onClose: closeModalNormal,
+                description: `판매 개수(${overStockItem.quantity}개)가 남은 수량(${stock}개)보다 많습니다.`,
+                type: "warning",
+            });
+            return;
+        }
+
         editProduct(Number(productId));
     };
 
@@ -97,6 +113,7 @@ export default function ProductEdutPage() {
         images.length >= 1 &&
         secondaryCategoryId !== null &&
         title.trim() !== "" &&
+        stock > 0 &&
         priceTable.some((item) => item.quantity > 0 && item.price > 0) &&
         (tradeType.direct || tradeType.delivery);
 
