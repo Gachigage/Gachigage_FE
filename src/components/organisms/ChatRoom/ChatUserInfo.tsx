@@ -27,7 +27,7 @@ export default function ChatUserInfo({chatInfo}: ChatUserInfoProps) {
                         height={28}
                     />
                 </Link>
-                {chatInfo.unreadCount > 0 && <span className="text-[20px] font-bold">{chatInfo.unreadCount}</span>}
+                {/* {chatInfo.unreadCount > 0 && <span className="text-[20px] font-bold">{chatInfo.unreadCount}</span>} */}
             </div>
             <span className="
                 absolute
