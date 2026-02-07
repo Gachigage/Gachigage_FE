@@ -1,14 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import BackButton from "@/components/atoms/BackButton";
 import ProductCreateImgs from "@/components/atoms/ProductCreateImgs";
 import ProductForm from "@/components/molecules/ProductForm";
 import AlertModal from "@/components/atoms/AlertModal";
 import { useProductFormStore } from "@/store/useProductFormStore";
-import { useCreateProduct } from "@/hooks/useProductMutation";
+import { useEditProduct } from "@/hooks/useProductMutation";
+import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-export default function ProductCreatePage() {
+export default function ProductEdutPage() {
+    const router = useRouter();
+    const { id: productId } = useParams<{ id: string }>();
     const images = useProductFormStore((state) => state.images);
     const secondaryCategoryId = useProductFormStore(
         (state) => state.secondaryCategoryId,
@@ -20,18 +24,35 @@ export default function ProductCreatePage() {
     const validate = useProductFormStore((state) => state.validate);
     const resetForm = useProductFormStore((state) => state.resetForm);
 
-    const [modalState, setModalState] = useState({
+    const [modalState, setModalState] = useState<{
+        isOpen: boolean;
+        title: string;
+        description: string;
+        type: "error" | "confirm" | "warning" | "question" | "info";
+        onClose: () => void;
+    }>({
         isOpen: false,
         title: "",
         description: "",
+        onClose: () => {},
         type: "error" as "error" | "confirm" | "warning" | "question" | "info",
     });
 
-    const { mutate: createProduct, isPending } = useCreateProduct({
+    const closeModalNormal = () => {
+        setModalState((prev) => ({ ...prev, isOpen: false }));
+    };
+
+    const closeModalBack = () => {
+        setModalState((prev) => ({ ...prev, isOpen: false }));
+        router.back();
+    };
+
+    const { mutate: editProduct, isPending } = useEditProduct({
         onError: (error) => {
             setModalState({
                 isOpen: true,
                 title: "등록 실패",
+                onClose: closeModalNormal,
                 description:
                     error.message ||
                     "상품 등록 중 오류가 발생했습니다. 다시 시도해주세요.",
@@ -39,14 +60,6 @@ export default function ProductCreatePage() {
             });
         },
     });
-
-    useEffect(() => {
-        resetForm();
-    }, [resetForm]);
-
-    const handleCloseModal = () => {
-        setModalState((prev) => ({ ...prev, isOpen: false }));
-    };
 
     const handleSubmit = () => {
         const validationResult = validate();
@@ -56,6 +69,7 @@ export default function ProductCreatePage() {
             setModalState({
                 isOpen: true,
                 title: "입력 확인",
+                onClose: closeModalNormal,
                 description:
                     typeof firstError === "string"
                         ? firstError
@@ -65,7 +79,18 @@ export default function ProductCreatePage() {
             return;
         }
 
-        createProduct();
+        editProduct(Number(productId));
+    };
+
+    const handleCancle = () => {
+        setModalState({
+            isOpen: true,
+            title: "변경을 삭제하시겠습니까?",
+            onClose: closeModalBack,
+            description:
+                "지금까지 변경한 내용이 사라져요.\n변경을 취소하시겠습니까?",
+            type: "warning",
+        });
     };
 
     const formIsValid =
@@ -79,8 +104,8 @@ export default function ProductCreatePage() {
         <div className="w-full flex-1 bg-gachigageWhite flex justify-center">
             <AlertModal
                 isOpen={modalState.isOpen}
-                onCancel={handleCloseModal}
-                onClose={handleCloseModal}
+                onCancel={closeModalNormal}
+                onClose={modalState.onClose}
                 title={modalState.title}
                 description={modalState.description}
                 type={modalState.type}
@@ -92,17 +117,25 @@ export default function ProductCreatePage() {
                     <ProductCreateImgs />
                     <div className="flex flex-col gap-[24px]">
                         <ProductForm />
-                        <button
-                            onClick={handleSubmit}
-                            disabled={!formIsValid || isPending}
-                            className={`w-full h-[56px] font-semibold leading-[120%] text-[24px] rounded-[8px] flex items-center justify-center ${
-                                formIsValid && !isPending
-                                    ? "cursor-pointer text-gachigageWhite bg-gachigageMint border-[0.5px] border-gachigageBrightMint1"
-                                    : "cursor-not-allowed bg-gachigageGray3 border-[0.5px] border-gachigageGray5 text-gachigageGray5"
-                            }`}
-                        >
-                            {isPending ? "등록 중..." : "작성완료"}
-                        </button>
+                        <div className="flex gap-[8px]">
+                            <button
+                                onClick={handleCancle}
+                                className={`w-full h-[56px] cursor-pointer font-semibold leading-[120%] text-[24px] rounded-[8px] flex items-center justify-center bg-white text-gachigageSubMint border border-gachigageSubMint`}
+                            >
+                                변경 취소
+                            </button>
+                            <button
+                                onClick={handleSubmit}
+                                disabled={!formIsValid || isPending}
+                                className={`w-full h-[56px] font-semibold leading-[120%] text-[24px] rounded-[8px] flex items-center justify-center ${
+                                    formIsValid && !isPending
+                                        ? "cursor-pointer text-gachigageWhite bg-gachigageMint border-[0.5px] border-gachigageBrightMint1"
+                                        : "cursor-not-allowed bg-gachigageGray3 border-[0.5px] border-gachigageGray5 text-gachigageGray5"
+                                }`}
+                            >
+                                {isPending ? "수정중..." : "작성완료"}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
