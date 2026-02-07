@@ -6,4 +6,5 @@ export interface PurchaseHistoryType {
     tradeDate: string;
     status: string;
     quantity: number;
+    thumbnailUrl: string;
 }

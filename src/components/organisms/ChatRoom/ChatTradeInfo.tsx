@@ -1,25 +1,44 @@
 "use client";   
-import React, { useState } from "react";
-
-import sampleProduct1 from "@/assets/images/sampleProduct1.png";
+import React, { useMemo, useState } from "react";
 import Image from "next/image";
+
+import { useChatUIStore } from "@/store/chat/useChatUIStore";
+
+import { ChatRoomInfo } from "@/types/Chat";
+
 import DefaultButton from "@/components/atoms/DefaultButton";
-import ChatTradeModal from "@/components/molecules/ChatTradeModal";
+
 import foldIcon from "@/assets/icons/fold.svg";
 import expandIcon from "@/assets/icons/expand.svg";
 
-export default function ChatTradeInfo() {
+interface ChatTradeInfoProps {
+    chatInfo: ChatRoomInfo
+}
+
+export default function ChatTradeInfo({chatInfo}:ChatTradeInfoProps) {
+    //TO-BE : 거래완료 유무값을 백앤드에서 받아야함
     const [isOpenProfileImage, setIsOpenProfileImage] = useState<boolean>(true);
-    const [flagChatTradeModal, setFlagChatTradeModal] = useState<boolean>(false);
+    const {openTradeModal} = useChatUIStore();
     
+    const isDisabled = useMemo(() => {
+        return chatInfo.amIBuyer
+    },[chatInfo.amIBuyer])
+
     return (
-        <div className="w-full h-[180px] flex flex-row gap-3 p-[20px] bg-[#ffffff] rounded-t-[8px]">
-            {isOpenProfileImage && <Image src={sampleProduct1} alt="Sample Product 1" width={123} height={123}/>}
+        <div className={`w-full ${isOpenProfileImage ? 'h-[180px]' : 'h-[126px]'} flex flex-row shrink-0 gap-3 p-[20px] bg-[#ffffff]`}>
+            {isOpenProfileImage && 
+            <Image 
+                src={chatInfo?.productImageUrl} 
+                alt="productImage" 
+                className="w-[132px] h-[132px] rounded-[8px]"
+                width={132}
+                height={132}
+            />}
             <div className="w-full flex flex-col justify-between">
                 <div className="flex justify-between">
                     <div className="flex flex-row text-[16px]">
-                        <span>상품명:</span>
-                        <span>모던한 의자</span>
+                        <span className="pr-[5px]">상품명:</span>
+                        <span>{chatInfo.productTitle}</span>
                     </div>
                     <div className="flex flex-row gap-1 items-center cursor-pointer" onClick={() => setIsOpenProfileImage(!isOpenProfileImage)}>
                         <div className="text-[13px] text-gachigageGray7">{isOpenProfileImage ? '접기' : '펼치기'}</div>
@@ -37,14 +56,17 @@ export default function ChatTradeInfo() {
                             }
                     </div>
                 </div>
-                <DefaultButton name="거래요청" className="w-full h-[40px] text-gachigageSubMint bg-white" onClick={() => setFlagChatTradeModal(true)}/>
+                <DefaultButton
+                    name="거래요청" 
+                    disabled={isDisabled}
+                    className={`w-full h-[40px] 
+                        ${isDisabled ? 'text-gachigageGray5 ' : 'text-gachigageSubMint'}
+                        ${isDisabled ? 'bg-gachigageGray3' : 'bg-white'}
+                        ${isDisabled ? 'disabled:cursor-not-allowed' : 'cursor-pointer'}
+                    `} 
+                    onClick={isDisabled ? '' : openTradeModal}
+                 />
             </div>
-            {flagChatTradeModal &&
-                <ChatTradeModal 
-                    isOpen={flagChatTradeModal}
-                    onClose={() => setFlagChatTradeModal(false)}
-                />
-            }
         </div>
     )
 }
