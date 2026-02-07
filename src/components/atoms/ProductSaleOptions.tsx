@@ -106,12 +106,14 @@ export default function ProductSaleOptions() {
             ))}
 
             {/* 추가하기 버튼 */}
-            <button
-                onClick={addPriceTableItem}
-                className="w-[354px] h-[43px] rounded-[8px] border border-gachigageSubMint bg-white text-[16px] font-medium text-gachigageSubMint cursor-pointer"
-            >
-                추가하기
-            </button>
+            {priceTable.length < 5 && (
+                <button
+                    onClick={addPriceTableItem}
+                    className="w-[354px] h-[43px] rounded-[8px] border border-gachigageSubMint bg-white text-[16px] font-medium text-gachigageSubMint cursor-pointer"
+                >
+                    추가하기
+                </button>
+            )}
         </div>
     );
 }

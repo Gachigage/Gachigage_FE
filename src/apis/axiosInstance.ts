@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { getSession } from "next-auth/react";
+import { useAuthErrorStore } from "@/stores/useAuthErrorStore";
 
 const BASE_URL = "/api";
 const isServer = typeof window === "undefined";
@@ -81,7 +82,7 @@ axiosClient.interceptors.response.use(
     (response) => response,
     async (error) => {
         if (error.response?.status === 401) {
-            window.location.href = "/login";
+            useAuthErrorStore.getState().showAuthError();
         }
         return Promise.reject(error);
     },
