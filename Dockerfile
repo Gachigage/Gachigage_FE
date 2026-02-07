@@ -1,4 +1,4 @@
-# 서버에 올라갈 Dockerfile (빌드 과정 없음!)
+# 서버에 올라갈 Dockerfile
 FROM node:20-alpine AS runner
 WORKDIR /app
 
@@ -9,11 +9,13 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# [중요] GitHub에서 빌드해서 보낸 파일들을 복사
-# public 폴더와 .next/static, standalone을 제자리에 둡니다.
-COPY ./public ./public
-COPY ./standalone ./
-COPY ./static ./.next/static
+# COPY 할 때 소유권을 nextjs에게 넘겨줍니다
+COPY --chown=nextjs:nodejs ./public ./public
+COPY --chown=nextjs:nodejs ./standalone ./
+COPY --chown=nextjs:nodejs ./static ./.next/static
+
+# .next 폴더와 캐시 폴더 권한을 확실하게 다시 잡습니다.
+RUN mkdir -p .next/cache && chown -R nextjs:nodejs .next
 
 USER nextjs
 
