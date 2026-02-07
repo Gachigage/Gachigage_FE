@@ -267,8 +267,15 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
                     isInside={false}
                 />
                 <InquireOrEditButton
-                    isOwner={true}
+                    isOwner={product.isOwner}
                     isEditorInquireClick={handleEditOrInquire}
+                    disabled={
+                        !product.isOwner &&
+                        product.priceTable.length > 0 &&
+                        product.priceTable.every(
+                            (item) => item.status === "INACTIVE",
+                        )
+                    }
                 />
             </div>
 
