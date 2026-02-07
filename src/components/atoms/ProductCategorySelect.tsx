@@ -58,6 +58,11 @@ export default function ProductCategorySelect() {
     const handlePrimarySelect = (id: number) => {
         setPrimaryCategoryId(id);
         setIsPrimaryOpen(false);
+
+        const selected = categories.find((cat) => cat.primaryId === id);
+        if (selected && selected.secondary.length === 0) {
+            setSecondaryCategoryId(id);
+        }
     };
 
     const handleSecondarySelect = (id: number) => {
@@ -126,62 +131,64 @@ export default function ProductCategorySelect() {
                     )}
                 </div>
 
-                {/* 2차 카테고리 드롭다운 */}
-                <div ref={secondaryRef} className="relative">
-                    <button
-                        onClick={() =>
-                            primaryCategoryId &&
-                            setIsSecondaryOpen(!isSecondaryOpen)
-                        }
-                        disabled={!primaryCategoryId}
-                        className={`w-[173px] h-[40px] rounded-[8px] border flex items-center justify-between px-[12px] ${
-                            primaryCategoryId
-                                ? "cursor-pointer"
-                                : "cursor-not-allowed opacity-50"
-                        } ${
-                            secondaryCategoryId
-                                ? "border-gachigageDark"
-                                : "border-gachigageGray3"
-                        }`}
-                    >
-                        <span
-                            className={`text-[16px] font-normal ${
+                {/* 2차 카테고리 드롭다운 (세부 항목이 있는 경우에만 표시) */}
+                {selectedPrimary && selectedPrimary.secondary.length > 0 && (
+                    <div ref={secondaryRef} className="relative">
+                        <button
+                            onClick={() =>
+                                primaryCategoryId &&
+                                setIsSecondaryOpen(!isSecondaryOpen)
+                            }
+                            disabled={!primaryCategoryId}
+                            className={`w-[173px] h-[40px] rounded-[8px] border flex items-center justify-between px-[12px] ${
+                                primaryCategoryId
+                                    ? "cursor-pointer"
+                                    : "cursor-not-allowed opacity-50"
+                            } ${
                                 secondaryCategoryId
-                                    ? "text-gachigageDark"
-                                    : "text-gachigageGray7"
+                                    ? "border-gachigageDark"
+                                    : "border-gachigageGray3"
                             }`}
                         >
-                            {selectedSecondary?.name || "세부 항목"}
-                        </span>
-                        <Image
-                            src={grayArrowDown}
-                            alt="화살표"
-                            width={26}
-                            height={26}
-                            className={`transition-transform ${isSecondaryOpen ? "rotate-180" : ""}`}
-                        />
-                    </button>
+                            <span
+                                className={`text-[16px] font-normal ${
+                                    secondaryCategoryId
+                                        ? "text-gachigageDark"
+                                        : "text-gachigageGray7"
+                                }`}
+                            >
+                                {selectedSecondary?.name || "세부 항목"}
+                            </span>
+                            <Image
+                                src={grayArrowDown}
+                                alt="화살표"
+                                width={26}
+                                height={26}
+                                className={`transition-transform ${isSecondaryOpen ? "rotate-180" : ""}`}
+                            />
+                        </button>
 
-                    {isSecondaryOpen && selectedPrimary && (
-                        <div className="absolute top-[44px] left-0 z-10 w-[173px] rounded-[8px] border border-gachigageDark bg-white p-[8px] flex flex-col gap-[8px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.25)]">
-                            {selectedPrimary.secondary.map((secondary) => (
-                                <button
-                                    key={secondary.id}
-                                    onClick={() =>
-                                        handleSecondarySelect(secondary.id)
-                                    }
-                                    className={`w-full rounded-[4px] px-[8px] py-[8px] text-left text-[16px] text-gachigageDark cursor-pointer transition-colors ${
-                                        secondaryCategoryId === secondary.id
-                                            ? "bg-gachigageGray0 border border-gachigageGray1 font-medium"
-                                            : "font-normal hover:bg-gachigageGray0 hover:border hover:border-gachigageGray1 hover:font-medium border border-transparent"
-                                    }`}
-                                >
-                                    {secondary.name}
-                                </button>
-                            ))}
-                        </div>
-                    )}
-                </div>
+                        {isSecondaryOpen && selectedPrimary && (
+                            <div className="absolute top-[44px] left-0 z-10 w-[173px] rounded-[8px] border border-gachigageDark bg-white p-[8px] flex flex-col gap-[8px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.25)]">
+                                {selectedPrimary.secondary.map((secondary) => (
+                                    <button
+                                        key={secondary.id}
+                                        onClick={() =>
+                                            handleSecondarySelect(secondary.id)
+                                        }
+                                        className={`w-full rounded-[4px] px-[8px] py-[8px] text-left text-[16px] text-gachigageDark cursor-pointer transition-colors ${
+                                            secondaryCategoryId === secondary.id
+                                                ? "bg-gachigageGray0 border border-gachigageGray1 font-medium"
+                                                : "font-normal hover:bg-gachigageGray0 hover:border hover:border-gachigageGray1 hover:font-medium border border-transparent"
+                                        }`}
+                                    >
+                                        {secondary.name}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );
