@@ -64,7 +64,7 @@ export default function ChatTradeInfo({chatInfo}:ChatTradeInfoProps) {
                         ${isDisabled ? 'bg-gachigageGray3' : 'bg-white'}
                         ${isDisabled ? 'disabled:cursor-not-allowed' : 'cursor-pointer'}
                     `} 
-                    onClick={isDisabled ? '' : openTradeModal}
+                    onClick={isDisabled ? undefined : openTradeModal}
                  />
             </div>
         </div>

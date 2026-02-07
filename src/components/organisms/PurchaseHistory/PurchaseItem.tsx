@@ -1,9 +1,10 @@
+
 import Image from "next/image";
-import { PurchaseHistoryType } from "./PurchaseHistoryType";
 import Link from "next/link";
+import { TradeHistoryItem } from "./PurchaseHistoryType";
 
 interface PurchaseItemProps {
-    productItem: PurchaseHistoryType
+    productItem: TradeHistoryItem
     index: number;
 }
 export default function PurchaseItem({productItem, index} : PurchaseItemProps) {
@@ -24,7 +25,7 @@ export default function PurchaseItem({productItem, index} : PurchaseItemProps) {
                 <div className="flex flex-col justify-center gap-3">
                     <div className="flex flex-row text-gachigageGray7 text-[13px]">
                         <span className="pr-[5px]">구매일</span>
-                        <span>{productItem.tradeDate.split('T')[0]}</span>
+                        <span>{productItem.tradeDate?.split('T')[0] ?? ''}</span>
                     </div>
                     <div className="text-[16px] font-semibold">{productItem.title}</div>
                     <div className="flex flex-row text-[18px] font-semibold gap-2">
