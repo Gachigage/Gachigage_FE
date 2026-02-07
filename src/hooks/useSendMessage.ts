@@ -6,6 +6,7 @@ export const useSendMessage = (chatRoomId: number) => {
 
     sendMessage({
       chatRoomId,
+      messageType: 'TEXT',
       content,
     });
   };

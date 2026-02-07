@@ -91,7 +91,7 @@ export function useChatSocket({
 
   stompSendMessage({
     chatRoomId,
-    messageType,
+    messageType: 'TEXT',
     content,
   });
 };

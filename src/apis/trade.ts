@@ -1,4 +1,4 @@
-import { TradeInfoResponse } from "@/types/trade";
+import { TradeInfoResponse } from "@/types/Trade";
 import { axiosServer } from "./axiosInstance";
 
 interface ApiResponse<T> {

@@ -1,8 +1,7 @@
-import { PurchaseHistoryType } from "./PurchaseHistoryType";
+import { TradeHistoryItem } from "./PurchaseHistoryType";
 import PurchaseItem from "./PurchaseItem";
-
 interface PurchaseListProps {
-    products: PurchaseHistoryType[];
+    products: TradeHistoryItem[];
     limit?: number;
 }
 export default function PurchaseList({ products, limit }: PurchaseListProps) {

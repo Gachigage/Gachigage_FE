@@ -2,7 +2,7 @@ import { Client, IMessage, StompSubscription } from "@stomp/stompjs";
 
 let client: Client | null = null;
 const subscriptions = new Map<string, StompSubscription>();
-
+type MessageType = "TEXT" | "IMAGE";
 // STOMP 연결
 export const connectStomp = (accessToken: string) => {
   if (client?.connected) return;
@@ -75,7 +75,7 @@ export const subscribeRoom = (
 // 메시지 발송
 export const sendMessage = (payload: {
   chatRoomId: number;
-  messageType: string;
+  messageType: MessageType;
   content: string;
 }) => {
   if (!client || !client.connected) return;
