@@ -7,8 +7,10 @@ import plusButton36 from "@/assets/icons/plusButton36.svg";
 import xButton36 from "@/assets/icons/xButton36.svg";
 import xButton23 from "@/assets/icons/xButton23.svg";
 import { useProductFormStore } from "@/store/useProductFormStore";
+import AlertModal from "@/components/atoms/AlertModal";
 
 const MAX_IMAGES = 8;
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export default function ProductCreateImgs() {
     // Store에서 상태 가져오기
@@ -20,6 +22,7 @@ export default function ProductCreateImgs() {
     // 로컬 UI 상태 (드래그)
     const [dragIndex, setDragIndex] = useState<number | null>(null);
     const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+    const [alertOpen, setAlertOpen] = useState(false);
     const mainInputRef = useRef<HTMLInputElement>(null);
     const subInputRef = useRef<HTMLInputElement>(null);
 
@@ -28,13 +31,22 @@ export default function ProductCreateImgs() {
         if (!files) return;
 
         const remainingSlots = MAX_IMAGES - images.length;
-        const filesToAdd = Array.from(files).slice(0, remainingSlots);
+        const selectedFiles = Array.from(files).slice(0, remainingSlots);
 
-        const newImageUrls = filesToAdd.map((file) =>
+        const oversized = selectedFiles.some(
+            (file) => file.size > MAX_FILE_SIZE,
+        );
+        if (oversized) {
+            setAlertOpen(true);
+            e.target.value = "";
+            return;
+        }
+
+        const newImageUrls = selectedFiles.map((file) =>
             URL.createObjectURL(file),
         );
 
-        addImages(newImageUrls, filesToAdd);
+        addImages(newImageUrls, selectedFiles);
         e.target.value = "";
     };
 
@@ -73,6 +85,14 @@ export default function ProductCreateImgs() {
 
     return (
         <div className=" flex flex-col gap-[8px] w-[353px] md:w-[calc(100%-587px)] md:min-w-[354px]">
+            <AlertModal
+                isOpen={alertOpen}
+                onCancel={() => setAlertOpen(false)}
+                onClose={() => setAlertOpen(false)}
+                title="이미지 용량 초과"
+                description="이미지 한 장당 최대 5MB까지 업로드 가능합니다."
+                type="error"
+            />
             {/* 메인 이미지 영역 */}
             <div className="relative w-full bg-gachigageGray1 aspect-square rounded-[16px] overflow-hidden">
                 {images.length === 0 ? (
