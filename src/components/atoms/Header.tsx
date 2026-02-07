@@ -12,6 +12,7 @@ export default function Header() {
     const router = useRouter();
     const { data: session } = useSession();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCommunityModalOpen, setIsCommunityModalOpen] = useState(false);
 
     const handleProtectedClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         if (!session) {
@@ -57,16 +58,12 @@ export default function Header() {
                             >
                                 물품 거래
                             </Link>
-                            <Link
-                                href="/community"
-                                className={`py-[6.5px] px-[10px] cursor-pointer ${
-                                    pathname.startsWith("/community")
-                                        ? "font-semibold"
-                                        : ""
-                                }`}
+                            <button
+                                onClick={() => setIsCommunityModalOpen(true)}
+                                className="py-[6.5px] px-[10px] cursor-pointer text-gachigageGray3"
                             >
                                 커뮤니티
-                            </Link>
+                            </button>
                             <Link
                                 href="/chat"
                                 onClick={handleProtectedClick}
@@ -102,6 +99,16 @@ export default function Header() {
                 onClose={() => router.push("/login")}
                 cancelText="다음에"
                 confirmText="로그인"
+            />
+            <AlertModal
+                title="준비 중인 기능이에요."
+                description="현재 해당 기능은 준비중입니다."
+                type="info"
+                isOpen={isCommunityModalOpen}
+                onCancel={() => setIsCommunityModalOpen(false)}
+                onClose={() => setIsCommunityModalOpen(false)}
+                cancelText="닫기"
+                confirmText="확인"
             />
         </>
     );
