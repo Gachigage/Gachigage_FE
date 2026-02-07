@@ -54,6 +54,27 @@
     --color-gachigageSubBrightMint2: #92ebdf;
     --color-gachigageSubBrightMint3: #b6f2ea;
     --color-gachigageSubBrightMint4: #dbf8f4;
+
+    /* Shadcn */
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    /* Shadcn */
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
 }
 
 @layer utilities {
@@ -110,6 +131,7 @@ body {
 @media (max-width: 767px) {
     ::-webkit-scrollbar {
         width: 6px;
+        height: 6px;
     }
 
     ::-webkit-scrollbar-thumb {
@@ -121,6 +143,7 @@ body {
 @media (min-width: 768px) and (max-width: 1279px) {
     ::-webkit-scrollbar {
         width: 8px;
+        height: 8px;
     }
 
     ::-webkit-scrollbar-thumb {
@@ -132,10 +155,62 @@ body {
 @media (min-width: 1280px) {
     ::-webkit-scrollbar {
         width: 10px;
+        height: 10px;
     }
 
     ::-webkit-scrollbar-thumb {
         background: #cecccc;
         border-radius: 6px;
+    }
+}
+
+/* shadcn */
+:root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.129 0.042 264.695);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.129 0.042 264.695);
+    --primary: oklch(0.208 0.042 265.755);
+    --primary-foreground: oklch(0.984 0.003 247.858);
+    --secondary: oklch(0.968 0.007 247.896);
+    --secondary-foreground: oklch(0.208 0.042 265.755);
+    --muted: oklch(0.968 0.007 247.896);
+    --muted-foreground: oklch(0.554 0.046 257.417);
+    --accent: oklch(0.968 0.007 247.896);
+    --accent-foreground: oklch(0.208 0.042 265.755);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.929 0.013 255.508);
+    --input: oklch(0.929 0.013 255.508);
+    --ring: oklch(0.704 0.04 256.788);
+    --radius: 0.625rem;
+}
+
+/* shadcn */
+.dark {
+    --background: oklch(0.129 0.042 264.695);
+    --foreground: oklch(0.984 0.003 247.858);
+    --primary: oklch(0.929 0.013 255.508);
+    --primary-foreground: oklch(0.208 0.042 265.755);
+}
+
+/* scrollbar 숨기기 */
+.scrollbar-hidden {
+    -ms-overflow-style: none; /* IE, Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+}
+
+/* 모바일에서만 스크롤바 숨기기 */
+@media (max-width: 767px) {
+    .scrollbar-hidden-mobile {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .scrollbar-hidden-mobile::-webkit-scrollbar {
+        display: none;
     }
 }

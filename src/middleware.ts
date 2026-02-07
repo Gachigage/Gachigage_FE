@@ -6,12 +6,18 @@ const middleware = auth((req) => {
     const isLoggedIn = !!req.auth;
 
     // 인증이 되어야 접근 가능 주소
-    const protectedRoutes = ["/mypage"];
+    const protectedRoutes = ["/mypage", "/chat", "/products/create"];
+
+    // /products/[id]/edit 패턴 체크
+    const isProductEditRoute = /^\/products\/\d+\/edit$/.test(nextUrl.pathname);
 
     // 비로그인 사용자만 접근 가능
     const authRoutes = ["/login"];
 
-    if (protectedRoutes.some((route) => nextUrl.pathname.startsWith(route))) {
+    if (
+        protectedRoutes.some((route) => nextUrl.pathname.startsWith(route)) ||
+        isProductEditRoute
+    ) {
         if (!isLoggedIn) {
             return NextResponse.redirect(new URL("/login", nextUrl));
         }
