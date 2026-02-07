@@ -1,11 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import AlertModal from "./AlertModal";
 import shopSelected from "@/assets/icons/shopSelected.svg";
 import shopDefault from "@/assets/icons/shopDefault.svg";
-import communitySelected from "@/assets/icons/communitySelected.svg";
 import communityDefault from "@/assets/icons/communityDefault.svg";
 import chatSelected from "@/assets/icons/chatSelected.svg";
 import chatDefault from "@/assets/icons/chatDefault.svg";
@@ -14,6 +15,7 @@ import profileDefault from "@/assets/icons/profileDefault.svg";
 
 export default function MobileNavigation() {
     const pathname = usePathname();
+    const [isCommunityModalOpen, setIsCommunityModalOpen] = useState(false);
 
     return (
         <div className="w-full z-99 h-[110px] border-t pt-[12px] pb-[24px] border-gachigageGray1 md:hidden bg-gachigageWhite flex justify-center fixed bottom-0">
@@ -46,33 +48,19 @@ export default function MobileNavigation() {
                     </div>
                 </Link>
 
-                <Link href="/community">
+                <button onClick={() => setIsCommunityModalOpen(true)}>
                     <div className="flex flex-col items-center gap-[8px] w-[79.5px]">
-                        {pathname.startsWith("/community") ? (
-                            <>
-                                <Image
-                                    src={communitySelected}
-                                    alt="커뮤니티"
-                                    width={36}
-                                    height={36}
-                                />
-                                <p className="font-medium">커뮤니티</p>
-                            </>
-                        ) : (
-                            <>
-                                <Image
-                                    src={communityDefault}
-                                    alt="커뮤니티"
-                                    width={36}
-                                    height={36}
-                                />
-                                <p className="font-normal text-gachigageGray3">
-                                    커뮤니티
-                                </p>
-                            </>
-                        )}
+                        <Image
+                            src={communityDefault}
+                            alt="커뮤니티"
+                            width={36}
+                            height={36}
+                        />
+                        <p className="font-normal text-gachigageGray3">
+                            커뮤니티
+                        </p>
                     </div>
-                </Link>
+                </button>
 
                 <Link href="/chat">
                     <div className="flex flex-col items-center gap-[8px] w-[79.5px]">
@@ -130,6 +118,16 @@ export default function MobileNavigation() {
                     </div>
                 </Link>
             </div>
+            <AlertModal
+                title="준비 중인 기능이에요."
+                description="현재 해당 기능은 준비중입니다."
+                type="info"
+                isOpen={isCommunityModalOpen}
+                onCancel={() => setIsCommunityModalOpen(false)}
+                onClose={() => setIsCommunityModalOpen(false)}
+                cancelText="닫기"
+                confirmText="확인"
+            />
         </div>
     );
 }
