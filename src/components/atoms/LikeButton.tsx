@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import emptyHeart from "@/assets/icons/emptyHeart.svg";
 import grayEmptyHeart from "@/assets/icons/grayEmptyHeart.svg";
 import heart from "@/assets/icons/heart.svg";
@@ -23,6 +23,8 @@ export default function LikeButton({
 }: LikeButtonProps) {
     const { data: session } = useSession();
     const router = useRouter();
+    const pathname = usePathname();
+    const isProductDetail = /^\/products\/\d+$/.test(pathname);
     const [isLiked, setIsLiked] = useState(initialIsLiked);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { toggleLike } = useProductLike();
@@ -52,7 +54,7 @@ export default function LikeButton({
                     alt="좋아요 아이콘"
                     width={24}
                     height={22}
-                    className="absolute bottom-[5px] right-[5px] z-[1] cursor-pointer"
+                    className={`absolute bottom-[5px] right-[5px] z-[1] cursor-pointer ${isProductDetail ? "bg-gachigageWhite" : ""}`}
                     onClick={handleClick}
                 />
                 <AlertModal
