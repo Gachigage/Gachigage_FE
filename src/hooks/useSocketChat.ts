@@ -28,7 +28,7 @@ export function useChatSocket({
 
     const timer = setTimeout(() => {subscribeRoom(chatRoomId.toString(),(message: ChatMessage) => {
           const isMine = message.senderIsBuyer === amIBuyer;
-          
+          console.info(isMine)
           // 내가보낸메세지는 무시
           if (isMine) {
             return;

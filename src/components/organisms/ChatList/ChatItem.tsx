@@ -45,7 +45,7 @@ export default function ChatItem({chatItem}: {chatItem: any}) {
                     <div className="flex flex-col">
                         <div className="w-full flex justify-between font-bold text-[16px]">
                             <span>{chatItem.otherName}</span>
-                            <ChatUnRead unreadCount={chatItem.unreadCount}/>
+                            {/* <ChatUnRead unreadCount={chatItem.unreadCount}/> */}
                         </div>
                         <div className="text-[13px] text-gachigageGray7 line-clamp-2 leading-[18px] mt-1">
                             {chatItem.lastMessage}
