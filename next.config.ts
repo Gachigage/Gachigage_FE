@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
             },
             {
                 source: "/api/:path*",
-                destination: "https://gachigage.com/api/:path*",
+                destination: `${process.env.NEXT_PUBLIC_API_BASE_URL}/:path*`,
             },
         ];
     },

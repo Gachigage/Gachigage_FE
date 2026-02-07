@@ -1,43 +1,19 @@
-# syntax=docker/dockerfile:1
-
-# ---- Base ----
-FROM node:20-alpine AS base
-RUN corepack enable && corepack prepare pnpm@latest --activate
-WORKDIR /app
-
-# ---- Dependencies ----
-FROM base AS deps
-RUN apk add --no-cache libc6-compat
-
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
-
-# ---- Build ----
-FROM base AS builder
-WORKDIR /app
-
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-
-ENV NEXT_TELEMETRY_DISABLED=1
-
-RUN pnpm build
-
-# ---- Production ----
-FROM base AS runner
+# 서버에 올라갈 Dockerfile (빌드 과정 없음!)
+FROM node:20-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# 보안을 위한 사용자 설정
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/public ./public
-
-# standalone 출력 복사
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# [중요] GitHub에서 빌드해서 보낸 파일들을 복사
+# public 폴더와 .next/static, standalone을 제자리에 둡니다.
+COPY ./public ./public
+COPY ./standalone ./
+COPY ./static ./.next/static
 
 USER nextjs
 
