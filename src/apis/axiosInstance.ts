@@ -97,6 +97,20 @@ const axiosServer: AxiosInstance = axios.create({
 });
 
 // 디버깅용 - 배포 후 서버 로그에서 확인 TODO:삭제
+axiosServer.interceptors.request.use(
+    (config) => {
+        console.log(
+            "[DEBUG] axiosServer request URL:",
+            config.baseURL,
+            config.url,
+        );
+        console.log("[DEBUG] Full URL:", `${config.baseURL}${config.url}`);
+        return config;
+    },
+    (error) => Promise.reject(error),
+);
+
+// 디버깅용 - 배포 후 서버 로그에서 확인 TODO:삭제
 if (isServer) {
     console.log(
         "[DEBUG] NEXT_PUBLIC_API_BASE_URL:",
