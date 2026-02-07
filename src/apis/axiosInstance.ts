@@ -96,4 +96,12 @@ const axiosServer: AxiosInstance = axios.create({
     timeout: 5000,
 });
 
+// 디버깅용 - 배포 후 서버 로그에서 확인 TODO:삭제
+if (isServer) {
+    console.log(
+        "[DEBUG] NEXT_PUBLIC_API_BASE_URL:",
+        process.env.NEXT_PUBLIC_API_BASE_URL,
+    );
+}
+
 export { axiosClient, axiosServer };
