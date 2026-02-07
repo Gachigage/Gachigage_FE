@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import AlertModal from "./AlertModal";
+import { useCreateChatRoom } from "@/hooks/useChatRoomMutation";
 
 type InquireOrEditButtonType = {
     isOwner: boolean;
@@ -19,7 +20,14 @@ export default function InquireOrEditButton({
     const { data: session } = useSession();
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const [isAlertOpen, setIsAlertOpen] = useState(false);
+    
+    const { mutate: createRoom } = useCreateChatRoom({
+        onError: () => {
+            setIsAlertOpen(true);
+        },
+    });
+    
     const handleClick = () => {
         if (disabled) return;
         if (isOwner) {

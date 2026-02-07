@@ -1,8 +1,10 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import { createPortal } from "react-dom";
-import DefaultButton from "../atoms/DefaultButton";
+import DefaultButton from "./DefaultButton";
+import { useChatUIStore } from '@/store/chat/useChatUIStore';
 
 interface OrderSheetModalProps {
+    isOpen: boolean;
     onClose: () => void;
 }
 
@@ -12,7 +14,7 @@ interface OrderListProps {
     selectCnt: number;
 }
 
-export default function OrderSheetModal({onClose}: OrderSheetModalProps) {
+export default function OrderSheetModal({isOpen, onClose}: OrderSheetModalProps) {
     const [orderList, setOrderList] = useState<OrderListProps[]>([
         {count: 10, price: 100000, selectCnt: 1},
         {count: 100, price: 1000000, selectCnt: 1 },
@@ -25,6 +27,8 @@ export default function OrderSheetModal({onClose}: OrderSheetModalProps) {
             0
         );
     },[orderList])
+
+    if (!isOpen) return null;
         
     return createPortal(
         <>
@@ -43,18 +47,18 @@ export default function OrderSheetModal({onClose}: OrderSheetModalProps) {
                 p-[30px]
                 cursor-pointer
             ">
-                <div className="flex flex-col w-[366px] gap-3">
+                <div className="flex flex-col w-full gap-3">
                     <div className="w-full flex flex-row justify-between">
                         <span className="text-[16px] font-bold">주문서</span>
-                        <DefaultButton name="수정 요청" className="w-[73px] h-[33px] text-[8px] text-gachigageGray3"/>
+                        <DefaultButton name="수정 요청" className="w-[73px] h-[33px] text-[13px] text-gachigageGray7 border border-gachigageGray3"/>
                     </div>
                     <p className="w-full border border-gachigageGray1"/>
                     <div className='flex flex-col gap-2'>
                         {orderList.map((item, index) => {
                             return (
                                 <div className='flex flex-row justify-between items-center text-[16px]'>
-                                    <div className='flex flex-row items-center gap-2 '>
-                                        <div className="flex items-center w-[69px] h-[40px] p-[5px] text-gachigageGray7 border border-gachigageGray3 rounded-[8px]">
+                                    <div className='flex flex-row items-center gap-2'>
+                                        <div className="flex items-center justify-center w-[69px] h-[40px] p-[5px] text-gachigageGray7 border border-gachigageGray3 rounded-[8px]">
                                             <span>{item.count}</span>
                                             <span>개</span>
                                             </div>

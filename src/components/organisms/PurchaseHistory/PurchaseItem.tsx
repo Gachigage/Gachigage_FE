@@ -1,19 +1,25 @@
 import Image from "next/image";
-import smapleProduct1 from "@/assets/images/sampleProduct1.png";
 import { PurchaseHistoryType } from "./PurchaseHistoryType";
+import Link from "next/link";
 
-export default function PurchaseItem(props: {productItem: PurchaseHistoryType, index: number}) {
-    const { productItem, index } = props;
-
+interface PurchaseItemProps {
+    productItem: PurchaseHistoryType
+    index: number;
+}
+export default function PurchaseItem({productItem, index} : PurchaseItemProps) {
     return(
         <>
-            <div key={index} className="flex flex-row gap-3">
+            <Link 
+                href={`/products/${productItem.productId}`} 
+                key={index} 
+                className="flex flex-row gap-3"
+            >
                 <Image
-                    src={smapleProduct1}
-                    alt="상품 이미지"
+                    src={productItem.thumbnailUrl}
+                    alt="thumbnailUrl"
                     width={165}
                     height={165}
-                    className="w-[165px] h-[165px] md:w-[224px] md:h-[224px] xl:w-[270px] xl:h-[270px]"
+                    className="w-[165px] h-[165px] md:w-[224px] md:h-[224px] xl:w-[270px] xl:h-[270px] rounded-[8px]"
                 />
                 <div className="flex flex-col justify-center gap-3">
                     <div className="flex flex-row text-gachigageGray7 text-[13px]">
@@ -27,10 +33,10 @@ export default function PurchaseItem(props: {productItem: PurchaseHistoryType, i
                             <span>원</span>
                         </div>
                         <p>/</p>
-                        <span>{productItem.quantity}개</span>
+                        <span>{productItem.quantity ?? 2}개</span>
                     </div>
                 </div>
-            </div>
+            </Link>
             <p className="border-b border-gachigageGray3 w-full"/>
         </>
     )

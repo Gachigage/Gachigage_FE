@@ -18,17 +18,46 @@ import {
     useEditPriceTableStatus,
     useEditStock,
 } from "@/hooks/useProductMutation";
+import { useCreateChatRoom } from "@/hooks/useChatRoomMutation";
+import { useSession } from "next-auth/react";
+import AlertModal from "../atoms/AlertModal";
 
 type ProductDetailInfoType = {
     product: ProductDetail;
 };
 
 export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
+    const [modalState, setModalState] = useState<{
+        isOpen: boolean;
+        title: string;
+        description: string;
+        type?: "error" | "confirm" | "warning" | "question" | "info";
+        onClose: () => void;
+    }>({
+        isOpen: false,
+        title: "",
+        description: "",
+        type: "error",
+        onClose: () => {},
+    });
+    const { data: session } = useSession();
     const { data: categories } = useProductCategories();
     const router = useRouter();
     const { loadProductData } = useProductFormStore();
     const { mutate: editPriceTableStatus } = useEditPriceTableStatus();
     const { mutate: editStock } = useEditStock();
+    const { mutate: createRoom } = useCreateChatRoom({
+        onError: () => {
+            setModalState({
+                isOpen: true,
+                title: "채팅방 생성 실패",
+                description: "본인이 등록한 상품에는 문의할 수 없습니다.",
+                type: "error",
+                onClose: closeModalNormal,
+            });
+        },
+    });
+        
 
     const [isStockModalOpen, setIsStockModalOpen] = useState(false);
     const [stockInput, setStockInput] = useState(formatNumber(product.stock));
@@ -40,6 +69,10 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
 
     const handleCloseStockModal = () => {
         setIsStockModalOpen(false);
+    };
+
+    const closeModalNormal = () => {
+        setModalState((prev) => ({ ...prev, isOpen: false }));
     };
 
     const handleStockInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,7 +136,12 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
                 preferredLocation: product.preferredTradeLocation,
             });
         } else {
-            // TODO: 채팅 페이지로 라우팅.. (의진님)
+            if (!session?.accessToken) return;
+            
+            createRoom({ 
+                productId: product.productId, 
+                accessToken: session.accessToken 
+            });
         }
     };
 
@@ -320,6 +358,14 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
                     </div>
                 </div>
             )}
+            <AlertModal
+                isOpen={modalState.isOpen}
+                onCancel={closeModalNormal}
+                onClose={modalState.onClose}
+                title={modalState.title}
+                description={modalState.description}
+                type={modalState.type}
+            />
         </div>
     );
 }

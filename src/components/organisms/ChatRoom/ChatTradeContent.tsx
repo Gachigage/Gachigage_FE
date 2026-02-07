@@ -1,85 +1,81 @@
+import { isEmpty } from "lodash";
+
 import Image from "next/image";
-import profileImage from "@/assets/images/profileImage.png";
 
-export default function ChatTradeContent() { 
-    const content= {
-        username: "이태경",
-        senderRole: 'BUYER',
-        content: '안녕하세요, 의자 문의 드립니다. 의자 너무 예쁘네요. 꼭 사고 싶습니다. 제가 가기 전까지 팔지 말아 주세요.',
-        createdAt: "2026-01-27T12:30:00",
-        roomId: '',
-        isRead: false,
-        profileImage: profileImage,
-    }
-    const content2 = {
-        username: "",
-        senderRole: 'SELLER',
-        content: '문의 주셔서 감사합니다. 몇개나 구매 하실건가요?',
-        createdAt: "2026-01-28T12:30:00",
-        roomId: '',
-        isRead: true,
-        profileImage: profileImage,
-    }
-    const chattings = [
-        content,
-        content2
-    ]
+import { ChatMessage, ChatRoomInfo } from "@/types/Chat";
+import { formatChatTime } from "@/lib/formatTimeUtils";
 
-    // 날짜가 바뀌었는지 확인
-    function isDifferentDay(a: string, b: string) {
+interface ChatTradeContentProps {
+  chatInfo: ChatRoomInfo;
+  chattings: ChatMessage[];
+}
+
+export default function ChatTradeContent({chatInfo, chattings}:ChatTradeContentProps) { 
+    const isDifferentDay = (a: string, b: string) => {
         return new Date(a).toDateString() !== new Date(b).toDateString();
     }
 
-    // 날짜 구분선용
-    function formatDateDivider(ts: string) {
+    const formatDateDivider = (ts: string) => {
         const d = new Date(ts);
         return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
     }
 
     return (
-        <div className="w-full h-full bg-gachigageGray0 p-[15px]">
-            {chattings.map((chat, index) => {
-                const prev = chattings[index - 1];
-                const showDateDivider = !prev || isDifferentDay(prev.createdAt, chat.createdAt);
-                return (
-                    <div key={index} className="flex flex-col">
-                        {showDateDivider && (
-                            <div className="text-center text-sm text-gray-400 my-3">
-                                <span>{formatDateDivider(chat.createdAt)}</span>
-                                <p className="w-full border border-gachigageGray1 mt-[5px]"/>
-                            </div>
-                        )}
-                        {chat.senderRole === 'BUYER' ?
-                         <div className="flex flex-row h-[110px] gap-2 justify-start">
-                            <Image 
-                                src={chat.profileImage} 
-                                alt="profile" 
-                                className="w-[41px] h-[41px] object-cover rounded-full shrink-0" 
-                                width={41} 
-                                height={41}
-                            />
-                            <div className="flex flex-col items-start gap-2 text-[13px]">
-                                <div className="font-bold">{chat.username}</div>
-                                <div className="flex flex-row gap-2 items-end">
-                                    <div className="flex w-[210px] bg-white rounded-[8px] p-[5px]">{chat.content}</div>
-                                    <div className="text-gachigageGray7">{chat.createdAt.split('T')[0]}</div>
+        <>
+            {!isEmpty(chattings) ?
+                <div className="flex-1 min-h-0 overflow-hidden w-full h-full bg-gachigageGray0 p-[15px] overflow-y-auto no-scrollbar">
+                    {chattings.map((chat, index) => {
+                        const prev = chattings[index - 1];
+                        const showDateDivider = !prev || isDifferentDay(prev.sendAt, chat.sendAt);
+
+                        return (
+                            <div key={index} className="mb-4">
+                            {showDateDivider && (
+                                <div className="text-center text-sm text-gray-400 my-4">
+                                <span>{formatDateDivider(chat.sendAt)}</span>
+                                <div className="w-full border border-gachigageGray1 mt-2" />
                                 </div>
-                                </div>
-                            </div> : 
-                            <div className="flex flex-col items-end gap-2 text-[13px]">
-                                <div className="font-bold">{chat.username}</div>
-                                <div className="flex flex-row gap-2 items-end">
-                                    <div className="flex flex-col text-gachigageGray7">
-                                        {chat.isRead && <span>읽음</span>}
-                                        <span>{chat.createdAt.split('T')[0]}</span>
+                            )}
+                            {!chat.me ? (
+                                <div className="flex items-start gap-2">
+                                    <Image
+                                        src={chat.senderIsBuyer ? chatInfo.buyerImageUrl : chatInfo.sellerImageUrl}
+                                        alt="sellerProfile"
+                                        className="w-[41px] h-[41px] object-cover rounded-full shrink-0"
+                                        width={41}
+                                        height={41}
+                                    />
+                                    <div className="flex flex-col gap-1 text-[13px]">
+                                        <div className="font-bold">{chat.senderIsBuyer ? chatInfo.buyerName : chatInfo.sellerName}</div>
+                                        <div className="flex items-end gap-2">
+                                        <div className="max-w-[210px] bg-white rounded-[8px] p-[8px] break-words">
+                                            {chat.content}
+                                        </div>
+                                        <span className="text-gachigageGray7 text-xs">
+                                            {formatChatTime(chat.sendAt)}
+                                        </span>
+                                        </div>
                                     </div>
-                                    <div className="flex w-[210px] bg-[#C7EEE3] rounded-[8px] p-[5px]">{chat.content}</div>
                                 </div>
+                            ) : (
+                                <div className="flex justify-end">
+                                <div className="flex items-end gap-2 text-[13px]">
+                                    <div className="flex flex-col text-gachigageGray7 text-xs items-end">
+                                        {/* <span>{chat.read ? '읽음' : '1'}</span> */}
+                                        <span>{formatChatTime(chat.sendAt)}</span>
+                                    </div>
+                                    <div className="max-w-[210px] bg-[#C7EEE3] rounded-[8px] p-[8px] break-words">
+                                    {chat.content}
+                                    </div>
+                                </div>
+                                </div>
+                            )}
                             </div>
-                        }
-                    </div>
-                )
-            })}
-        </div>
+                        );
+                    })}
+                </div> :
+                <div className="flex-1 min-h-0 overflow-hidden w-full h-full bg-gachigageGray0 p-[15px] overflow-y-auto no-scrollbar"></div>
+            }
+        </>
     )
 }
