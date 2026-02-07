@@ -1,4 +1,5 @@
 "use client";
+import { createPortal } from "react-dom";
 import errorIcon from "@/assets/icons/alertError.svg";
 import confirmIcon from "@/assets/icons/alertCheck.svg";
 import warningIcon from "@/assets/icons/alertWarning.svg";
@@ -36,16 +37,22 @@ export default function AlertModal({
     cancelText = "취소",
     confirmText = "확인",
 }: AlertModalProps) {
-    // [수정됨] isOpen이 false면 렌더링하지 않음
     if (!isOpen) return null;
 
-    return (
-        // [수정됨] 화면 중앙 정렬을 위한 오버레이(배경) 추가
-        <div className="fixed inset-0 z-[999] flex items-center justify-center">
+    const handleOverlayClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
+    const modalContent = (
+        <div
+            className="fixed inset-0 z-[999] flex items-center justify-center"
+            onClick={handleOverlayClick}
+        >
             <div
                 className="flex flex-col items-center gap-[24px] p-[24px] rounded-[16px] border border-gachigageGray1
-        w-[246px] md:w-[378px] shadow-[0_0_9px_0_rgba(0,0,0,0.2)] bg-gachigageWhite" // [수정됨] bg-white 명시
-                onClick={(e) => e.stopPropagation()} // 모달 내부 클릭 시 닫힘 방지
+        w-[246px] md:w-[378px] shadow-[0_0_9px_0_rgba(0,0,0,0.2)] bg-gachigageWhite"
+                onClick={handleOverlayClick}
             >
                 <p className="text-gachigageDark font-semibold leading-[120%]">
                     {title}
@@ -63,8 +70,9 @@ export default function AlertModal({
                         }`}
                     />
                 )}
-                <p className="break-words text-center whitespace-pre-line">{description}</p>{" "}
-                {/* [수정됨] 텍스트 중앙 정렬 */}
+                <p className="break-words text-center whitespace-pre-line">
+                    {description}
+                </p>
                 <div className="w-full flex gap-[8px]">
                     <button
                         onClick={onCancel}
@@ -82,4 +90,8 @@ export default function AlertModal({
             </div>
         </div>
     );
+
+    if (typeof window === "undefined") return null;
+
+    return createPortal(modalContent, document.body);
 }
