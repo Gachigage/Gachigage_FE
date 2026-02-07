@@ -5,12 +5,20 @@ import { useMediaQuery } from "@/lib/useMediaQuery";
 import { formatChatDay } from "@/lib/formatTimeUtils";
 
 import ChatUnRead from "./ChatUnRead";
+import DefaultProfileImage from "@/assets/images/defaultProfileImage.png"
+import { useMemo } from "react";
 
 export default function ChatItem({chatItem}: {chatItem: any}) {
     const isDesktop = useMediaQuery("(min-width: 1024px)");
     
-    if (isDesktop === null) return null;
+    const profileImageSrc = useMemo(() => {
+        return chatItem?.otherProfileImage && chatItem.otherProfileImage.trim() !== ""
+        ? chatItem.otherProfileImage
+        : DefaultProfileImage;
+    },[chatItem?.otherProfileImage])
 
+    // if (isDesktop === null) return null;
+    if (!chatItem) return null;
     return (
         <Link
             href={`/chat/${chatItem.chatRoomId}`}
@@ -27,7 +35,7 @@ export default function ChatItem({chatItem}: {chatItem: any}) {
         >
             <div className="flex flex-row gap-5 w-full h-full">
                 <Image
-                    src={chatItem.otherProfileImage}
+                    src={profileImageSrc}
                     alt="profile"
                     className="w-[41px] h-[41px] object-cover rounded-full shrink-0"
                     width={41}

@@ -16,6 +16,7 @@ interface ChatTradeInfoProps {
 }
 
 export default function ChatTradeInfo({chatInfo}:ChatTradeInfoProps) {
+    //TO-BE : 거래완료 유무값을 백앤드에서 받아야함
     const [isOpenProfileImage, setIsOpenProfileImage] = useState<boolean>(true);
     const {openTradeModal} = useChatUIStore();
     
@@ -23,8 +24,6 @@ export default function ChatTradeInfo({chatInfo}:ChatTradeInfoProps) {
         return chatInfo.amIBuyer
     },[chatInfo.amIBuyer])
 
-    console.info(isDisabled)
-    console.info(chatInfo)
     return (
         <div className={`w-full ${isOpenProfileImage ? 'h-[180px]' : 'h-[126px]'} flex flex-row shrink-0 gap-3 p-[20px] bg-[#ffffff]`}>
             {isOpenProfileImage && 

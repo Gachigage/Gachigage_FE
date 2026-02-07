@@ -1,10 +1,11 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 
 import DefaultButton from "@/components/atoms/DefaultButton";
+import DefaultProfileImage from "@/assets/images/defaultProfileImage.png";
 import PageName from "@/components/atoms/PageName";
 import NicknameChangeModal from "@/components/atoms/NicknameChangeModal";
 
@@ -13,16 +14,22 @@ import { useProfileImageMutation } from "@/hooks/useProfileImageMutation";
 
 
 export default function ProfileCard() {
-    const { mutate: changeProfileImage, isPending } = useProfileImageMutation();
-    const { data: session, status } = useSession();
+    const { mutate: changeProfileImage } = useProfileImageMutation();
+    const { data: session } = useSession();
 
     const [changeNickName, setChangeNickName] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     
-    const { data: userInfo, isLoading } = useMyPageInfo({
+    const { data: userInfo } = useMyPageInfo({
         accessToken: session?.accessToken,
         enabled: !!session?.accessToken,
     });      
+
+    const profileImageSrc = useMemo(() => {
+        return userInfo?.profileImage && userInfo.profileImage.trim() !== ""
+        ? userInfo.profileImage
+        : DefaultProfileImage;
+    },[userInfo?.profileImage])
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -35,6 +42,8 @@ export default function ProfileCard() {
 
         e.target.value = "";
     };
+
+    if (!userInfo) return null;
 
     return (
         <div className="w-full">
@@ -57,7 +66,7 @@ export default function ProfileCard() {
             ">
                 <div className="w-[172px] h-[172px]">
                    <Image
-                     src={userInfo?.profileImage ?? ''}
+                     src={profileImageSrc}
                      alt={'profileImage'}
                      width={172}
                      height={172}

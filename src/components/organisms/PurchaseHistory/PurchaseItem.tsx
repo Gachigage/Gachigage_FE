@@ -1,6 +1,6 @@
 import Image from "next/image";
-import smapleProduct1 from "@/assets/images/sampleProduct1.png";
 import { PurchaseHistoryType } from "./PurchaseHistoryType";
+import Link from "next/link";
 
 interface PurchaseItemProps {
     productItem: PurchaseHistoryType
@@ -9,9 +9,13 @@ interface PurchaseItemProps {
 export default function PurchaseItem({productItem, index} : PurchaseItemProps) {
     return(
         <>
-            <div key={index} className="flex flex-row gap-3">
+            <Link 
+                href={`/products/${productItem.productId}`} 
+                key={index} 
+                className="flex flex-row gap-3"
+            >
                 <Image
-                    src={productItem.thumbnailUrl ?? smapleProduct1}
+                    src={productItem.thumbnailUrl}
                     alt="thumbnailUrl"
                     width={165}
                     height={165}
@@ -32,7 +36,7 @@ export default function PurchaseItem({productItem, index} : PurchaseItemProps) {
                         <span>{productItem.quantity ?? 2}개</span>
                     </div>
                 </div>
-            </div>
+            </Link>
             <p className="border-b border-gachigageGray3 w-full"/>
         </>
     )

@@ -27,6 +27,7 @@ export default function ChatTradeModal({isOpen, chatRoomId, onClose}:ChatTradeMo
     const { data: tradeData = [], isLoading, error } = useTradeList(chatRoomId);
     const [tradeList, setTradeList] = useState<TradeListProps[]>([]);
     const { mutate: confirmTradeMutate } = useConfirmTrade(chatRoomId);
+    const {isOpenOrderModal, isOpenChatTradeModal, closeTradeModal, closeOrderModal} = useChatUIStore();
 
     useEffect(() => {
         if (!tradeData.length) return;
@@ -79,6 +80,7 @@ export default function ChatTradeModal({isOpen, chatRoomId, onClose}:ChatTradeMo
         if (!selectedTrade) return;
 
         confirmTradeMutate(selectedTrade.id);
+        closeTradeModal();
     };
 
     // 8일이후는 이걸로
