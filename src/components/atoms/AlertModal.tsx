@@ -14,6 +14,8 @@ type AlertModalProps = {
     onCancel: () => void;
     onClose: () => void;
     type: "error" | "confirm" | "warning" | "question" | "info";
+    cancelText?: string;
+    confirmText?: string;
 };
 
 const alertIconMap = {
@@ -31,6 +33,8 @@ export default function AlertModal({
     onCancel,
     onClose,
     type,
+    cancelText = "취소",
+    confirmText = "확인",
 }: AlertModalProps) {
     // [수정됨] isOpen이 false면 렌더링하지 않음
     if (!isOpen) return null;
@@ -64,13 +68,13 @@ export default function AlertModal({
                         onClick={onCancel}
                         className="w-full h-[40px] rounded-[8px] flex items-center justify-center font-normal text-gachigageGray7  border-[0.5px] border-gachigageGray3 bg-gachigageWhite cursor-pointer"
                     >
-                        취소
+                        {cancelText}
                     </button>
                     <button
                         onClick={onClose}
                         className="w-full h-[40px] rounded-[8px] flex items-center justify-center font-normal text-gachigageWhite  border-[0.5px] border-gachigageBrightMint1 bg-gachigageMint cursor-pointer"
                     >
-                        확인
+                        {confirmText}
                     </button>
                 </div>
             </div>
