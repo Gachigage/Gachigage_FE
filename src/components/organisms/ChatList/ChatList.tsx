@@ -1,12 +1,13 @@
 import { useState } from "react";
 import isEmpty from "lodash/isEmpty";
+import Image from "next/image";
 
 import { useSession } from "next-auth/react";
-
 import { useChatList } from "@/hooks/useChatList";
 import DefaultButton from "@/components/atoms/DefaultButton";
-
 import ChatItem from "./ChatItem";
+
+import emptyChatListIcon from "@/assets/icons/emptyChatList.svg";
 
 export default function ChatList() {
     const { data: session } = useSession();
@@ -18,7 +19,7 @@ export default function ChatList() {
 
     return (
         <>
-            {filteredChatList && !isEmpty(filteredChatList) && 
+            {filteredChatList && !isEmpty(filteredChatList) ?
                 <div className="
                     flex flex-col
                     w-full
@@ -29,41 +30,57 @@ export default function ChatList() {
                     md:max-w-[768px]
                     xl:max-w-[1152px]
                 ">
-                <div className="flex flex-row gap-2 shrink-0">
-                     <DefaultButton
-                        className={`w-full h-[33px] ${
-                            filter === "ALL"
-                            ? "text-gachigageDarkMint1 border-gachigageDarkMint1"
-                            : "text-gachigageGray7 border-gachigageGray7"
-                        }`}
-                        name="전체"
-                        onClick={() => setFilter("ALL")}
+                    {/* <div className="flex flex-row gap-2 shrink-0">
+                        <DefaultButton
+                            className={`w-full h-[33px] ${
+                                filter === "ALL"
+                                ? "text-gachigageDarkMint1 border-gachigageDarkMint1"
+                                : "text-gachigageGray7 border-gachigageGray7"
+                            }`}
+                            name="전체"
+                            onClick={() => setFilter("ALL")}
+                            />
+                        <DefaultButton
+                            className={`w-full h-[33px] ${
+                                filter === "UNREAD"
+                                ? "text-gachigageDarkMint1 border-gachigageDarkMint1"
+                                : "text-gachigageGray7 border-gachigageGray7"
+                            }`}
+                            name="안읽음"
+                            onClick={() => setFilter("UNREAD")}
                         />
-                    <DefaultButton
-                        className={`w-full h-[33px] ${
-                            filter === "UNREAD"
-                            ? "text-gachigageDarkMint1 border-gachigageDarkMint1"
-                            : "text-gachigageGray7 border-gachigageGray7"
-                        }`}
-                        name="안읽음"
-                        onClick={() => setFilter("UNREAD")}
-                    />
-                </div>
+                    </div> */}
+                    <div className="
+                        flex-1
+                        min-h-0
+                        border-gachigageGray1
+                        bg-gachigageGray0
+                        rounded-[8px]
+                        overflow-y-auto
+                    ">
+                        <div className="flex flex-col gap-2 p-[5px]">
+                            {filteredChatList.map((chatItem, index) => (
+                                <ChatItem key={index} chatItem={chatItem}/>
+                            ))}
+                        </div>  
+                    </div>
+                </div> :
                 <div className="
-                    flex-1
-                    min-h-0
-                    border-gachigageGray1
-                    bg-gachigageGray0
-                    rounded-[8px]
-                    overflow-y-auto
+                    flex 
+                    flex-col
+                    items-center
+                    justify-center
+                    w-full
+                    h-full
+                    gap-5
                 ">
-                    <div className="flex flex-col gap-2 p-[5px]">
-                        {filteredChatList.map((chatItem, index) => (
-                            <ChatItem key={index} chatItem={chatItem}/>
-                        ))}
-                    </div>  
+                    <Image 
+                        src={emptyChatListIcon}
+                        alt="emptyChatListIcon"
+                    />
+                    <span className="text-gachigageGray5 text-[16px]">문의하기를 통해 대화를 시작해보세요.</span>
                 </div>
-            </div>}
+            }
         </>
     )
 }

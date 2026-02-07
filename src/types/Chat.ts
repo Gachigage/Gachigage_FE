@@ -28,6 +28,7 @@ export interface ChatRoomInfo {
   productStatus: "SELLING" | "SOLD";
   unreadCount: number;
   amIBuyer: boolean;
+  memberId: number;
 }
 export interface ChatMessage {
   chatRoomId: number;
@@ -37,6 +38,7 @@ export interface ChatMessage {
   read: boolean;
   senderIsBuyer: boolean;
   me: boolean;
+  senderId: number;
 }
 export interface PageResponse<T> {
   content: T[];

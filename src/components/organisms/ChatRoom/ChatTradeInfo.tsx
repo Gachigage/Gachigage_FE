@@ -25,7 +25,7 @@ export default function ChatTradeInfo({chatInfo}:ChatTradeInfoProps) {
     },[chatInfo.amIBuyer])
 
     return (
-        <div className={`w-full ${isOpenProfileImage ? 'h-[180px]' : 'h-[126px]'} flex flex-row shrink-0 gap-3 p-[20px] bg-[#ffffff]`}>
+        <div className={`w-full ${isOpenProfileImage ? 'h-[160px]' : 'h-[106px]'} flex flex-row shrink-0 gap-3 p-[15px] bg-[#ffffff]`}>
             {isOpenProfileImage && 
             <Image 
                 src={chatInfo?.productImageUrl} 
