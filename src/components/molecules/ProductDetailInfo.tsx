@@ -238,20 +238,26 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
             )}
 
             {/* 거래 희망 장소 */}
-            <div className="w-full flex flex-col gap-[20px]">
-                <div className="flex items-center gap-[12px]">
-                    <span className="font-semibold text-[18px] text-gachigageDark">
-                        거래 희망 장소
-                    </span>
-                    <span className="font-normal text-[14px] text-gachigageDark/70">
-                        {product.preferredTradeLocation?.address}
-                    </span>
-                </div>
-                <NaverMap
-                    latitude={product.preferredTradeLocation?.latitude}
-                    longitude={product.preferredTradeLocation?.longitude}
-                />
-            </div>
+            {product.preferredTradeLocation?.latitude &&
+                product.preferredTradeLocation?.longitude &&
+                product.preferredTradeLocation?.address && (
+                    <div className="w-full flex flex-col gap-[20px]">
+                        <div className="flex items-center gap-[12px]">
+                            <span className="font-semibold text-[18px] text-gachigageDark">
+                                거래 희망 장소
+                            </span>
+                            <span className="font-normal text-[14px] text-gachigageDark/70">
+                                {product.preferredTradeLocation?.address}
+                            </span>
+                        </div>
+                        <NaverMap
+                            latitude={product.preferredTradeLocation?.latitude}
+                            longitude={
+                                product.preferredTradeLocation?.longitude
+                            }
+                        />
+                    </div>
+                )}
 
             {/* 좋아요 & 문의하기*/}
             <div className="fixed bottom-[110px] left-0 right-0 z-50 flex gap-[4px] rounded-t-[8px] shadow-[0_-2px_4px_0_rgba(0,0,0,0.06)] overflow-hidden md:static md:bottom-auto md:z-auto md:rounded-none md:shadow-none md:overflow-visible">
