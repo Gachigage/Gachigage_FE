@@ -89,7 +89,11 @@ export default function QuantityRadio({
                 ) : (
                     <div
                         key={index}
-                        className="flex items-center font-medium justify-between pl-[20px] pr-[12px] py-[7px] border-[1px] rounded-[8px] border-gachigageGray1 bg-white text-gachigageGray7"
+                        className={`flex items-center font-medium justify-between pl-[20px] pr-[12px] py-[7px] border-[1px] rounded-[8px] border-gachigageGray1 ${
+                            option.status === "INACTIVE"
+                                ? "bg-gachigageGray1 text-gachigageGray7"
+                                : "bg-white text-gachigageGray7"
+                        }`}
                     >
                         <span>{option.quantity}개</span>
                         <span>{formatNumber(option.price)}원</span>

@@ -8,17 +8,20 @@ import AlertModal from "./AlertModal";
 type InquireOrEditButtonType = {
     isOwner: boolean;
     isEditorInquireClick?: () => void;
+    disabled?: boolean;
 };
 
 export default function InquireOrEditButton({
     isOwner,
     isEditorInquireClick,
+    disabled = false,
 }: InquireOrEditButtonType) {
     const { data: session } = useSession();
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleClick = () => {
+        if (disabled) return;
         if (isOwner) {
             isEditorInquireClick?.();
         } else {
@@ -33,10 +36,13 @@ export default function InquireOrEditButton({
     return (
         <>
             <button
-                className={`w-full h-[56px] flex items-center justify-center  bg-gachigageMint text-gachigageWhite leading-[120%] text-[24px]  font-semibold cursor-pointer
-                md:border-[0.5px] border-gachigageBrightMint1 md:rounded-[8px]
-            `}
+                className={`w-full h-[56px] flex items-center justify-center leading-[120%] text-[24px] font-semibold md:border-[0.5px] md:rounded-[8px] ${
+                    disabled
+                        ? "bg-gachigageGray3 text-gachigageGray5 cursor-not-allowed border-gachigageGray3"
+                        : "bg-gachigageMint text-gachigageWhite cursor-pointer border-gachigageBrightMint1"
+                }`}
                 onClick={handleClick}
+                disabled={disabled}
             >
                 {isOwner ? "수정하기" : "문의하기"}
             </button>

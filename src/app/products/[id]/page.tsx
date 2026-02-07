@@ -17,6 +17,10 @@ export default async function ProductDetailPage({
         .data;
     console.log(product);
 
+    const isSoldOut =
+        product.priceTable.length > 0 &&
+        product.priceTable.every((item) => item.status === "INACTIVE");
+
     return (
         <div className="w-full flex-1 bg-gachigageWhite flex justify-center">
             <div className="w-full pt-[140px] pb-[190px] md:pb-[60px] max-w-[354px] md:max-w-[1152px] md:px-[24px] flex flex-col gap-[60px]">
@@ -31,7 +35,7 @@ export default async function ProductDetailPage({
                 </div>
 
                 <div className="w-full flex flex-col md:flex-row gap-[60px] justify-center">
-                    <ProductDetailImgs images={product.imageUrls} />
+                    <ProductDetailImgs images={product.imageUrls} isSoldOut={isSoldOut} />
                     <ProductDetailInfo product={product} />
                 </div>
                 <RelatedProducts products={product.relatedProducts.products} />

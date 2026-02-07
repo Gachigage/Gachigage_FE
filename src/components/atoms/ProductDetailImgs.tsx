@@ -4,13 +4,16 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
 import gray1LeftArrow from "@/assets/icons/gray1LeftArrow.svg";
 import gray1RightArrow from "@/assets/icons/gray1RightArrow.svg";
-import sampleImg from "@/assets/images/sampleProduct1.png";
 
 interface ProductDetailImgsProps {
     images: string[];
+    isSoldOut?: boolean;
 }
 
-export default function ProductDetailImgs({ images }: ProductDetailImgsProps) {
+export default function ProductDetailImgs({
+    images,
+    isSoldOut = false,
+}: ProductDetailImgsProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
     const isDraggingRef = useRef(false);
@@ -77,6 +80,14 @@ export default function ProductDetailImgs({ images }: ProductDetailImgsProps) {
                     fill
                     className="object-cover"
                 />
+
+                {isSoldOut && (
+                    <div className="absolute inset-0 bg-[#6D6767]/60 flex items-center justify-center z-10">
+                        <span className="text-gachigageWhite text-[24px] font-normal leading-[120%] text-center whitespace-pre-line">
+                            {"SOLD\nOUT"}
+                        </span>
+                    </div>
+                )}
 
                 <button
                     onClick={handlePrev}
