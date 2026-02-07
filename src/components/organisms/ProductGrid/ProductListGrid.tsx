@@ -1,8 +1,8 @@
-import { ProductGridProps } from "./ProductGridType";
+import { ProductListProps } from "@/types/Mypage";
 import ProductItem from "./ProductItem";
 
 interface ProductListGridProps {    
-    productList: ProductGridProps[];
+    productList: ProductListProps[];
     columns?: number;
     limit?: number;
 }

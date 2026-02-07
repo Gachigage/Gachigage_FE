@@ -9,8 +9,8 @@ import PurchaseList from "./PurchaseList";
 import { useTradeHistory } from "@/hooks/useTradeHistory";
 
 export default function PurchaseHistory() {
-    const { data: session, status } = useSession();
-    const { data: products = [], isLoading } = useTradeHistory({
+    const { data: session } = useSession();
+    const { data: products = [] } = useTradeHistory({
         type: "purchases",
         page: 0,
         size: 6,

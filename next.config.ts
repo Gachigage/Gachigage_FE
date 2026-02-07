@@ -2,10 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
     output: "standalone",
-    // TODO: 배포 테스트용 - 타입 체크 임시 비활성화
-    typescript: {
-        ignoreBuildErrors: true,
-    },
     images: {
         remotePatterns: [
             {

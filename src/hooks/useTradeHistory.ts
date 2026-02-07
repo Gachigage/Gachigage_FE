@@ -20,8 +20,16 @@ export function useTradeHistory({
     queryKey: ["tradeHistory", type, page, size],
     queryFn: () => fetchTradeHistory(type, page, size, accessToken),
     enabled,
-     select: (data) => {
-      return [...data.content]; 
-    },
+    select: (res) =>
+    res.content.map((item) => ({
+      productId: item.productId,
+      title: item.title,
+      thumbnailUrl: item.thumbnailUrl,
+      mainImageUrl: item.mainImageUrl,
+      price: item.price,
+      quantity: item.quantity,
+      tradeDate: item.createdAt,
+      tradeId: item.tradeId,
+    })),
   });
 }
