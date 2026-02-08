@@ -117,6 +117,11 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
     const handleEditOrInquire = () => {
         if (product.isOwner) {
             router.push(`/products/${product.productId}/edit`);
+            const locationToLoad =
+                product.preferredTradeLocation?.address
+                    ? product.preferredTradeLocation
+                    : null;
+
             loadProductData({
                 images: product.imageUrls,
                 primaryCategoryId: product.category.mainCategoryId,
@@ -133,7 +138,7 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
                         product.tradeType === "DELIVERY" ||
                         product.tradeType === "ALL",
                 },
-                preferredLocation: product.preferredTradeLocation,
+                preferredLocation: locationToLoad,
             });
         } else {
             if (!session?.accessToken) return;
