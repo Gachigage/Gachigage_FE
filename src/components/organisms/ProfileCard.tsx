@@ -11,6 +11,7 @@ import NicknameChangeModal from "@/components/atoms/NicknameChangeModal";
 
 import { useMyPageInfo } from "@/hooks/useMypageInfo";
 import { useProfileImageMutation } from "@/hooks/useProfileImageMutation";
+import { LogoutButton } from "@/components/atoms/LogoutButton";
 
 
 export default function ProfileCard() {
@@ -74,7 +75,10 @@ export default function ProfileCard() {
                    />
                 </div>
                 <div className="flex flex-col gap-3">
-                    <div className="text-dSubTitle">{userInfo?.nickname}</div>
+                    <div className="flex items-center justify-between">
+                        <div className="text-dSubTitle">{userInfo?.nickname}</div>
+                        <span className="md:hidden"><LogoutButton /></span>
+                    </div>
                     <div className="--text-dBody text-[var(--color-gachigageGray7)] flex flex-col gap-1">
                         <div className="flex flex-row">
                             <span className="pr-[5px]">이메일:</span>
