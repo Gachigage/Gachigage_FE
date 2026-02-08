@@ -14,6 +14,9 @@ export default function ProductEdutPage() {
     const router = useRouter();
     const { id: productId } = useParams<{ id: string }>();
     const images = useProductFormStore((state) => state.images);
+    const primaryCategoryId = useProductFormStore(
+        (state) => state.primaryCategoryId,
+    );
     const secondaryCategoryId = useProductFormStore(
         (state) => state.secondaryCategoryId,
     );
@@ -109,9 +112,12 @@ export default function ProductEdutPage() {
         });
     };
 
+    const hasCategorySelected =
+        secondaryCategoryId !== null || primaryCategoryId !== null;
+
     const formIsValid =
         images.length >= 1 &&
-        secondaryCategoryId !== null &&
+        hasCategorySelected &&
         title.trim() !== "" &&
         stock > 0 &&
         priceTable.some((item) => item.quantity > 0 && item.price > 0) &&
