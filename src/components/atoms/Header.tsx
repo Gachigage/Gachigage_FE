@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import AlertModal from "./AlertModal";
+import { LogoutButton } from "./LogoutButton";
 
 export default function Header() {
     const pathname = usePathname();
@@ -78,17 +79,20 @@ export default function Header() {
                         </div>
                     </div>
 
-                    <Link
-                        href="/mypage"
-                        onClick={handleProtectedClick}
-                        className={`py-[6.5px] cursor-pointer ${
-                            pathname.startsWith("/mypage")
-                                ? "font-semibold"
-                                : ""
-                        }`}
-                    >
-                        마이페이지
-                    </Link>
+                    <div className="flex gap-[20px] items-center">
+                        {session && <LogoutButton />}
+                        <Link
+                            href="/mypage"
+                            onClick={handleProtectedClick}
+                            className={`py-[6.5px] cursor-pointer ${
+                                pathname.startsWith("/mypage")
+                                    ? "font-semibold"
+                                    : ""
+                            }`}
+                        >
+                            마이페이지
+                        </Link>
+                    </div>
                 </div>
             </div>
             <AlertModal
