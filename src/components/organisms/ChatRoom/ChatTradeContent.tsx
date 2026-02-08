@@ -42,7 +42,7 @@ export default function ChatTradeContent({chatInfo, chattings}:ChatTradeContentP
             {!isEmpty(chattings) ?
                 <div
                     ref={containerRef} 
-                    className="flex-1 min-h-0 overflow-hidden w-full h-full bg-gachigageGray0 p-[15px] overflow-y-auto no-scrollbar">
+                    className="flex-1 min-h-0 overflow-hidden w-full h-full bg-gachigageGray0 px-[15px] overflow-y-auto no-scrollbar">
                     {chattings.map((chat, index) => {
                         const prev = chattings[index - 1];
                         const showDateDivider = !prev || isDifferentDay(prev.sendAt, chat.sendAt);
