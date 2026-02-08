@@ -7,6 +7,7 @@ import {
   sendMessage as stompSendMessage,
 } from "@/lib/stomp/stompManager";
 import { ChatMessage } from "@/types/Chat";
+import { v4 as uuidv4 } from 'uuid';
 
 export function useChatSocket({
   chatRoomId,
@@ -42,6 +43,7 @@ export function useChatSocket({
           ...message,
           content: normalizedContent,
           me: isMine,
+          messageUuid: message.messageUuid || uuidv4() // 서버에 messageUuid 없으면 임시 UUID
         };
 
         queryClient.setQueryData(["chatMessages", chatRoomId], (old: { content: ChatMessage[]; pageable: any } | undefined) => {
@@ -49,7 +51,10 @@ export function useChatSocket({
 
           // 중복 메시지 방지
           const exists = current.content.some((m: ChatMessage) =>
-            m.sendAt === normalizedMessage.sendAt && m.content === normalizedMessage.content
+            m.sendAt === normalizedMessage.sendAt && 
+            m.content === normalizedMessage.content &&
+            m.senderId === normalizedMessage.senderId &&
+            m.messageUuid === normalizedMessage.messageUuid
           );
           if (exists) return current;
 
@@ -81,9 +86,12 @@ export function useChatSocket({
   }) => {
     if (!content.trim() || !memberId) return;
 
+    const tempId = uuidv4(); // 임시 UUID 생성
     const sendAt = new Date().toISOString();
+    console.info(tempId)
     const optimisticMessage: ChatMessage = {
       chatRoomId,
+      messageUuid: tempId,  // 여기에 UUID 부여
       content,
       messageType: 'TEXT',
       sendAt,
@@ -97,7 +105,10 @@ export function useChatSocket({
       const current = old || { content: [] as ChatMessage[], pageable: {} };
 
       const exists = current.content.some((m: ChatMessage) =>
-        m.sendAt === optimisticMessage.sendAt && m.content === optimisticMessage.content
+        m.sendAt === optimisticMessage.sendAt &&
+        m.content === optimisticMessage.content &&
+        m.senderId === optimisticMessage.senderId &&
+        m.messageUuid === optimisticMessage.messageUuid
       );
       if (exists) return current;
 
@@ -112,6 +123,7 @@ export function useChatSocket({
       chatRoomId,
       messageType: 'TEXT',
       content,
+      messageUuid: tempId
     });
   };
 
