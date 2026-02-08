@@ -77,6 +77,7 @@ export const sendMessage = (payload: {
   chatRoomId: number;
   messageType: MessageType;
   content: string;
+  messageUuid: string;
 }) => {
   if (!client || !client.connected) return;
 
@@ -86,6 +87,7 @@ export const sendMessage = (payload: {
       chatRoomId: String(payload.chatRoomId),
       messageType: payload.messageType,
       content: payload.content,
+      messageUuid: payload.messageUuid
     }),
   });
 };

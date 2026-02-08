@@ -39,6 +39,7 @@ export interface ChatMessage {
   senderIsBuyer: boolean;
   me: boolean;
   senderId: number;
+  messageUuid: string;
 }
 export interface PageResponse<T> {
   content: T[];

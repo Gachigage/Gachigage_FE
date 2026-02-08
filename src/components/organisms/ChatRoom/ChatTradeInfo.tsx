@@ -25,22 +25,22 @@ export default function ChatTradeInfo({chatInfo}:ChatTradeInfoProps) {
     },[chatInfo.amIBuyer])
 
     return (
-        <div className={`w-full ${isOpenProfileImage ? 'h-[160px]' : 'h-[106px]'} flex flex-row shrink-0 gap-3 p-[15px] bg-[#ffffff]`}>
+        <div className={`w-full ${isOpenProfileImage ? 'h-[140px]' : 'h-[106px]'} flex flex-row shrink-0 gap-3 p-[10px] bg-[#ffffff]`}>
             {isOpenProfileImage && 
             <Image 
                 src={chatInfo?.productImageUrl} 
                 alt="productImage" 
-                className="w-[132px] h-[132px] rounded-[8px]"
-                width={132}
-                height={132}
+                className="w-[112px] h-[112px] rounded-[8px]"
+                width={112}
+                height={112}
             />}
-            <div className="w-full flex flex-col justify-between">
+            <div className="w-full flex flex-col justify-between py-[10px]">
                 <div className="flex justify-between">
-                    <div className="flex flex-row text-[16px]">
-                        <span className="pr-[5px]">상품명:</span>
-                        <span>{chatInfo.productTitle}</span>
+                    <div className="flex flex-row text-[16px] min-w-[60px]">
+                        <span className="pr-[5px] shrink-0">상품명:</span>
+                        <span className="overflow-hidden text-ellipsis whitespace-nowrap">{chatInfo.productTitle}</span>
                     </div>
-                    <div className="flex flex-row gap-1 items-center cursor-pointer" onClick={() => setIsOpenProfileImage(!isOpenProfileImage)}>
+                    <div className="flex flex-row gap-1 items-center cursor-pointer shrink-0" onClick={() => setIsOpenProfileImage(!isOpenProfileImage)}>
                         <div className="text-[13px] text-gachigageGray7">{isOpenProfileImage ? '접기' : '펼치기'}</div>
                             {isOpenProfileImage ? 
                                 <Image
@@ -59,7 +59,7 @@ export default function ChatTradeInfo({chatInfo}:ChatTradeInfoProps) {
                 <DefaultButton
                     name="거래요청" 
                     disabled={isDisabled}
-                    className={`w-full h-[40px] 
+                    className={`w-full h-[35px] 
                         ${isDisabled ? 'text-gachigageGray5 ' : 'text-gachigageSubMint'}
                         ${isDisabled ? 'bg-gachigageGray3' : 'bg-white'}
                         ${isDisabled ? 'disabled:cursor-not-allowed' : 'cursor-pointer'}
