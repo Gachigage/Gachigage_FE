@@ -13,8 +13,10 @@ interface ChatInputProps {
 }
 export default function ChatInput({chatRoomId, sendMessage} : ChatInputProps) {
     const [message, setMessage] = useState("");
+    const [isComposing, setIsComposing] = useState(false); // 조합 중 상태
 
     const handleSendMessage = () => {
+        if (!message.trim()) return;
         sendMessage({
             chatRoomId,
             messageType: "TEXT",
@@ -24,7 +26,7 @@ export default function ChatInput({chatRoomId, sendMessage} : ChatInputProps) {
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (e.key === "Enter" && !e.shiftKey) {
+        if (e.key === "Enter" && !e.shiftKey && !isComposing) {
             e.preventDefault();
             handleSendMessage();
         }
@@ -36,18 +38,20 @@ export default function ChatInput({chatRoomId, sendMessage} : ChatInputProps) {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyDown}
+                onCompositionStart={() => setIsComposing(true)} // 조합 시작
+                onCompositionEnd={() => setIsComposing(false)}   // 조합 종료
                 placeholder="메세지 입력"
                 className="
-                w-full
-                h-full
-                text-[16px]
-                resize-none
-                overflow-hidden
-                align-top
-                pt-[8px]
-                hover:border-transparent
-                focus:border-transparent
-                focus:outline-none
+                    w-full
+                    h-full
+                    text-[16px]
+                    resize-none
+                    overflow-hidden
+                    align-top
+                    pt-[8px]
+                    hover:border-transparent
+                    focus:border-transparent
+                    focus:outline-none
                 "
             />
             <div className="w-full flex flex-row justify-end">
