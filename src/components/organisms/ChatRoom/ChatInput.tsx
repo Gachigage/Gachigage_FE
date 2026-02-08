@@ -31,7 +31,7 @@ export default function ChatInput({chatRoomId, sendMessage} : ChatInputProps) {
     };
 
     return (
-        <div className="flex flex-col shrink-0 justify-between items-end h-[104px] border border-gachigageGray3 bg-gachigageWhite rounded-b-[8px] p-[10px] m-[10px]">
+        <div className="flex flex-col shrink-0 justify-between items-end h-[84px] border border-gachigageGray3 bg-gachigageWhite rounded-b-[8px] p-[10px] m-[10px]">
              <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
@@ -42,6 +42,7 @@ export default function ChatInput({chatRoomId, sendMessage} : ChatInputProps) {
                 h-full
                 text-[16px]
                 resize-none
+                overflow-hidden
                 align-top
                 pt-[8px]
                 hover:border-transparent

@@ -5,12 +5,15 @@ import Image from "next/image";
 import { ChatMessage, ChatRoomInfo } from "@/types/Chat";
 import { formatChatTime } from "@/lib/formatTimeUtils";
 
+import DefaultProfileImage from "@/assets/images/defaultProfileImage.png";
+import { useEffect, useRef } from "react";
 interface ChatTradeContentProps {
   chatInfo: ChatRoomInfo;
   chattings: ChatMessage[];
 }
 
-export default function ChatTradeContent({chatInfo, chattings}:ChatTradeContentProps) { 
+export default function ChatTradeContent({chatInfo, chattings}:ChatTradeContentProps) {
+    const containerRef = useRef<HTMLDivElement>(null); 
     const isDifferentDay = (a: string, b: string) => {
         return new Date(a).toDateString() !== new Date(b).toDateString();
     }
@@ -20,10 +23,26 @@ export default function ChatTradeContent({chatInfo, chattings}:ChatTradeContentP
         return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
     }
 
+    const profileImage = (chat: any) => {
+        if(chat.senderIsBuyer) {
+            return !isEmpty(chatInfo.buyerImageUrl) ? chatInfo.buyerImageUrl : DefaultProfileImage
+        } else {
+            return !isEmpty(chatInfo.sellerImageUrl) ? chatInfo.sellerImageUrl : DefaultProfileImage 
+        }
+    }
+
+    useEffect(() => {
+        if (containerRef.current) {
+            containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        }
+    }, [chattings]);
+
     return (
         <>
             {!isEmpty(chattings) ?
-                <div className="flex-1 min-h-0 overflow-hidden w-full h-full bg-gachigageGray0 p-[15px] overflow-y-auto no-scrollbar">
+                <div
+                    ref={containerRef} 
+                    className="flex-1 min-h-0 overflow-hidden w-full h-full bg-gachigageGray0 p-[15px] overflow-y-auto no-scrollbar">
                     {chattings.map((chat, index) => {
                         const prev = chattings[index - 1];
                         const showDateDivider = !prev || isDifferentDay(prev.sendAt, chat.sendAt);
@@ -39,7 +58,7 @@ export default function ChatTradeContent({chatInfo, chattings}:ChatTradeContentP
                             {!chat.me ? (
                                 <div className="flex items-start gap-2">
                                     <Image
-                                        src={chat.senderIsBuyer ? chatInfo.buyerImageUrl : chatInfo.sellerImageUrl}
+                                        src={profileImage(chat)}
                                         alt="sellerProfile"
                                         className="w-[41px] h-[41px] object-cover rounded-full shrink-0"
                                         width={41}

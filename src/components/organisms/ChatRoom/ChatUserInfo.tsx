@@ -17,17 +17,17 @@ export default function ChatUserInfo({chatInfo}: ChatUserInfoProps) {
     };
 
     return (
-        <div className="w-full px-[10px] h-[62px] flex items-center bg-[#ffffff] shrink-0">
+        <div className="w-full px-[10px] h-[42px] flex items-center bg-[#ffffff] shrink-0">
             <div className="flex items-center gap-2 cursor-pointer" onClick={handleBackClick}>
                 <Link href="/chat" className="flex items-center">
                     <Image
                         src={backArrow}
                         alt="back"
-                        width={28}
-                        height={28}
+                        width={24}
+                        height={24}
                     />
                 </Link>
-                {chatInfo.unreadCount > 0 && <span className="text-[20px] font-bold">{chatInfo.unreadCount}</span>}
+                {/* {chatInfo.unreadCount > 0 && <span className="text-[20px] font-bold">{chatInfo.unreadCount}</span>} */}
             </div>
             <span className="
                 absolute
@@ -35,7 +35,7 @@ export default function ChatUserInfo({chatInfo}: ChatUserInfoProps) {
                 -translate-x-1/2
                 text-gachigageDark
                 font-semibold
-                text-[24px]
+                text-[22px]
                 leading-[120%]
                 whitespace-nowrap
             ">
