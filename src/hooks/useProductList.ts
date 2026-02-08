@@ -45,7 +45,6 @@ export const useProductList = () => {
             if (productLocation.city === "전체") {
                 params.locationDto = {
                     province: productLocation.province,
-                    city: null,
                 };
             } else if (productLocation.city) {
                 params.locationDto = {
