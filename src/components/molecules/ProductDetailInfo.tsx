@@ -57,7 +57,6 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
             });
         },
     });
-        
 
     const [isStockModalOpen, setIsStockModalOpen] = useState(false);
     const [stockInput, setStockInput] = useState(formatNumber(product.stock));
@@ -117,10 +116,9 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
     const handleEditOrInquire = () => {
         if (product.isOwner) {
             router.push(`/products/${product.productId}/edit`);
-            const locationToLoad =
-                product.preferredTradeLocation?.address
-                    ? product.preferredTradeLocation
-                    : null;
+            const locationToLoad = product.preferredTradeLocation?.address
+                ? product.preferredTradeLocation
+                : null;
 
             loadProductData({
                 images: product.imageUrls,
@@ -142,10 +140,10 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
             });
         } else {
             if (!session?.accessToken) return;
-            
-            createRoom({ 
-                productId: product.productId, 
-                accessToken: session.accessToken 
+
+            createRoom({
+                productId: product.productId,
+                accessToken: session.accessToken,
             });
         }
     };
@@ -303,7 +301,7 @@ export default function ProductDetailInfo({ product }: ProductDetailInfoType) {
                 )}
 
             {/* 좋아요 & 문의하기*/}
-            <div className="fixed bottom-[110px] left-0 right-0 z-50 flex gap-[4px] rounded-t-[8px] shadow-[0_-2px_4px_0_rgba(0,0,0,0.06)] overflow-hidden md:static md:bottom-auto md:z-auto md:rounded-none md:shadow-none md:overflow-visible">
+            <div className="bg-gachigageWhite fixed bottom-[110px] left-0 right-0 z-50 flex gap-[4px] rounded-t-[8px] shadow-[0_-2px_4px_0_rgba(0,0,0,0.06)] overflow-hidden md:static md:bottom-auto md:z-auto md:rounded-none md:shadow-none md:overflow-visible">
                 <LikeButton
                     isLiked={product.isLiked}
                     productId={product.productId}
