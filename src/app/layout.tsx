@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "./Providers";
 import localFont from "next/font/local";
+import NewRelic from "@/components/atoms/NewRelic";
 
 const pretendard = localFont({
     src: "../assets/fonts/PretendardVariable.woff2",
@@ -26,6 +27,7 @@ export default function RootLayout({
     return (
         <html lang="ko" className={`${pretendard.variable}`}>
             <body className="antialiased">
+                {process.env.NODE_ENV === "production" && <NewRelic />}
                 <Providers>{children}</Providers>
             </body>
         </html>
