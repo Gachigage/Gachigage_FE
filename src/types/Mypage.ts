@@ -20,15 +20,53 @@ export interface ProductListProps {
   productId: number;
 }
 
-// export interface TradeHistoryItem {
-//   tradeId: number;
-//   productId: number;
-//   title: string;
-//   price: number;
-//   thumbnailUrl: string;
-//   tradeDate: string;
-//   quantity: number;
-// }
+export interface PageResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+}
+
+export interface PurchaseItem {
+  tradeId: number;
+  productId: number;
+  title: string;
+  thumbnailUrl: string;
+  price: number;
+  quantity: number;
+  tradeDate: string;
+  status: "DONE" | "CANCELLED";
+}
+
+export type PurchaseHistoryData = PageResponse<PurchaseItem>;
+
+export interface ListingItem {
+  productId: number;
+  title: string;
+  mainImageUrl: string;
+  province: string;
+  city: string;
+  tradeType: "DIRECT" | "DELIVERY";
+  price: number;
+  quantity: number;
+  viewCount: number;
+  createdAt: string;
+  liked: boolean;
+}
+
+export type ListingHistoryData = PageResponse<ListingItem>;
+
+export interface ApiResponse<T> {
+  errorCode: string;
+  status: number;
+  message: string;
+  data: T;
+}
+
 
 export interface PurchaseItem {
   productId: number;
@@ -43,6 +81,7 @@ export interface PurchaseItem {
   quantity: number;
   viewCount: number;
   createdAt: string;
+  tradeDate: string;
   liked: boolean;
   tradeId: number;
 }

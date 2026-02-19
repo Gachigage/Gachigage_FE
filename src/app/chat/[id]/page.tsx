@@ -58,19 +58,14 @@ export default function ChatRoom() {
                         flex-1
                         min-h-0
                     ">
-                        <div className="flex flex-col w-full h-full border border-gachigageGray1 bg-gachigageGray0">
+                        <div className="flex flex-col w-full h-full border border-gachigageGray1 bg-gachigageGray0 rounded-[8px]">
                             <ChatUserInfo chatInfo={chatInfo} />
                             <ChatTradeInfo chatInfo={chatInfo}/>
                             <ChatTradeContent chatInfo={chatInfo} chattings={chattings}/>
                             <ChatInput chatRoomId={chatInfo.chatRoomId} sendMessage={sendMessage}/>
-                            {isOpenOrderModal &&
-                                <OrderSheetModal 
-                                    isOpen={isOpenOrderModal}
-                                    onClose={closeOrderModal}
-                                />
-                            }
                             {isOpenChatTradeModal &&
                                 <ChatTradeModal
+                                    chatInfo={chatInfo}
                                     isOpen={isOpenChatTradeModal}
                                     onClose={closeTradeModal}
                                     chatRoomId={chatInfo?.chatRoomId}

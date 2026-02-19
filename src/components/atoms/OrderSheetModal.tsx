@@ -2,25 +2,23 @@ import React, {useEffect, useMemo, useState} from 'react';
 import { createPortal } from "react-dom";
 import DefaultButton from "./DefaultButton";
 import { useChatUIStore } from '@/store/chat/useChatUIStore';
+import { ChatRoomInfo } from '@/types/Chat';
 
+interface OrderListProps {
+    id: number;
+    isChecked: boolean;
+    price: number;
+    quantity: number;
+    selectCnt: number;
+}
 interface OrderSheetModalProps {
+    orderList: OrderListProps[];
     isOpen: boolean;
     onClose: () => void;
 }
 
-interface OrderListProps {
-    count: number;
-    price: number;
-    selectCnt: number;
-}
-
-export default function OrderSheetModal({isOpen, onClose}: OrderSheetModalProps) {
-    const [orderList, setOrderList] = useState<OrderListProps[]>([
-        {count: 10, price: 100000, selectCnt: 1},
-        {count: 100, price: 1000000, selectCnt: 1 },
-        {count: 500, price: 5000000, selectCnt: 1 },
-    ]);
-    
+export default function OrderSheetModal({orderList, isOpen, onClose}: OrderSheetModalProps) {
+    console.info
     const orderTotalAmount = useMemo(() => {
         return orderList.reduce(
             (acc, order) => acc + order.selectCnt * order.price,
@@ -50,7 +48,7 @@ export default function OrderSheetModal({isOpen, onClose}: OrderSheetModalProps)
                 <div className="flex flex-col w-full gap-3">
                     <div className="w-full flex flex-row justify-between">
                         <span className="text-[16px] font-bold">주문서</span>
-                        <DefaultButton name="수정 요청" className="w-[73px] h-[33px] text-[13px] text-gachigageGray7 border border-gachigageGray3"/>
+                        {/* <DefaultButton name="수정 요청" className="w-[73px] h-[33px] text-[13px] text-gachigageGray7 border border-gachigageGray3"/> */}
                     </div>
                     <p className="w-full border border-gachigageGray1"/>
                     <div className='flex flex-col gap-2'>
@@ -59,7 +57,7 @@ export default function OrderSheetModal({isOpen, onClose}: OrderSheetModalProps)
                                 <div className='flex flex-row justify-between items-center text-[16px]'>
                                     <div className='flex flex-row items-center gap-2'>
                                         <div className="flex items-center justify-center w-[69px] h-[40px] p-[5px] text-gachigageGray7 border border-gachigageGray3 rounded-[8px]">
-                                            <span>{item.count}</span>
+                                            <span>{item.quantity}</span>
                                             <span>개</span>
                                             </div>
                                             <p>X</p>

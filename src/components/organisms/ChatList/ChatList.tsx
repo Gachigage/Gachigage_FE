@@ -23,15 +23,15 @@ export default function ChatList() {
                 <div className="
                     flex flex-col
                     w-full
+                    lg:w-[270px]
+                    lg:min-w-[270px]
+                    lg:max-w-[270px]
+                    lg:shrink-0
                     gap-2
-                    no-scrollbar
                     px-2
-                    md:px-0
-                    md:max-w-[768px]
-                    xl:max-w-[1152px]
                 ">
-                    {/* <div className="flex flex-row gap-2 shrink-0">
-                        <DefaultButton
+                    <div className="flex flex-row gap-2 shrink-0">
+                        {/* <DefaultButton
                             className={`w-full h-[33px] ${
                                 filter === "ALL"
                                 ? "text-gachigageDarkMint1 border-gachigageDarkMint1"
@@ -48,8 +48,8 @@ export default function ChatList() {
                             }`}
                             name="안읽음"
                             onClick={() => setFilter("UNREAD")}
-                        />
-                    </div> */}
+                        /> */}
+                    </div>
                     <div className="
                         flex-1
                         min-h-0
@@ -57,6 +57,7 @@ export default function ChatList() {
                         bg-gachigageGray0
                         rounded-[8px]
                         overflow-y-auto
+                        no-scrollbar
                     ">
                         <div className="flex flex-col gap-2 p-[5px]">
                             {filteredChatList.map((chatItem, index) => (
@@ -66,19 +67,33 @@ export default function ChatList() {
                     </div>
                 </div> :
                 <div className="
-                    flex 
-                    flex-col
+                    flex flex-col
+                    w-full
                     items-center
                     justify-center
-                    w-full
-                    h-full
-                    gap-5
+                    lg:w-[270px]
+                    lg:min-w-[270px]
+                    lg:max-w-[270px]
+                    lg:bg-gachigageGray0
+                    lg:shrink-0
+                    lg:rounded-[8px]
+                    gap-2
+                    px-2
                 ">
-                    <Image 
+                    <div className="lg:hidden">
+                        <Image
                         src={emptyChatListIcon}
                         alt="emptyChatListIcon"
-                    />
-                    <span className="text-gachigageGray5 text-[16px]">문의하기를 통해 대화를 시작해보세요.</span>
+                        />
+                    </div>
+                    <span className="text-gachigageGray5 text-[16px] lg:text-gachigageGray5">
+                        <span className="lg:hidden">
+                        문의하기를 통해 대화를 시작해보세요.
+                        </span>
+                        <span className="hidden lg:inline">
+                        대화방이 없어요.
+                        </span>
+                    </span>
                 </div>
             }
         </>

@@ -6,7 +6,6 @@ export type ChatDetail = {
   lastMessageTime: string;
   unreadCount: number;
 }
-
 export interface ChatListResponse {
   chatRoomId: number;
   productId: number;
@@ -30,10 +29,12 @@ export interface ChatRoomInfo {
   amIBuyer: boolean;
   memberId: number;
 }
+
+export type ChatMessageType = "TEXT" | "IMAGE" | "TRADE_ORDER";
 export interface ChatMessage {
   chatRoomId: number;
   content: string;
-  messageType: "TEXT" | "IMAGE";
+  messageType: ChatMessageType;
   sendAt: string;
   read: boolean;
   senderIsBuyer: boolean;

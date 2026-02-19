@@ -4,18 +4,15 @@ import Image from "next/image";
 
 import { useChatUIStore } from "@/store/chat/useChatUIStore";
 
-import { ChatRoomInfo } from "@/types/Chat";
+import { ChatDetail, ChatRoomInfo } from "@/types/Chat";
 
 import DefaultButton from "@/components/atoms/DefaultButton";
 
 import foldIcon from "@/assets/icons/fold.svg";
 import expandIcon from "@/assets/icons/expand.svg";
 
-interface ChatTradeInfoProps {
-    chatInfo: ChatRoomInfo
-}
 
-export default function ChatTradeInfo({chatInfo}:ChatTradeInfoProps) {
+export default function ChatTradeInfo({chatInfo}:{chatInfo: ChatRoomInfo}) {
     //TO-BE : 거래완료 유무값을 백앤드에서 받아야함
     const [isOpenProfileImage, setIsOpenProfileImage] = useState<boolean>(true);
     const {openTradeModal} = useChatUIStore();
@@ -25,7 +22,7 @@ export default function ChatTradeInfo({chatInfo}:ChatTradeInfoProps) {
     },[chatInfo.amIBuyer])
 
     return (
-        <div className={`w-full ${isOpenProfileImage ? 'h-[140px]' : 'h-[106px]'} flex flex-row shrink-0 gap-3 p-[10px] bg-[#ffffff]`}>
+        <div className={`w-full ${isOpenProfileImage ? 'h-[140px]' : 'h-[106px]'} flex flex-row shrink-0 gap-3 p-[10px] bg-[#ffffff] rounded-[8px]`}>
             {isOpenProfileImage && 
             <Image 
                 src={chatInfo?.productImageUrl} 

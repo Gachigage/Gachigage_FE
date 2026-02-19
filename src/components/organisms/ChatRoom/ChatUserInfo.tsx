@@ -17,7 +17,7 @@ export default function ChatUserInfo({chatInfo}: ChatUserInfoProps) {
     };
 
     return (
-        <div className="w-full px-[10px] h-[42px] flex items-center bg-[#ffffff] shrink-0">
+        <div className="w-full px-[10px] h-[42px] flex items-center bg-[#ffffff] shrink-0 rounded-[8px]">
             <div className="flex items-center gap-2 cursor-pointer" onClick={handleBackClick}>
                 <Link href="/chat" className="flex items-center">
                     <Image

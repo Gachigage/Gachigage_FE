@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { TradeHistoryItem } from "./PurchaseHistoryType";
+import { formatChatDay } from "@/lib/formatTimeUtils";
 
 interface PurchaseItemProps {
     productItem: TradeHistoryItem
@@ -25,7 +26,7 @@ export default function PurchaseItem({productItem, index} : PurchaseItemProps) {
                 <div className="flex flex-col justify-center gap-3">
                     <div className="flex flex-row text-gachigageGray7 text-[13px]">
                         <span className="pr-[5px]">구매일</span>
-                        <span>{productItem.tradeDate?.split('T')[0] ?? ''}</span>
+                        <span>{formatChatDay(productItem.tradeDate) ?? ''}</span>
                     </div>
                     <div className="text-[16px] font-semibold">{productItem.title}</div>
                     <div className="flex flex-row text-[18px] font-semibold gap-2">
