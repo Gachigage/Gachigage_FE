@@ -6,7 +6,7 @@ import {
   subscribeRoom,
   sendMessage as stompSendMessage,
 } from "@/lib/stomp/stompManager";
-import { ChatMessage } from "@/types/Chat";
+import { ChatMessage, ChatMessageType } from "@/types/Chat";
 import { v4 as uuidv4 } from 'uuid';
 
 export function useChatSocket({
@@ -81,7 +81,7 @@ export function useChatSocket({
     content,
   }: {
     chatRoomId: number;
-    messageType: string;
+    messageType: ChatMessageType;
     content: string;
   }) => {
     if (!content.trim() || !memberId) return;
@@ -93,7 +93,7 @@ export function useChatSocket({
       chatRoomId,
       messageUuid: tempId,  // 여기에 UUID 부여
       content,
-      messageType: 'TEXT',
+      messageType: messageType ?? 'TEXT',
       sendAt,
       read: false,
       senderId: memberId, // 내 userId 추가
@@ -121,7 +121,7 @@ export function useChatSocket({
 
     stompSendMessage({
       chatRoomId,
-      messageType: 'TEXT',
+      messageType: messageType ?? 'TEXT',
       content,
       messageUuid: tempId
     });

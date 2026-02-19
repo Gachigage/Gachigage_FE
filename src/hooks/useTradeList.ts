@@ -11,6 +11,5 @@ export function useTradeList(chatRoomId?: number) {
     queryFn: () =>
       fetchTradeInfo(chatRoomId as number, session?.accessToken),
       enabled: !!chatRoomId && !!session?.accessToken,
-      select: (data) => data.productPriceList,
   });
 }

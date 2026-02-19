@@ -1,4 +1,4 @@
-import { MyPageResponse, PurchaseHistoryResponse } from "@/types/Mypage";
+import { ApiResponse, ListingHistoryData, MyPageResponse, PurchaseHistoryData, PurchaseHistoryResponse } from "@/types/Mypage";
 import { axiosServer } from "./axiosInstance";
 
 /**
@@ -23,20 +23,48 @@ export const fetchMyPage = async (
 };
 
 /**
- * 구매/판매/찜 상품내역
+ * 구매내역
+ * @param page 
+ * @param size 
+ * @param accessToken 
+ * @returns 
+ */
+export const fetchTradePurchase = async (
+  page: number,
+  size: number,
+  accessToken?: string
+): Promise<PurchaseHistoryData> => {
+  const response = await axiosServer.get<ApiResponse<PurchaseHistoryData>>(
+    `/users/me/purchases`,
+    {
+      params: { page, size },
+      ...(accessToken && {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }),
+    }
+  );
+
+  return response.data.data;
+};
+
+
+/**
+ * 판매/찜 상품내역
  * @param type 
  * @param page 
  * @param size 
  * @param accessToken 
  * @returns 
  */
-export const fetchTradeHistory = async (
-  type: "purchases" | "sales" | "wishlist",
+export const fetchListingHistory = async (
+  type: "sales" | "wishlist",
   page: number,
   size: number,
   accessToken?: string
-): Promise<PurchaseHistoryResponse["data"]> => {
-  const response = await axiosServer.get<PurchaseHistoryResponse>(
+): Promise<ListingHistoryData> => {
+  const response = await axiosServer.get<ApiResponse<ListingHistoryData>>(
     `/users/me/${type}`,
     {
       params: { page, size },

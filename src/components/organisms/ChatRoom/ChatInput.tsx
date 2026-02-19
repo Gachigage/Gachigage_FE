@@ -1,10 +1,11 @@
 "use client";
 import React, {useState} from "react";
 import DefaultButton from "@/components/atoms/DefaultButton";
+import { ChatMessageType } from "@/types/Chat";
 
 interface sendPayloadProps {
     chatRoomId: number;
-    messageType: string;
+    messageType: ChatMessageType;
     content: string;
 }
 interface ChatInputProps {
