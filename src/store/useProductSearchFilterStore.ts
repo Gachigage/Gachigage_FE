@@ -18,6 +18,7 @@ interface ProductSearchFilterState {
 
 interface ProductSearchFilterActions {
     setSearchKeyword: (keyword: string) => void;
+    resetSearchKeyword: () => void;
     setProductType: (productType: ProductType) => void;
     setProductPrice: (productPrice: {
         minPrice: number;
@@ -56,6 +57,7 @@ export const useProductSearchFilterStore = create<ProductSearchFilterStore>(
     (set) => ({
         ...initialState,
         setSearchKeyword: (keyword) => set({ searchKeyword: keyword }),
+        resetSearchKeyword: () => set({ searchKeyword: "" }), 
         setProductType: (productType) => set({ productType: productType }),
         setProductPrice: (productPrice) => set({ productPrice: productPrice }),
         setProductLocation: (productLocation) =>
