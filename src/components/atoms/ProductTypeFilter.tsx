@@ -2,9 +2,31 @@
 
 import Image from "next/image";
 import hamburger from "@/assets/icons/hamburger.svg";
-import { useState, useRef } from "react";
+import reset from "@/assets/icons/reset.svg";
+import { useRef, useState } from "react";
 import { useProductSearchFilterStore } from "@/store/useProductSearchFilterStore";
 import { useProductCategoriesForFilter } from "@/hooks/useProductCategories";
+
+interface ProductTypeValue {
+    primaryId: number | null;
+    primaryName: string;
+    secondaryId: number | null;
+    secondaryName: string;
+}
+
+const EMPTY_PRODUCT_TYPE: ProductTypeValue = {
+    primaryId: null,
+    primaryName: "",
+    secondaryId: null,
+    secondaryName: "",
+};
+
+const ALL_PRODUCT_TYPE: ProductTypeValue = {
+    primaryId: null,
+    primaryName: "전체",
+    secondaryId: null,
+    secondaryName: "전체",
+};
 
 export default function ProductTypeFilter() {
     const { categories } = useProductCategoriesForFilter();
@@ -17,6 +39,8 @@ export default function ProductTypeFilter() {
     );
 
     const [isOpen, setIsOpen] = useState(false);
+    const [draftProductType, setDraftProductType] =
+        useState<ProductTypeValue>(productType);
     const [selectedPrimaryIndex, setSelectedPrimaryIndex] = useState<number>(0);
     const [hoveredPrimaryIndex, setHoveredPrimaryIndex] = useState<
         number | null
@@ -27,10 +51,42 @@ export default function ProductTypeFilter() {
     const containerRef = useRef<HTMLDivElement>(null);
     const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+    const findPrimaryIndex = (targetType: ProductTypeValue) => {
+        if (!categories.length) return 0;
+
+        if (
+            targetType.primaryName.trim() === "" ||
+            targetType.primaryName === "전체"
+        ) {
+            return 0;
+        }
+
+        const indexById = categories.findIndex(
+            (category) => category.primaryId === targetType.primaryId,
+        );
+        if (indexById !== -1) return indexById;
+
+        const indexByName = categories.findIndex(
+            (category) => category.primary === targetType.primaryName,
+        );
+        return indexByName === -1 ? 0 : indexByName;
+    };
+
+    const syncDraftFromStore = () => {
+        const appliedType = productType;
+        setDraftProductType(appliedType);
+        setSelectedPrimaryIndex(findPrimaryIndex(appliedType));
+        setHoveredPrimaryIndex(null);
+        setHoveredSecondaryIndex(null);
+    };
+
     const handleMouseEnter = () => {
         if (closeTimeoutRef.current) {
             clearTimeout(closeTimeoutRef.current);
             closeTimeoutRef.current = null;
+        }
+        if (!isOpen) {
+            syncDraftFromStore();
         }
         setIsOpen(true);
     };
@@ -44,20 +100,23 @@ export default function ProductTypeFilter() {
     };
 
     const handlePrimaryClick = (index: number) => {
+        const selectedPrimary = categories[index];
+        if (!selectedPrimary) return;
+
         setSelectedPrimaryIndex(index);
         setHoveredSecondaryIndex(null);
 
-        // "전체" 카테고리 클릭 시 바로 store 업데이트
         if (index === 0) {
-            setProductType({
-                primaryId: null,
-                primaryName: "전체",
-                secondaryId: null,
-                secondaryName: "전체",
-            });
-            setIsOpen(false);
-            setHoveredPrimaryIndex(null);
+            setDraftProductType(ALL_PRODUCT_TYPE);
+            return;
         }
+
+        setDraftProductType({
+            primaryId: selectedPrimary.primaryId,
+            primaryName: selectedPrimary.primary,
+            secondaryId: null,
+            secondaryName: "전체",
+        });
     };
 
     const handleSecondaryClick = (
@@ -66,12 +125,24 @@ export default function ProductTypeFilter() {
         secondaryId: number | null,
         secondaryName: string,
     ) => {
-        setProductType({
+        setDraftProductType({
             primaryId,
             primaryName,
             secondaryId,
             secondaryName,
         });
+    };
+
+    const handleReset = () => {
+        setDraftProductType(EMPTY_PRODUCT_TYPE);
+        setProductType(EMPTY_PRODUCT_TYPE);
+        setSelectedPrimaryIndex(0);
+        setHoveredPrimaryIndex(null);
+        setHoveredSecondaryIndex(null);
+    };
+
+    const handleApply = () => {
+        setProductType(draftProductType);
         setIsOpen(false);
         setHoveredPrimaryIndex(null);
         setHoveredSecondaryIndex(null);
@@ -83,10 +154,7 @@ export default function ProductTypeFilter() {
             productType.secondaryName.trim() !== ""
         )
             return "전체";
-        if (
-            productType.primaryName === "" ||
-            productType.secondaryName === ""
-        )
+        if (productType.primaryName === "" || productType.secondaryName === "")
             return "물품 유형";
 
         return `${productType.primaryName} - ${productType.secondaryName}`;
@@ -132,77 +200,120 @@ export default function ProductTypeFilter() {
 
             {/* 드롭다운 컨테이너 */}
             {isOpen && (
-                <div className="absolute w-[350px] top-[66px] left-0 z-50 flex bg-white border border-gachigageDark1 rounded-[12px] ">
-                    {/* 1차 카테고리 */}
-                    <div className="w-[175px] px-[8px] py-[8px] flex flex-col gap-[8px] border-r border-gachigageGray1">
-                        {categories.map((category, index) => {
-                            const isSelected = selectedPrimaryIndex === index;
-                            const isHovered = hoveredPrimaryIndex === index;
+                <div className="absolute w-[350px] top-[66px] left-0 z-50 bg-white border border-gachigageDark1 rounded-[12px] p-[10px]">
+                    <p className="font-semibold text-gachigageDark px-[4px]">
+                        카테고리 필터
+                    </p>
+                    <div className="w-full h-[1px] bg-gachigageGray1 mt-[12px] mb-[8px]" />
 
-                            return (
-                                <div
-                                    key={category.primary}
-                                    className={`flex w-[159px] px-[10px] h-[41px] items-center rounded-[4px] cursor-pointer text-[13px] transition-colors ${
-                                        isSelected || isHovered
-                                            ? "bg-gachigageGray1 text-gachigageDark font-medium"
-                                            : "text-gachigageGray7 font-normal"
-                                    }`}
-                                    onMouseEnter={() =>
-                                        setHoveredPrimaryIndex(index)
-                                    }
-                                    onMouseLeave={() =>
-                                        setHoveredPrimaryIndex(null)
-                                    }
-                                    onClick={() => handlePrimaryClick(index)}
-                                >
-                                    {category.primary}
-                                </div>
-                            );
-                        })}
-                    </div>
-
-                    {/* 2차 카테고리 */}
-                    <div
-                        className="w-[175px] px-[8px] py-[8px] flex flex-col"
-                        onMouseLeave={() => setHoveredSecondaryIndex(null)}
-                    >
-                        {selectedPrimaryIndex === 0 ? (
-                            <div className="flex-1 flex flex-col items-center justify-center text-gachigageGray7 text-[13px] text-center">
-                                <p>카테고리를 선택하시면</p>
-                                <p>세부 항목을 볼 수 있어요.</p>
-                            </div>
-                        ) : (
-                            currentSecondaries.map((secondary, index) => {
-                                const isHovered =
-                                    hoveredSecondaryIndex === index;
+                    <div className="-mx-[10px] flex">
+                        {/* 1차 카테고리 */}
+                        <div className="w-[175px] px-[8px] py-[8px] flex flex-col gap-[8px] border-r border-gachigageGray1">
+                            {categories.map((category, index) => {
+                                const isSelected =
+                                    selectedPrimaryIndex === index;
+                                const isHovered = hoveredPrimaryIndex === index;
 
                                 return (
                                     <div
-                                        key={secondary.id ?? secondary.name}
+                                        key={category.primary}
                                         className={`flex w-[159px] px-[10px] h-[41px] items-center rounded-[4px] cursor-pointer text-[13px] transition-colors ${
-                                            isHovered
+                                            isSelected || isHovered
                                                 ? "bg-gachigageGray1 text-gachigageDark font-medium"
                                                 : "text-gachigageGray7 font-normal"
                                         }`}
                                         onMouseEnter={() =>
-                                            setHoveredSecondaryIndex(index)
+                                            setHoveredPrimaryIndex(index)
+                                        }
+                                        onMouseLeave={() =>
+                                            setHoveredPrimaryIndex(null)
                                         }
                                         onClick={() =>
-                                            handleSecondaryClick(
-                                                categories[selectedPrimaryIndex]
-                                                    .primaryId,
-                                                categories[selectedPrimaryIndex]
-                                                    .primary,
-                                                secondary.id,
-                                                secondary.name,
-                                            )
+                                            handlePrimaryClick(index)
                                         }
                                     >
-                                        {secondary.name}
+                                        {category.primary}
                                     </div>
                                 );
-                            })
-                        )}
+                            })}
+                        </div>
+
+                        {/* 2차 카테고리 */}
+                        <div
+                            className="w-[175px] px-[8px] py-[8px] flex flex-col"
+                            onMouseLeave={() => setHoveredSecondaryIndex(null)}
+                        >
+                            {selectedPrimaryIndex === 0 ? (
+                                <div className="flex-1 flex flex-col items-center justify-center text-gachigageGray7 text-[13px] text-center">
+                                    <p>카테고리를 선택하시면</p>
+                                    <p>세부 항목을 볼 수 있어요.</p>
+                                </div>
+                            ) : (
+                                currentSecondaries.map((secondary, index) => {
+                                    const isHovered =
+                                        hoveredSecondaryIndex === index;
+                                    const isSelected =
+                                        draftProductType.primaryName ===
+                                            categories[selectedPrimaryIndex]
+                                                .primary &&
+                                        draftProductType.secondaryName ===
+                                            secondary.name;
+
+                                    return (
+                                        <div
+                                            key={secondary.id ?? secondary.name}
+                                            className={`flex w-[159px] px-[10px] h-[41px] items-center rounded-[4px] cursor-pointer text-[13px] transition-colors ${
+                                                isSelected || isHovered
+                                                    ? "bg-gachigageGray1 text-gachigageDark font-medium"
+                                                    : "text-gachigageGray7 font-normal"
+                                            }`}
+                                            onMouseEnter={() =>
+                                                setHoveredSecondaryIndex(index)
+                                            }
+                                            onClick={() =>
+                                                handleSecondaryClick(
+                                                    categories[
+                                                        selectedPrimaryIndex
+                                                    ].primaryId,
+                                                    categories[
+                                                        selectedPrimaryIndex
+                                                    ].primary,
+                                                    secondary.id,
+                                                    secondary.name,
+                                                )
+                                            }
+                                        >
+                                            {secondary.name}
+                                        </div>
+                                    );
+                                })
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="-mx-[10px] h-[1px] bg-gachigageGray1 mt-[8px] mb-[10px]" />
+
+                    <div className="w-full flex items-center gap-[6px]">
+                        <button
+                            type="button"
+                            onClick={handleReset}
+                            className="flex-1 h-[40px] rounded-[8px] border-[0.5px] border-gachigageGray3 bg-gachigageWhite hover:bg-gachigageGray1 text-gachigageGray7 font-normal flex items-center justify-center gap-[6px] cursor-pointer"
+                        >
+                            <Image
+                                src={reset}
+                                alt="초기화 아이콘"
+                                width={12}
+                                height={12}
+                            />
+                            <span>초기화</span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleApply}
+                            className="flex-1 h-[40px] rounded-[8px] border-[0.5px] border-gachigageBrightMint1 bg-gachigageMint hover:opacity-90 text-gachigageWhite font-medium cursor-pointer"
+                        >
+                            적용하기
+                        </button>
                     </div>
                 </div>
             )}
