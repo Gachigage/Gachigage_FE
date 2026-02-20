@@ -23,6 +23,11 @@ const LABEL_MARKERS = [
 const MIN_PRICE = 0;
 const MAX_PRICE = 100000000;
 
+interface ProductPriceValue {
+    minPrice: number;
+    maxPrice: number;
+}
+
 const priceToSliderIndex = (priceInManwon: number): number => {
     const exactIndex = PRICE_STEPS.indexOf(priceInManwon);
     if (exactIndex !== -1) return exactIndex;
@@ -47,6 +52,31 @@ const sliderIndexToPrice = (index: number): number => {
     return PRICE_STEPS[Math.min(roundedIndex, PRICE_STEPS.length - 1)];
 };
 
+const normalizeProductPrice = (price: ProductPriceValue): ProductPriceValue => {
+    if (price.maxPrice === 0) {
+        return {
+            minPrice: MIN_PRICE,
+            maxPrice: MAX_PRICE,
+        };
+    }
+
+    return {
+        minPrice: price.minPrice,
+        maxPrice: price.maxPrice,
+    };
+};
+
+const toStoreProductPrice = (price: ProductPriceValue): ProductPriceValue => {
+    if (price.minPrice === MIN_PRICE && price.maxPrice === MAX_PRICE) {
+        return {
+            minPrice: MIN_PRICE,
+            maxPrice: 0,
+        };
+    }
+
+    return price;
+};
+
 export default function ProductMoneyFilter() {
     const productPrice = useProductSearchFilterStore(
         (state) => state.productPrice,
@@ -58,24 +88,36 @@ export default function ProductMoneyFilter() {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const [draftProductPrice, setDraftProductPrice] =
+        useState<ProductPriceValue>(normalizeProductPrice(productPrice));
 
     const [minInputValue, setMinInputValue] = useState<string | null>(null);
     const [maxInputValue, setMaxInputValue] = useState<string | null>(null);
 
-    const actualMinPrice =
-        productPrice.maxPrice === 0 ? MIN_PRICE : productPrice.minPrice;
-    const actualMaxPrice =
-        productPrice.maxPrice === 0 ? MAX_PRICE : productPrice.maxPrice;
+    const appliedProductPrice = normalizeProductPrice(productPrice);
 
     const displayedMinInput =
-        minInputValue !== null ? minInputValue : formatNumber(actualMinPrice);
+        minInputValue !== null
+            ? minInputValue
+            : formatNumber(draftProductPrice.minPrice);
     const displayedMaxInput =
-        maxInputValue !== null ? maxInputValue : formatNumber(actualMaxPrice);
+        maxInputValue !== null
+            ? maxInputValue
+            : formatNumber(draftProductPrice.maxPrice);
+
+    const syncDraftFromStore = () => {
+        setDraftProductPrice(normalizeProductPrice(productPrice));
+        setMinInputValue(null);
+        setMaxInputValue(null);
+    };
 
     const handleMouseEnter = () => {
         if (closeTimeoutRef.current) {
             clearTimeout(closeTimeoutRef.current);
             closeTimeoutRef.current = null;
+        }
+        if (!isOpen) {
+            syncDraftFromStore();
         }
         setIsOpen(true);
     };
@@ -83,13 +125,15 @@ export default function ProductMoneyFilter() {
     const handleMouseLeave = () => {
         closeTimeoutRef.current = setTimeout(() => {
             setIsOpen(false);
+            setMinInputValue(null);
+            setMaxInputValue(null);
         }, 100);
     };
 
     const handleSliderChange = (values: number[]) => {
         const minPrice = sliderIndexToPrice(values[0]) * 10000;
         const maxPrice = sliderIndexToPrice(values[1]) * 10000;
-        setProductPrice({ minPrice, maxPrice });
+        setDraftProductPrice({ minPrice, maxPrice });
     };
 
     const handleMinInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,26 +145,32 @@ export default function ProductMoneyFilter() {
     };
 
     const handleMinInputFocus = () => {
-        setMinInputValue(formatNumber(actualMinPrice));
+        setMinInputValue(formatNumber(draftProductPrice.minPrice));
     };
 
     const handleMaxInputFocus = () => {
-        setMaxInputValue(formatNumber(actualMaxPrice));
+        setMaxInputValue(formatNumber(draftProductPrice.maxPrice));
     };
 
     const handleMinInputBlur = () => {
         if (minInputValue === null) return;
         let value = parseFormattedNumber(minInputValue);
-        value = Math.max(MIN_PRICE, Math.min(value, actualMaxPrice));
-        setProductPrice({ minPrice: value, maxPrice: actualMaxPrice });
+        value = Math.max(
+            MIN_PRICE,
+            Math.min(value, draftProductPrice.maxPrice),
+        );
+        setDraftProductPrice((prev) => ({ ...prev, minPrice: value }));
         setMinInputValue(null);
     };
 
     const handleMaxInputBlur = () => {
         if (maxInputValue === null) return;
         let value = parseFormattedNumber(maxInputValue);
-        value = Math.max(actualMinPrice, Math.min(value, MAX_PRICE));
-        setProductPrice({ minPrice: actualMinPrice, maxPrice: value });
+        value = Math.max(
+            draftProductPrice.minPrice,
+            Math.min(value, MAX_PRICE),
+        );
+        setDraftProductPrice((prev) => ({ ...prev, maxPrice: value }));
         setMaxInputValue(null);
     };
 
@@ -139,34 +189,63 @@ export default function ProductMoneyFilter() {
     };
 
     const handleReset = () => {
-        setProductPrice({ minPrice: MIN_PRICE, maxPrice: MAX_PRICE });
+        const resetPrice = { minPrice: MIN_PRICE, maxPrice: MAX_PRICE };
+        setDraftProductPrice(resetPrice);
+        setProductPrice(toStoreProductPrice(resetPrice));
+        setMinInputValue(null);
+        setMaxInputValue(null);
+    };
+
+    const handleApply = () => {
+        const normalizedDraftPrice = {
+            minPrice: Math.max(
+                MIN_PRICE,
+                Math.min(
+                    draftProductPrice.minPrice,
+                    draftProductPrice.maxPrice,
+                ),
+            ),
+            maxPrice: Math.min(
+                MAX_PRICE,
+                Math.max(
+                    draftProductPrice.maxPrice,
+                    draftProductPrice.minPrice,
+                ),
+            ),
+        };
+
+        setProductPrice(toStoreProductPrice(normalizedDraftPrice));
+        setIsOpen(false);
         setMinInputValue(null);
         setMaxInputValue(null);
     };
 
     const currentSliderValues = [
-        priceToSliderIndex(actualMinPrice / 10000),
-        priceToSliderIndex(actualMaxPrice / 10000),
+        priceToSliderIndex(draftProductPrice.minPrice / 10000),
+        priceToSliderIndex(draftProductPrice.maxPrice / 10000),
     ];
 
-    const displayMinPrice = formatNumber(actualMinPrice);
-    const displayMaxPrice = formatNumber(actualMaxPrice);
-
     const getDisplayText = () => {
-        if (actualMinPrice === MIN_PRICE && actualMaxPrice === MAX_PRICE) {
+        if (
+            appliedProductPrice.minPrice === MIN_PRICE &&
+            appliedProductPrice.maxPrice === MAX_PRICE
+        ) {
             return "금액";
         }
-        if (actualMinPrice === MIN_PRICE) {
-            return `~ ${formatNumber(actualMaxPrice)}원`;
+        if (appliedProductPrice.minPrice === MIN_PRICE) {
+            return `~ ${formatNumber(appliedProductPrice.maxPrice)}원`;
         }
-        if (actualMaxPrice === MAX_PRICE) {
-            return `${formatNumber(actualMinPrice)}원 ~`;
+        if (appliedProductPrice.maxPrice === MAX_PRICE) {
+            return `${formatNumber(appliedProductPrice.minPrice)}원 ~`;
         }
-        return `${formatNumber(actualMinPrice)} ~ ${formatNumber(actualMaxPrice)}원`;
+        return `${formatNumber(appliedProductPrice.minPrice)} ~ ${formatNumber(
+            appliedProductPrice.maxPrice,
+        )}원`;
     };
 
     const isFiltered =
-        actualMinPrice !== MIN_PRICE || actualMaxPrice !== MAX_PRICE;
+        appliedProductPrice.minPrice !== MIN_PRICE ||
+        appliedProductPrice.maxPrice !== MAX_PRICE;
 
     return (
         <div
@@ -193,87 +272,98 @@ export default function ProductMoneyFilter() {
 
             {/* 드롭다운 컨테이너 */}
             {isOpen && (
-                <div className="absolute w-[354px] h-[244px] top-[66px] left-1/2 -translate-x-1/2 z-50 bg-white border border-gachigageDark1 rounded-[12px] px-[12px] pt-[20px] pb-[12px]">
-                    <p className="text-center text-[18px] font-semibold text-gachigageDark mb-[30px]">
-                        {displayMinPrice}원 ~ {displayMaxPrice}원
+                <div className="absolute w-[354px] top-[66px] left-1/2 -translate-x-1/2 z-50 bg-white border border-gachigageDark1 rounded-[12px] p-[10px]">
+                    <p className=" font-semibold text-gachigageDark px-[4px]">
+                        금액 필터
                     </p>
+                    <div className="w-full h-[1px] bg-gachigageGray1 mt-[12px] mb-[16px]" />
 
-                    <div className="mb-[5px]">
-                        <Slider
-                            value={currentSliderValues}
-                            onValueChange={handleSliderChange}
-                            min={0}
-                            max={PRICE_STEPS.length - 1}
-                            step={1}
-                            className="w-full z-2 [&_[data-slot=slider-track]]:h-[4px] [&_[data-slot=slider-track]]:bg-gachigageGray1 [&_[data-slot=slider-range]]:bg-gachigageGray5 [&_[data-slot=slider-thumb]]:w-[20px] [&_[data-slot=slider-thumb]]:h-[20px] [&_[data-slot=slider-thumb]]:border-2 [&_[data-slot=slider-thumb]]:border-gachigageGray5"
-                        />
-                    </div>
+                    <div className="px-[2px] pt-[10px]">
+                        <div className="mb-[5px]">
+                            <Slider
+                                value={currentSliderValues}
+                                onValueChange={handleSliderChange}
+                                min={0}
+                                max={PRICE_STEPS.length - 1}
+                                step={1}
+                                className="w-full z-2 [&_[data-slot=slider-track]]:h-[4px] [&_[data-slot=slider-track]]:bg-gachigageGray1 [&_[data-slot=slider-range]]:bg-gachigageGray5 [&_[data-slot=slider-thumb]]:w-[20px] [&_[data-slot=slider-thumb]]:h-[20px] [&_[data-slot=slider-thumb]]:border-2 [&_[data-slot=slider-thumb]]:border-gachigageGray5"
+                            />
+                        </div>
 
-                    <div className="px-[10px] w-full">
-                        <div className="relative w-full h-[30px] text-[18px] font-normal text-gachigageGray7 mb-[30px]">
-                            {LABEL_MARKERS.map((marker, index) => {
-                                const stepIndex = PRICE_STEPS.indexOf(
-                                    marker.value,
-                                );
-                                const percent =
-                                    (stepIndex / (PRICE_STEPS.length - 1)) *
-                                    100;
+                        <div className="px-[10px] w-full">
+                            <div className="relative w-full h-[30px] text-[18px] font-normal text-gachigageGray7 mb-[30px]">
+                                {LABEL_MARKERS.map((marker, index) => {
+                                    const stepIndex = PRICE_STEPS.indexOf(
+                                        marker.value,
+                                    );
+                                    const percent =
+                                        (stepIndex / (PRICE_STEPS.length - 1)) *
+                                        100;
 
-                                return (
-                                    <div
-                                        key={index}
-                                        className="absolute top-0 flex flex-col items-center -translate-x-1/2"
-                                        style={{ left: `${percent}%` }}
-                                    >
-                                        <div className="w-[1px] h-[8px] bg-gachigageGray7 mb-[4px]" />
-                                        <span className="whitespace-nowrap">
-                                            {marker.label}
-                                        </span>
-                                    </div>
-                                );
-                            })}
+                                    return (
+                                        <div
+                                            key={index}
+                                            className="absolute top-0 flex flex-col items-center -translate-x-1/2"
+                                            style={{ left: `${percent}%` }}
+                                        >
+                                            <div className="w-[1px] h-[8px] bg-gachigageGray7 mb-[4px]" />
+                                            <span className="whitespace-nowrap">
+                                                {marker.label}
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-[12px] mb-[15px]">
+                            <input
+                                type="text"
+                                value={displayedMinInput}
+                                onChange={handleMinInputChange}
+                                onFocus={handleMinInputFocus}
+                                onBlur={handleMinInputBlur}
+                                onKeyDown={(e) => handleKeyDown(e, "min")}
+                                className="w-[150px] h-[36px] px-[8px] rounded-[8px] border border-gachigageGray3 text-[18px] font-medium text-gachigageGray7 bg-gachigageWhite focus:outline-none focus:border-gachigageGray5"
+                                placeholder="최소 금액"
+                            />
+                            <div className="w-[6px] h-[1.5px] bg-gachigageGray3"></div>
+                            <input
+                                type="text"
+                                value={displayedMaxInput}
+                                onChange={handleMaxInputChange}
+                                onFocus={handleMaxInputFocus}
+                                onBlur={handleMaxInputBlur}
+                                onKeyDown={(e) => handleKeyDown(e, "max")}
+                                className="w-[150px] h-[36px] px-[8px] rounded-[8px] border border-gachigageGray3 text-[18px] font-medium text-gachigageGray7 bg-gachigageWhite focus:outline-none focus:border-gachigageGray5"
+                                placeholder="최대 금액"
+                            />
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-[12px] mb-[15px]">
-                        <input
-                            type="text"
-                            value={displayedMinInput}
-                            onChange={handleMinInputChange}
-                            onFocus={handleMinInputFocus}
-                            onBlur={handleMinInputBlur}
-                            onKeyDown={(e) => handleKeyDown(e, "min")}
-                            className="w-[150px] h-[36px] px-[8px] rounded-[8px] border border-gachigageGray3 text-[18px] font-medium text-gachigageGray7 bg-gachigageWhite focus:outline-none focus:border-gachigageGray5"
-                            placeholder="최소 금액"
-                        />
-                        <div className="w-[6px] h-[1.5px] bg-gachigageGray3"></div>
-                        <input
-                            type="text"
-                            value={displayedMaxInput}
-                            onChange={handleMaxInputChange}
-                            onFocus={handleMaxInputFocus}
-                            onBlur={handleMaxInputBlur}
-                            onKeyDown={(e) => handleKeyDown(e, "max")}
-                            className="w-[150px] h-[36px] px-[8px] rounded-[8px] border border-gachigageGray3 text-[18px] font-medium text-gachigageGray7 bg-gachigageWhite focus:outline-none focus:border-gachigageGray5"
-                            placeholder="최대 금액"
-                        />
-                    </div>
+                    <div className="w-full h-[1px] bg-gachigageGray1 mb-[10px]" />
 
-                    <div className="w-full flex items-center justify-end">
-                        <div
-                            className="w-[85px] h-[20px] flex items-center justify-center gap-[2px] cursor-pointer rounded-[10px] bg-gachigageGray0 hover:bg-gachigageGray1"
+                    <div className="w-full flex items-center gap-[6px]">
+                        <button
+                            type="button"
                             onClick={handleReset}
+                            className="flex-1 h-[40px] rounded-[8px] border-[0.5px] border-gachigageGray3 bg-gachigageWhite hover:bg-gachigageGray1 text-gachigageGray7 font-normal flex items-center justify-center gap-[6px] cursor-pointer"
                         >
                             <Image
                                 src={reset}
-                                alt="reset 아이콘"
-                                width={10}
-                                height={10}
+                                alt="초기화 아이콘"
+                                width={12}
+                                height={12}
                             />
-                            <span className="text-[13px] text-gachigageGray7 font-normal">
-                                금액 초기화
-                            </span>
-                        </div>
+                            <span>초기화</span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleApply}
+                            className="flex-1 h-[40px] rounded-[8px] border-[0.5px] border-gachigageBrightMint1 bg-gachigageMint hover:opacity-90 text-gachigageWhite font-medium cursor-pointer"
+                        >
+                            적용하기
+                        </button>
                     </div>
                 </div>
             )}
