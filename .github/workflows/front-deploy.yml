@@ -5,62 +5,43 @@ on:
         branches: ["main"]
     workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
 
-            # 1. pnpm 설정
-            - name: Install pnpm
-              uses: pnpm/action-setup@v4
+            - name: Login to GHCR
+              uses: docker/login-action@v3
               with:
-                  version: 9 # 프로젝트에 맞는 버전
+                registry: ghcr.io
+                username: ${{github.actor}}
+                password: ${{secrets.GHCR_PAT}}
+            
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
+            # 2) 이미지 빌드 & 푸시
+            - name: Build and Push
+              uses: docker/build-push-action@v6
               with:
-                  node-version: "20"
-                  cache: "pnpm"
+                context: .
+                file: ./Dockerfile
+                push: true
+                tags: |
+                  ghcr.io/gachigage/gachigage-frontend:prod
+                  ghcr.io/gachigage/gachigage-frontend:${{ github.sha }}
+                build-args: |
+                  NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
+                  NEXT_PUBLIC_NAVER_MAP_CLIENT_ID=${{ secrets.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID }}
+                cache-from: type=gha
+                cache-to: type=gha,mode=max
 
-            # 2. 의존성 설치 및 빌드 (GitHub 컴퓨터가 수행)
-            - name: Install Dependencies
-              run: pnpm install --frozen-lockfile
-
-            - name: Build
-              run: pnpm build
-              env:
-                  # [중요] GitHub Secrets에서 값을 가져와서 빌드에 주입
-                  NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
-                  NEXT_PUBLIC_NAVER_MAP_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID }}
-                  # 필요한 다른 NEXT_PUBLIC 변수들도 여기에 추가
-
-            # 3. 결과물 압축 (전송 속도를 위해)
-            # standalone, public, static 폴더만 있으면 실행 가능합니다.
-            - name: Make Tarball
-              run: |
-                  mkdir -p deploy
-                  cp -r public deploy/
-                  cp -r .next/standalone deploy/standalone
-                  cp -r .next/static deploy/static
-                  cp Dockerfile deploy/Dockerfile 
-                  # Dockerfile도 같이 보내야 함
-
-                  tar -czf deploy.tar.gz -C deploy .
-
-            # 4. 서버로 압축 파일 전송
-            - name: SCP to Server
-              uses: appleboy/scp-action@v0.1.7
-              with:
-                  host: ${{ secrets.SERVER_HOST }}
-                  username: ${{ secrets.SERVER_USER }}
-                  password: ${{ secrets.SERVER_PASSWORD }}
-                  port: 22
-                  source: "deploy.tar.gz"
-                  target: "/${{ secrets.SERVER_USER }}/gachigage/frontend/"
-
-            # 5. 서버에서 압축 풀고 실행
-            - name: Deploy on Server
+            - name: Deploy on Server (pull & up)
               uses: appleboy/ssh-action@v1.0.3
               with:
                   host: ${{ secrets.SERVER_HOST }}
@@ -68,16 +49,8 @@ jobs:
                   password: ${{ secrets.SERVER_PASSWORD }}
                   port: 22
                   script: |
-                      cd /${{ secrets.SERVER_USER }}/gachigage/frontend
+                      cd /opt/gachigage
 
-                      # 압축 풀기
-                      tar -xzf deploy.tar.gz
-                      rm deploy.tar.gz
-
-                      # 상위 폴더(docker-compose 있는 곳)로 이동
-                      cd ..
-
-                      # Docker 재시작
-                      # 이미 빌드된 파일을 복사만 하므로 엄청나게 빠름
-                      docker compose up -d --build --no-deps frontend
+                      docker compose pull frontend
+                      docker compose up -d --no-deps frontend
                       docker image prune -f
